@@ -73,6 +73,12 @@ public class InsertToWord {
             //结构各层阻尼器最大出力及位移包络值汇总
             //粘滞阻尼器性能规格表
             maxEarthquakeDapmerForceDisplace(tables.get(27), tables.get(28), tables.get(3),tables.get(4));
+
+
+            //计算最后几个表里的值
+            //减震器周边子结构的设计计算方法
+            calculateTable(tables.get(28),tables.get(29),tables.get(30));
+
         } catch (FileNotFoundException e) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + wordPath + "没找到");
             e.printStackTrace();
@@ -1121,6 +1127,35 @@ public class InsertToWord {
         }
     }
 
+
+    /**
+     * 计算最后几个表里的值
+     * 减震器周边子结构的设计计算方法
+     * @param table28
+     * @param table29
+     * @param table30
+     */
+    private static void calculateTable(XWPFTable table28,XWPFTable table29,XWPFTable table30){
+        System.out.println("======================================= 计算最后三个表的数据 =======================================================");
+        //计算参数所在的位置
+//        String paramsPath = basePath + "";
+                String paramsPath = "C:\\Users\\lizhongxiang\\Desktop\\最终\\材料数据.xlsx";
+
+        //1.excle里获取计算参数
+        Map<String,Object>[] caculateParams = GetExcelValue.getCaculateParams(paramsPath);
+
+        //2.子结构框架梁 受弯受剪 验算
+        System.out.println("===============================子结构框架梁 受弯受剪 验算 =======================================");
+        CaculateTable.caculateTable1(table28,caculateParams[0]);
+
+        //3.子结构框架柱抗剪验算
+        System.out.println("=============================== 子结构框架柱抗剪验算 =======================================");
+        CaculateTable.caculateTable2(table29,caculateParams[1]);
+
+        //4.悬臂墙配筋验算
+        System.out.println("=============================== 悬臂墙配筋验算 =======================================");
+        CaculateTable.caculateTable3(table30,caculateParams[2]);
+    }
     /**
      * 获取CAD中的编号
      *
@@ -1304,5 +1339,10 @@ public class InsertToWord {
             System.out.println(" 有效的列无法确定");
         }
         return name;
+    }
+
+
+    public  static void main(String args[]){
+        calculateTable(null,null,null);
     }
 }

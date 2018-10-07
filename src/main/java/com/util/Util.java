@@ -2,6 +2,11 @@ package com.util;
 
 import com.entity.Constants;
 import com.entity.ValueNote;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -19,6 +24,13 @@ public class Util {
 			System.out.println("===================================================");
 			System.out.println(valueNote.getFloor());
 
+		}
+	}
+
+	public static void printArray(Object[] objects){
+		int i = 0;
+		for (Object object : objects){
+			System.out.println( "   "+(++i)+"      "+object.toString());
 		}
 	}
 
@@ -336,4 +348,54 @@ public class Util {
 		}
 		return null;
 	}
+
+	/**
+	 * 获取excel单元格里的值
+	 * @param cell
+	 * @return
+	 */
+	public static String getValueFromXssfcell(XSSFCell cell){
+		if (cell == null) return null;
+		try {
+			return cell.getNumericCellValue()+"";
+		}catch (Exception e){
+			try {
+				return cell.getStringCellValue();
+			}catch (Exception e1){
+				return cell.getRawValue();
+			}
+		}
+	}
+
+
+	/**
+	 * 将值插入到word表格的单元格内
+	 * @param cell
+	 * @param text
+	 */
+	public static void insertValueToCell(XWPFTableCell cell, String text) {
+		dealCell(cell, text, 10);
+	}
+
+	/**
+	 * 将值插入到单元格内
+	 *
+	 * @param cell
+	 * @param text
+	 */
+	private static void dealCell(XWPFTableCell cell, String text, int fontSize) {
+		if (cell == null) {
+			return;
+		}
+		cell.removeParagraph(0);
+		XWPFParagraph pr = cell.addParagraph();
+		XWPFRun rIO = pr.createRun();
+		rIO.setFontFamily("Times New Roman");
+		rIO.setColor("000000");
+		rIO.setFontSize(fontSize);
+		rIO.setText(text);
+		cell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+		pr.setAlignment(ParagraphAlignment.CENTER);
+	}
+
 }

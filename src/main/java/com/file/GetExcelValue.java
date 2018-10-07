@@ -1,6 +1,7 @@
 package com.file;
 
 import com.excel.sheet.*;
+import com.util.Util;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
@@ -354,6 +355,49 @@ public class GetExcelValue {
 			}
 		}
 	}
+
+
+	/**
+	 * 根据参数，从excle里获取计算所需的数值
+	 * 子结构框架梁
+	 *
+	 * @param path
+	 * @return
+	 */
+	public static Map<String,Object>[] getCaculateParams(String path){
+		FileInputStream e = null;
+		try {
+			System.out.println("\n"+path);
+			System.out.println("=================== 计算最后几个表格 **  参数的获取 =========================");
+			e = new FileInputStream(path);
+			XSSFWorkbook excel = new XSSFWorkbook(e);
+
+			//梁
+			Map<String,Object> girderParams = ExcelCaculateParams.getParamsOfGirder(excel);
+			//柱
+			Map<String,Object> pillarParams = ExcelCaculateParams.getParamsOfPillar(excel);
+			//悬臂
+			Map<String,Object> cantileverParams = ExcelCaculateParams.getParamsOfCantilever(excel);
+
+			return new Map[]{girderParams,pillarParams,cantileverParams};
+		} catch (FileNotFoundException e1) {
+			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"没找到");
+			return null;
+		} catch (IOException e1) {
+			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"处理异常");
+			return null;
+		}
+		finally {
+			if(e != null){
+				try {
+					e.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+	}
+
 
 	private static void printArrayDisplace(String[][][] array){
 		String[][] x = array[0];
