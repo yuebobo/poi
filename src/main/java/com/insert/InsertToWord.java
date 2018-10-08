@@ -121,13 +121,13 @@ public class InsertToWord {
         try {
             //1.结构周期对比   //地震剪力对比Fx  //地震剪力对比Fy
             //从记事本WZQ中 获取
-            Map<Integer, List<String>> map = TxtGetValue.getValueFor3(basePath + "\\txt\\WZQ2.txt");
+            Map<Integer, List<String>> map = TxtGetValue.getValueFor3(basePath + "\\txt\\2.txt");
 
             //2.结构质量对比  周期对比    地震剪力对比
             Map<Integer, Object> modelMap = GetExcelValue.getModel(basePath + "\\excel\\工作簿1.xlsx");
 
             //3.结构质量对比    从记事本WMASS中获取 ：结构的总质量       (表3 PKPM)
-            String qualityOfStructure1 = TxtGetValue.getValueFor1(basePath + "\\txt\\WMASS.txt");
+            String qualityOfStructure1 = TxtGetValue.getValueFor1(basePath + "\\txt\\3.txt");
 
             //4.周期对比                           （表2   PKPM）
             List<String> cycle1 = map.get(1);
@@ -303,7 +303,7 @@ public class InsertToWord {
         System.out.println("\n处理 地震波持时表");
         try {
             //获取周期
-            String singleT = TxtGetValue.getSingleT(basePath + "\\txt\\WZQ1.txt");
+            String singleT = TxtGetValue.getSingleT(basePath + "\\txt\\1.txt");
             String path;
             String[] value;
             for (int i = 2; i < 9; i++) {
@@ -342,9 +342,9 @@ public class InsertToWord {
             // 减震结构层间剪力
             String[][][] shear = GetExcelValue.getShear(basePath + "\\excel\\工作簿4.xlsx", 3);
             //获取反应谱数据 震前 （map里key为2（x），3（y）
-            Map<Integer, List<String>> mapBefore = TxtGetValue.getValueFor3(basePath + "\\txt\\WZQ1.txt");
+            Map<Integer, List<String>> mapBefore = TxtGetValue.getValueFor3(basePath + "\\txt\\1.txt");
             //获取反应谱数据 震后（map里key为2（x），3（y）
-            Map<Integer, List<String>> mapAfter = TxtGetValue.getValueFor3(basePath + "\\txt\\WZQ2.txt");
+            Map<Integer, List<String>> mapAfter = TxtGetValue.getValueFor3(basePath + "\\txt\\2.txt");
 
             // 计算剪力比值
             String[][][] pro = Util.getArrayProportion(shear, shearNot);
