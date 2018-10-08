@@ -1,5 +1,6 @@
 package com.txt;
 
+import com.entity.Constants;
 import com.util.Util;
 
 import java.io.*;
@@ -32,10 +33,7 @@ public class TxtGetValue {
 	 * @return
 	 */
 	public static Map<Integer, List<String>> getValueFor3(String txtPath) {
-		String line;
-		String[] strs;
-		int i = 1;
-		int count = 0;
+
 		List<String> theFirst = new ArrayList<>();
 		List<String> theSecond = new ArrayList<>();
 		List<String> theThird = new ArrayList<>();
@@ -44,36 +42,30 @@ public class TxtGetValue {
 		try {
 			fileIn = new FileInputStream(txtPath);
 			br = new BufferedReader(new InputStreamReader(fileIn, "GBK"));
-			while ((line = br.readLine()) != null) {
-				strs = line.trim().replaceAll(" +", " ").split(" ");
+			String flageStr;
+			String type = null;
 
-				if (i == 1 && strs.length == 8) {
-					//获取第一个表里的数据  （周期三个数）
-					if (0 < count && count < 4) {
-						theFirst.add(strs[1]);
-					}
-					if (count > 3) {
-						i++;
-					}
-					count++;
-				} else if (i == 2 && strs.length == 9) {
-					//获取第二个表里的数据
-					if (strs.length > 0 && strs[0].matches("^[0-9]*$")) {
-						theSecond.add(strs[3].substring(0, strs[3].length() - 1));
-					} else if (theSecond.size() > 0) {
-						i++;
-					}
-				} else if (i == 3 && strs.length == 9) {
-					//获取第三个表里的数据
-					if (strs.length > 0 && strs[0].matches("^[0-9]*$")) {
-						theThird.add(strs[3].substring(0, strs[3].length() - 1));
-					} else if (theSecond.size() > 0) {
-						i++;
-					}
-				} else if (i == 4) {
+			//根据前前三行的内容进行判断是那种类型的 WZQ
+			for (int i = 0; i < 3 ; i++){
+				flageStr = br.readLine();
+				if (flageStr.lastIndexOf(Constants.TYPE_ONE) > 0){
+					type = Constants.TYPE_ONE;
+					break;
+				}
+				if (flageStr.lastIndexOf(Constants.TYPE_TWO) > 0){
+					type = Constants.TYPE_TWO;
 					break;
 				}
 			}
+			if (Constants.TYPE_ONE.equals(type)){
+				typeOne(br,theFirst,theSecond,theThird);
+			} else if (Constants.TYPE_TWO.equals(type)){
+				typeTwo(br,theFirst,theSecond,theThird);
+			} else {
+				System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$  无法确定WZQ是那种类型的 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+				throw  new RuntimeException("无法确定WZQ是那种类型的");
+			}
+
 			Map<Integer, List<String>> values = new HashMap<>();
 			System.out.println(txtPath);
 			values.put(1, theFirst);
@@ -90,6 +82,7 @@ public class TxtGetValue {
 			return values;
 		} catch (Exception e) {
 			System.out.println("$$$$$$$$$$$$" + txtPath + "出现异常");
+			e.printStackTrace();
 			return null;
 		} finally {
 			if (fileIn != null) {
@@ -107,6 +100,133 @@ public class TxtGetValue {
 		}
 	}
 
+	/**
+	 * 获取WZQ里的数据
+	 * 第一种情况
+	 *  文件内容空头几行里包含了  ////////////////////////////////
+	 * @param br
+	 * @param theFirst
+	 * @param theSecond
+	 * @param theThird
+	 * @throws IOException
+	 */
+	private static void typeOne(BufferedReader br,List<String> theFirst ,List<String> theSecond,List<String> theThird) throws IOException {
+		String line;
+		String[] strs;
+		int i = 1;
+		int count = 0;
+		while ((line = br.readLine()) != null) {
+			strs = line.trim().replaceAll(" +", " ").split(" ");
+			if (i == 1 && strs.length == 8) {
+				//获取第一个表里的数据  （周期三个数）
+				if (0 < count && count < 4) {
+					theFirst.add(strs[1]);
+				}
+				if (count > 3) {
+					i++;
+				}
+				count++;
+			} else if (i == 2 && strs.length == 9) {
+				//获取第二个表里的数据
+				if (strs.length > 0 && strs[0].matches("^[0-9]*$")) {
+					theSecond.add(strs[3].substring(0, strs[3].length() - 1));
+				} else if (theSecond.size() > 0) {
+					i++;
+				}
+			}else if (i == 2 && theSecond.size() > 0){
+				i++;
+			} else if (i == 3 && strs.length == 9) {
+				//获取第三个表里的数据
+				if (strs.length > 0 && strs[0].matches("^[0-9]*$")) {
+					theThird.add(strs[3].substring(0, strs[3].length() - 1));
+				} else if (theThird.size() > 0) {
+					i++;
+				}
+			} else if (i == 3 && theThird.size() > 0) {
+				break;
+			}else if (i == 4) {
+				break;
+			}
+		}
+	}
+
+
+	/**
+	 * 获取WZQ里的数据
+	 * 第二种情况
+	 *  文件内容空头几行里包含了  *****************************
+	 * @param br
+	 * @param theFirst
+	 * @param theSecond
+	 * @param theThird
+	 * @throws IOException
+	 */
+	private static void typeTwo(BufferedReader br,List<String> theFirst ,List<String> theSecond,List<String> theThird) throws IOException {
+		String line;
+		String[] strs;
+		int i = 1;
+		int count = 0;
+		boolean flage = false;
+		while ((line = br.readLine()) != null) {
+			strs = line.trim().replaceAll(" +", " ").split(" ");
+
+			if (i == 1 && strs.length == 5) {
+				//获取第一个表里的数据  （周期三个数）
+				if (0 < count && count < 4) {
+					theFirst.add(strs[1]);
+				}
+				if (count > 3) {
+					i++;
+				}
+				count++;
+				continue;
+			}
+
+			if (i == 2 && !flage){
+				if (strs.length == 8){
+					flage = true;
+				}
+				continue;
+			}
+			if (i == 2 && strs.length == 6) {
+				//获取第二个表里的数据
+				if (strs.length > 0 && strs[0].matches("^[0-9]*$")) {
+					theSecond.add(strs[3].substring(0,strs[3].indexOf("(")));
+				} else if (theSecond.size() > 0) {
+					flage = false;
+					i++;
+				}
+				continue;
+			}
+			if (i == 2 && theSecond.size() > 0){
+				flage = false;
+				i++;
+				continue;
+			}
+
+			if (i == 3 && !flage){
+				if (strs.length == 8){
+					flage = true;
+				}
+				continue;
+			}
+
+			if (i == 3 && strs.length == 6) {
+				//获取第三个表里的数据
+				if (strs.length > 0 && strs[0].matches("^[0-9]*$")) {
+					theThird.add(strs[3].substring(0, strs[3].indexOf("(")));
+				} else if (theThird.size() > 0) {
+					i++;
+				}
+				continue;
+			}
+			if (i == 3 && theThird.size() > 0){
+				break;
+			}else if (i == 4) {
+				break;
+			}
+		}
+	}
 
 	/**
 	 * 质量结构对比

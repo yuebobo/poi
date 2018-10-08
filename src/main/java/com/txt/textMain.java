@@ -9,12 +9,13 @@ public class textMain {
 	public static void main(String[] args){
 		
 		String path1 = "C:/Users/YYong/Desktop/pp/李祖玮工作资料/工作空间/txt/WMASS.txt";
-		String path2 = "C:/Users/YYong/Desktop/pp/李祖玮工作资料/工作空间/txt/WZQ.txt";
-		String path3 = "C:\\Users\\lizhongxiang\\Desktop\\李祖玮工作资料\\工作空间\\txt\\WZQ1.txt";
-		getLineNoteCount(path3);
+//		String path2 = "C:/Users/YYong/Desktop/pp/李祖玮工作资料/工作空间/txt/WZQ.txt";
+		String path2 = "C:\\Users\\lizhongxiang\\Desktop\\最终\\WZQ(2).txt";
+		String path3 = "C:\\Users\\lizhongxiang\\Desktop\\最终\\wzq(3).txt";
+		getLineNoteCount(path2);
 		Long st = System.currentTimeMillis();
 //		TxtGetValue.getValueFor1(path1);
-//		TxtGetValue.getValueFor3(path3);
+		TxtGetValue.getValueFor3(path3);
 //		List<String> j = TxtGetValue.getValueForFloorHeigh(path1);
 //		System.out.println(j);
 		

@@ -2,6 +2,11 @@ package com.entity;
 
 public  class Constants {
 
+	//WZQ 的文件类型
+	public static final String TYPE_ONE = "////////////";
+	public static final String TYPE_TWO = "************";
+
+
 	public static final String T1X = "T1X";
 	public static final String T2X = "T2X";
 	public static final String T3X = "T3X";
@@ -39,7 +44,7 @@ public  class Constants {
 
 	//受力状况 v ，m
 	public static final String STRESS_CONDITION_V = "STRESS_CONDITION_V";
-	public static final String STRESS_CONDITION_OLDV = "STRESS_CONDITION_OLDV";
+//	public static final String STRESS_CONDITION_OLDV = "STRESS_CONDITION_OLDV";
 	public static final String STRESS_CONDITION_M = "STRESS_CONDITION_M";
 	public static final String STRESS_CONDITION_P = "STRESS_CONDITION_P";
 
