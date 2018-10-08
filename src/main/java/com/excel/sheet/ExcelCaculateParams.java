@@ -182,14 +182,14 @@ public class ExcelCaculateParams {
         cell = row.getCell(1);
         value = Util.getValueFromXssfcell(cell);
         map.put(Constants.STRESS_CONDITION_V,value);
-        //原v
-        cell = row.getCell(4);
-        value = Util.getValueFromXssfcell(cell);
-        map.put(Constants.STRESS_CONDITION_OLDV,value);
-        //M
-        cell = row.getCell(7);
-        value = Util.getValueFromXssfcell(cell);
-        map.put(Constants.STRESS_CONDITION_M,value);
+//        //原v
+//        cell = row.getCell(4);
+//        value = Util.getValueFromXssfcell(cell);
+//        map.put(Constants.STRESS_CONDITION_OLDV,value);
+//        //M
+//        cell = row.getCell(7);
+//        value = Util.getValueFromXssfcell(cell);
+//        map.put(Constants.STRESS_CONDITION_M,value);
 
         //楼层高度
         row = sheet.getRow(4);
