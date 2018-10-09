@@ -1143,8 +1143,7 @@ public class InsertToWord {
     private static void calculateTable(XWPFTable table29, XWPFTable table30, XWPFTable table31) {
         System.out.println("======================================= 计算最后三个表的数据 =======================================================");
         //计算参数所在的位置
-//        String paramsPath = basePath + " "\\excel\\calculateParams.xlsx"";
-        String paramsPath = "C:\\Users\\lizhongxiang\\Desktop\\workSpace\\最终\\材料数据.xlsx";
+        String paramsPath = basePath + "\\excel\\材料数据.xlsx";
 
         //1.excle里获取计算参数
         Map<String, Object>[] caculateParams = GetExcelValue.getCaculateParams(paramsPath);
@@ -1348,19 +1347,19 @@ public class InsertToWord {
     }
 
 
-    public static void main(String args[]) throws IOException {
-        String wordPath = "C:\\Users\\lizhongxiang\\Desktop\\workSpace\\最终\\cccc.docx";
-        FileInputStream in = null;
-        XWPFDocument word = null;
-        FileOutputStream out = null;
-        in = new FileInputStream(wordPath);
-        word = new XWPFDocument(in);
-        out = new FileOutputStream("C:\\Users\\lizhongxiang\\Desktop\\workSpace\\最终\\out"+System.currentTimeMillis()+" .docx");
-        List<XWPFTable> tables = word.getTables();
-        calculateTable(tables.get(29), tables.get(30), tables.get(31));
-        word.write(out);
-        out.flush();
-        out.close();
-        in.close();
-    }
+//    public static void main(String args[]) throws IOException {
+//        String wordPath = "C:\\Users\\lizhongxiang\\Desktop\\workSpace\\最终\\cccc.docx";
+//        FileInputStream in = null;
+//        XWPFDocument word = null;
+//        FileOutputStream out = null;
+//        in = new FileInputStream(wordPath);
+//        word = new XWPFDocument(in);
+//        out = new FileOutputStream("C:\\Users\\lizhongxiang\\Desktop\\workSpace\\最终\\out"+System.currentTimeMillis()+" .docx");
+//        List<XWPFTable> tables = word.getTables();
+//        calculateTable(tables.get(29), tables.get(30), tables.get(31));
+//        word.write(out);
+//        out.flush();
+//        out.close();
+//        in.close();
+//    }
 }

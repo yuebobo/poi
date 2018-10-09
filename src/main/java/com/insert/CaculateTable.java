@@ -77,7 +77,18 @@ public class CaculateTable {
         System.out.println("受弯验算 ：\n_afs_  = "+ _afs_ + "\n_ypclong_ = " + _ypclong_ + "\n_As_ = "+ _As_ + "\n_Ps_ = "+_Ps_ );
         System.out.println("受剪验算 ：\n_shearForce1_  = "+ _shearForce1_ + "\n_shearForce1_ = " + _shearForce1_ );
 
-        //4.将计算的结果回填到表格中
+        //4.比较数据，得出结论
+        String _Ps1_ = table.getRow(9).getCell(6).getText();
+        Double _Ps11_ = Double.valueOf(_Ps1_.substring(1,_Ps1_.length() - 1));
+        String result ;
+        if (_Ps_ < _Ps11_ && _shearForce1_ > Double.valueOf(stressConditionV) && _shearForce2_ > Double.valueOf(stressConditionV)){
+            //通过
+            result = "通过";
+        }else {
+            result = "不通过";
+        }
+
+        //5.将计算的结果回填到表格中
         Util.insertValueToCell(table.getRow(0).getCell(2),Util.getPrecisionString(sectionB,1));
         Util.insertValueToCell(table.getRow(0).getCell(5),Util.getPrecisionString(sectionH,1));
         Util.insertValueToCell(table.getRow(1).getCell(2),Util.getPrecisionString(stressConditionV,1));
@@ -97,6 +108,7 @@ public class CaculateTable {
         Util.insertValueToCell(table.getRow(9).getCell(2),Util.getPrecisionString(_As_,0));
         Util.insertValueToCell(table.getRow(9).getCell(5),Util.getPrecisionString(_Ps_ * 100,2)+"%");
         Util.insertValueToCell(table.getRow(10).getCell(2),Util.getPrecisionString(_shearForce1_,0));
+        Util.insertValueToCell(table.getRow(10).getCell(4),result);
         Util.insertValueToCell(table.getRow(11).getCell(2),Util.getPrecisionString(_shearForce2_,0));
     }
 
@@ -161,7 +173,17 @@ public class CaculateTable {
         System.out.println("=============== 计算结果 ===================");
         System.out.println("受剪验算 ：\n_result1_  = "+ _result1_ + "\n_lamda_ = " + _lamda_ + "\n_result3_ =  "+_result3_ );
 
-        //4.将计算的结果回填到表格中
+
+        //4.比较数据，得出结论
+        String result ;
+        if (_result1_ > Double.valueOf(stressConditionV) && _result3_ > Double.valueOf(stressConditionV) ){
+            //通过
+            result = "通过";
+        }else {
+            result = "不通过";
+        }
+
+        //5.将计算的结果回填到表格中
         Util.insertValueToCell(table.getRow(0).getCell(2),Util.getPrecisionString(sectionB,1));
         Util.insertValueToCell(table.getRow(0).getCell(5),Util.getPrecisionString(sectionH,1));
         Util.insertValueToCell(table.getRow(1).getCell(1),Util.getPrecisionString(floorH,0));
@@ -180,6 +202,7 @@ public class CaculateTable {
         Util.insertValueToCell(table.getRow(9).getCell(5),Util.getPrecisionString(hoopL,0));
 
         Util.insertValueToCell(table.getRow(10).getCell(2),Util.getPrecisionString(_result1_,0));
+        Util.insertValueToCell(table.getRow(10).getCell(4),result);
         Util.insertValueToCell(table.getRow(11).getCell(2),Util.getPrecisionString(_lamda_,2));
         Util.insertValueToCell(table.getRow(12).getCell(2),Util.getPrecisionString(_result3_,0));
     }
@@ -252,11 +275,22 @@ public class CaculateTable {
         System.out.println("=============== 计算结果 ===================");
         System.out.println("受剪验算 ：\n_M_  = "+ _M_ + "\n_As_ = " + _As_ + "\n_result_2 =  "+_result_2 + "\n_result_3= "+_result_3 );
 
+        //4.比较数据，得出结论
+        Double _As1_ = Double.valueOf(hoopVerticlL) * 0.25 * Math.PI * Math.pow(Double.valueOf(hoopVerticlD),2);
+
+        String result ;
+        if (_As1_ > _As_ && _result_2 > Double.valueOf(stressConditionV) && _result_3 > Double.valueOf(stressConditionV)){
+            //通过
+            result = "通过";
+        }else {
+            result = "不通过";
+        }
+
         //4.将计算的结果回填到表格中
         Util.insertValueToCell(table.getRow(0).getCell(2),Util.getPrecisionString(sectionB,1));
         Util.insertValueToCell(table.getRow(0).getCell(5),Util.getPrecisionString(sectionH,1));
-        Util.insertValueToCell(table.getRow(1).getCell(1),Util.getPrecisionString(floorH,0));
-        Util.insertValueToCell(table.getRow(1).getCell(5),Util.getPrecisionString(damperH,0));
+        Util.insertValueToCell(table.getRow(1).getCell(1),Util.getPrecisionString(floorH,3));
+        Util.insertValueToCell(table.getRow(1).getCell(5),Util.getPrecisionString(damperH,3));
         Util.insertValueToCell(table.getRow(2).getCell(2),Util.getPrecisionString(stressConditionV,1));
         Util.insertValueToCell(table.getRow(2).getCell(5),Util.getPrecisionString(_M_.toString(),1));
 
@@ -278,6 +312,7 @@ public class CaculateTable {
 
         Util.insertValueToCell(table.getRow(10).getCell(2),Util.getPrecisionString(_As_,0));
         Util.insertValueToCell(table.getRow(11).getCell(2),Util.getPrecisionString(_result_2,0));
+        Util.insertValueToCell(table.getRow(11).getCell(4),result);
         Util.insertValueToCell(table.getRow(12).getCell(2),Util.getPrecisionString(_result_3,0));
     }
 }
