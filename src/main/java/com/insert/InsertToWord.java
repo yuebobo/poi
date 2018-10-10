@@ -121,20 +121,29 @@ public class InsertToWord {
         try {
             //1.结构周期对比   //地震剪力对比Fx  //地震剪力对比Fy
             //从记事本WZQ中 获取
-            Map<Integer, List<String>> map = TxtGetValue.getValueFor3(basePath + "\\txt\\2.txt");
+//            Map<Integer, List<String>> map = TxtGetValue.getValueFor3(basePath + "\\txt\\2.txt");
+
 
             //2.结构质量对比  周期对比    地震剪力对比
             Map<Integer, Object> modelMap = GetExcelValue.getModel(basePath + "\\excel\\工作簿1.xlsx");
 
             //3.结构质量对比    从记事本WMASS中获取 ：结构的总质量       (表3 PKPM)
-            String qualityOfStructure1 = TxtGetValue.getValueFor1(basePath + "\\txt\\3.txt");
+//            String qualityOfStructure1 = TxtGetValue.getValueFor1(basePath + "\\txt\\3.txt");
+
+            //  == == 从材料数据文件里获取周期，减震剪力对比,质量
+            Map<Integer,Object> map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
 
             //4.周期对比                           （表2   PKPM）
-            List<String> cycle1 = map.get(1);
+            String[] cycle1 = (String[]) map.get(1);
+            //结构质量对比
+            String qualityOfStructure1 = (String) map.get(2);
+            //
+            List[] fxFy = (List[]) map.get(3);
+
             //5.地震剪力对比Fx    （表1   PKPM   X）
-            List<String> fx = map.get(2);
+            List<String> fx = fxFy[0];
             //6."地震剪力对比Fy"  （表1   PKPM   Y）
-            List<String> fy = map.get(3);
+            List<String> fy =  fxFy[1];
 
             //7.结构质量对比               (表3 SAP2000)
             String qualityOfStructure2 = (String) modelMap.get(1);
@@ -154,9 +163,9 @@ public class InsertToWord {
             XWPFTableRow row4;
             for (int i = 1; i < 4; i++) {
                 row4 = table4.getRow(i);
-                dealCellBig(row4.getCell(1), Util.getPrecisionString(cycle1.get(i - 1), 3));
+                dealCellBig(row4.getCell(1), Util.getPrecisionString(cycle1[i-1], 3));
                 dealCellBig(row4.getCell(2), Util.getPrecisionString(cycle2[i - 1], 3));
-                dealCellBig(row4.getCell(3), Util.subAndDiv(cycle1.get(i - 1), cycle2[i - 1], 2));
+                dealCellBig(row4.getCell(3), Util.subAndDiv(cycle1[i - 1], cycle2[i - 1], 2));
             }
 
             //===================================  表5  结构地震剪力对比  ====================================
@@ -204,6 +213,14 @@ public class InsertToWord {
             XWPFTableRow rowy = table6.getRow(2);
             XWPFTableCell cellx;
             XWPFTableCell celly;
+
+
+            Map<Integer,Object> map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
+            List[] notFxFy = (List[]) map.get(4);
+            List<String> fx = notFxFy[0];
+            List<String> fy =  notFxFy[1];
+            e2T5R2[0][0] = fx.get(fx.size()-1);
+            e2T5R2[1][0] = fy.get(fy.size()-1);
 
             //用于计算T1-R2的平均值
             double x = 0d;
@@ -303,7 +320,11 @@ public class InsertToWord {
         System.out.println("\n处理 地震波持时表");
         try {
             //获取周期
-            String singleT = TxtGetValue.getSingleT(basePath + "\\txt\\1.txt");
+//            String singleT = TxtGetValue.getSingleT(basePath + "\\txt\\1.txt");
+            Map<Integer,Object> map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
+            String[] cycle1 = (String[]) map.get(1);
+            String singleT = cycle1[0];
+
             String path;
             String[] value;
             for (int i = 2; i < 9; i++) {
@@ -341,19 +362,29 @@ public class InsertToWord {
             String[][][] shearNot = GetExcelValue.getShear(basePath + "\\excel\\工作簿3.xlsx", 1);
             // 减震结构层间剪力
             String[][][] shear = GetExcelValue.getShear(basePath + "\\excel\\工作簿4.xlsx", 3);
-            //获取反应谱数据 震前 （map里key为2（x），3（y）
-            Map<Integer, List<String>> mapBefore = TxtGetValue.getValueFor3(basePath + "\\txt\\1.txt");
-            //获取反应谱数据 震后（map里key为2（x），3（y）
-            Map<Integer, List<String>> mapAfter = TxtGetValue.getValueFor3(basePath + "\\txt\\2.txt");
-
             // 计算剪力比值
             String[][][] pro = Util.getArrayProportion(shear, shearNot);
 
+            //获取反应谱数据 震前 （map里key为2（x），3（y）
+//            Map<Integer, List<String>> mapBefore = TxtGetValue.getValueFor3(basePath + "\\txt\\1.txt");
+            //获取反应谱数据 震后（map里key为2（x），3（y）
+//            Map<Integer, List<String>> mapAfter = TxtGetValue.getValueFor3(basePath + "\\txt\\2.txt");
+            Map<Integer,Object>  map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
+            //
+            List[] fxFy = (List[]) map.get(3);
+            List[] notFxFy = (List[]) map.get(4);
+
+            //5.地震剪力对比Fx    （表1   PKPM   X）
+            List<String> fx = fxFy[0];
+            //6."地震剪力对比Fy"  （表1   PKPM   Y）
+            List<String> fy =  fxFy[1];
+
+
             //获取反应谱
-            List<String> earthquakeBeforeX = mapBefore.get(2);
-            List<String> earthquakeBeforeY = mapBefore.get(3);
-            List<String> earthquakeAfterX = mapAfter.get(2);
-            List<String> earthquakeAfterY = mapAfter.get(3);
+            List<String> earthquakeBeforeX = notFxFy[0];
+            List<String> earthquakeBeforeY =  notFxFy[1];
+            List<String> earthquakeAfterX =  fxFy[0];
+            List<String> earthquakeAfterY =  fxFy[1];
 
             //楼层数
             int floor = Math.min(shear[0].length, shearNot[0].length);
@@ -905,7 +936,7 @@ public class InsertToWord {
             int floor = Math.min(displaceAngle[1].length, displaceAngle[0].length);
             floor = Math.min(floor, floorH.size());
             if (floor != floorH.size() || floor != displaceAngle[0].length || floor != displaceAngle[1].length) {
-                System.out.println("楼层数据不一致");
+                System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$  楼层数据不一致 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             }
 
             //包络值

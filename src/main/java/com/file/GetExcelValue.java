@@ -67,7 +67,75 @@ public class GetExcelValue {
 			}
 		}
 	}
-	
+
+
+
+	/**
+	 * 从材料数据文件里获取周期，减震/非减震 剪力对比,质量
+	 * @throws IOException
+	 */
+	public static Map<Integer, Object> getCycleAndFxFy(String path) {
+		System.out.println("==========================================");
+		System.out.println(path);
+		FileInputStream e = null;
+		try {
+			e = new FileInputStream(path);
+			XSSFWorkbook excel = new XSSFWorkbook(e);
+			//周期获取
+			String[] cecle = ExcelCaculateParams.getCycle(excel.getSheetAt(5));
+			System.out.println("周期对比：");
+			arrayToString(cecle);
+
+			//质量获取
+			String quality = ExcelCaculateParams.getQuality(excel.getSheetAt(4));
+			System.out.println("==========================================");
+			System.out.println("质量： "+quality);
+
+			//减震剪力
+			List[] fxFy = ExcelCaculateParams.getEarthquakeAndShear(excel.getSheetAt(7));
+			System.out.println("减震剪力：");
+			System.out.println("X方向 ：");
+			System.out.println(fxFy[0]);
+			System.out.println("Y方向 ：");
+			System.out.println(fxFy[1]);
+
+			//非减震剪力
+			List[] notFxFy = ExcelCaculateParams.getEarthquakeAndShear(excel.getSheetAt(6));
+			System.out.println("非减震剪力：");
+			System.out.println("X方向 ：");
+			System.out.println(fxFy[0]);
+			System.out.println("Y方向 ：");
+			System.out.println(fxFy[1]);
+
+			Map<Integer,Object> map = new HashMap<>();
+			map.put(1, cecle);
+			map.put(2, quality);
+			map.put(3, fxFy);
+			map.put(4,notFxFy);
+			return map;
+		} catch (FileNotFoundException e1) {
+			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"没找到");
+			return null;
+		} catch (IOException e1) {
+			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"处理异常");
+			return null;
+		}
+		finally {
+			if(e != null){
+				try {
+					e.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+	}
+
+
+
+
+
+
 	/**
 	 * 基低剪力对比
 	 * @param path
