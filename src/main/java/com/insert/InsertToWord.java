@@ -1222,9 +1222,6 @@ public class InsertToWord {
     private static Map<Integer, Double[]>[] getDamperFloorAdd(XWPFTable table2, Double[][][] force) {
         String[][][] modelNo = getModelNo1(table2);
 
-        String[][] modelNoX = modelNo[0];
-        String[][] modelNoY = modelNo[1];
-
         Map<Integer, Double[]>[] returnValue = new Map[2];
         Integer floor;
         String no;
@@ -1237,6 +1234,7 @@ public class InsertToWord {
             for (int i = 0; i < modelNo[h].length; i++) {
                 floor = Integer.valueOf(modelNo[h][i][0].substring(2, 3));
                 no = modelNo[h][i][1];
+                flag = false;
                 for (int j = 0; j < force[h].length; j++) {
                     f = force[h][j][0];
                     if (f == Double.valueOf(no)) {
