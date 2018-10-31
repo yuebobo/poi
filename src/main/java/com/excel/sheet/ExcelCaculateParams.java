@@ -352,8 +352,13 @@ public class ExcelCaculateParams {
         Iterator it = sheet.iterator();
         it.next();
         it.next();
+        String str;
         while (it.hasNext()) {
             row = (XSSFRow) it.next();
+            str = Util.getValueFromXssfcell(row.getCell(3));
+            if(str == null || "".equals(str) || 0 == Double.valueOf(str)){
+                break;
+            }
             fx.add(Util.getValueFromXssfcell(row.getCell(3)));
             fy.add(Util.getValueFromXssfcell(row.getCell(10)));
         }
