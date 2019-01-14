@@ -75,7 +75,16 @@ public class MainDeal {
         }else {
             System.out.println("缺少txt文件夹");
         }
-        InsertToWord.getValueInsertWord(basePath, wordPath);
+
+        //==================================================  第一套模板  (云南) ======================================================
+        InsertToWord.getValueInsertWord1(basePath, wordPath);
+        //==================================================  第一套模板 （云南）======================================================
+
+
+        //==================================================  第二套模板  (江苏）======================================================
+        //InsertToWord.getValueInsertWord2(basePath,wordPath);
+        //==================================================  第二套模板  （江苏）======================================================
+
 //		if(excel0IsExist){
 //			try {
 //				InsertToExcel.getValueInsertExcel(basePath);

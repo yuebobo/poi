@@ -24,7 +24,94 @@ public class InsertToWord {
      * @param path
      * @param wordPath
      */
-    public static void getValueInsertWord(String path, String wordPath) {
+    public static void getValueInsertWord1(String path, String wordPath) {
+        basePath = path;
+        FileInputStream in = null;
+        XWPFDocument word = null;
+        FileOutputStream out = null;
+        try {
+            in = new FileInputStream(wordPath);
+            word = new XWPFDocument(in);
+            out = new FileOutputStream(basePath + "\\out" + System.currentTimeMillis() + ".docx");
+            List<XWPFTable> tables = word.getTables();
+            getModelNo1(tables.get(4));
+
+            //模型对比三个表
+            insertModelCompare(tables.get(5), tables.get(6), tables.get(7));
+
+            //基低剪力对比          （非减震结构底部剪力对比表）
+            insertBaseShearCopmpare(tables.get(8));
+
+            //地震波信息
+            insertEarthquakeWaveInfo(tables.get(9));
+
+            //地震波持时
+            insertEarthquakeWave(tables.get(10));
+
+            //层间剪力对比
+            insertFloorShearCopmare(tables.get(12), tables.get(13));
+
+            //层间位移对比
+            insertFloorDisplaceCompare(tables.get(14), tables.get(15), tables.get(16), tables.get(17));
+
+            //地震波下结构X/Y方向的弹性能
+            insertElasticPropertyOfBaseEarthquake(tables.get(19), tables.get(20));
+
+            //各地震波下X/Y方向阻尼器耗能
+            insertEarthquakeDamperDisEnergy(tables.get(4), tables.get(21), tables.get(22));
+
+            //结构附加阻尼比计算  该表的数据依赖与上边四个表的数据(此表要后处理)
+            insertAnnexDamperRatio(tables.get(18), tables.get(19), tables.get(20), tables.get(21), tables.get(22));
+
+            //阻尼器出力与楼层剪力占比
+            insertDamperFloorRatio(tables.get(23), tables.get(24), tables.get(4));
+
+            //层间位移角
+            insertFloorDisplaceAngle(tables.get(26),tables.get(27));
+
+
+            //结构各层阻尼器最大出力及位移包络值汇总
+            //粘滞阻尼器性能规格表
+            maxEarthquakeDapmerForceDisplace(tables.get(28), tables.get(29), tables.get(3), tables.get(4));
+
+        } catch (FileNotFoundException e) {
+            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + wordPath + "没找到");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + wordPath + "处理异常");
+            e.printStackTrace();
+        } finally {
+            try {
+                word.write(out);
+            } catch (IOException e) {
+                System.out.println("输出流异常");
+                e.printStackTrace();
+            }
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 对word文件插入值
+     *
+     * @param path
+     * @param wordPath
+     */
+    public static void getValueInsertWord2(String path, String wordPath) {
         basePath = path;
         FileInputStream in = null;
         XWPFDocument word = null;
@@ -108,6 +195,7 @@ public class InsertToWord {
             }
         }
     }
+
 
     /**
      * 模型对比三个表的值得插入
@@ -905,10 +993,8 @@ public class InsertToWord {
     private static void insertFloorDisplaceAngle(XWPFTable table23) {
         System.out.println("\n处理  大震下非减震和减震的结构层间位移角表");
         try {
-            //原来是工作簿10
             String[][][] displaceAngle = GetExcelValue.getDisplaceAngle(basePath + "\\excel\\工作簿5.xlsx", 2);
             //层高
-//            List<String> floorH = TxtGetValue.getValueForFloorHeigh(basePath + "\\txt\\WMASS.txt");
 
             List<String> floorH = GetExcelValue.getFloorHigh(basePath + "\\excel\\floorH.xlsx", 0);
             //楼层高度单位毫米
@@ -987,6 +1073,133 @@ public class InsertToWord {
             dealCellSM(table23.getRow(2 + floor).getCell(1), Util.getPrecisionString(minEnvelopeX, 0));
             dealCellSM(table23.getRow(2 + floor).getCell(2), Util.getPrecisionString(minEnvelopeY, 0));
         } catch (Exception e) {
+            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 大震下非减震和减震的结构层间位移角表发生异常");
+        }
+    }
+
+
+
+    /**
+     * 结构层间位移角
+     * 大震下非减震和减震的结构层间位移角
+     *
+     * @param table23
+     * @param table24
+     */
+    private static void insertFloorDisplaceAngle(XWPFTable table23, XWPFTable table24) {
+        System.out.println("\n处理  大震下非减震和减震的结构层间位移角表");
+        try {
+            //非减震结构层间位移
+            String[][][] displaceAngle = GetExcelValue.getDisplaceAngle(basePath + "\\excel\\工作簿5.xlsx",2);
+            // 减震结构层间位移displaceAngleNot
+            String[][][] displaceAngleNot = GetExcelValue.getDisplaceAngle(basePath + "\\excel\\工作簿6.xlsx",0);
+
+            //层高
+            List<String> floorH = GetExcelValue.getFloorHigh(basePath + "\\excel\\floorH.xlsx",0);
+            //楼层高度单位毫米
+            Double[] floorh = new Double[floorH.size()];
+
+            //获取有效列
+            Integer[] valueCol = Util.getValueCol(displaceAngleNot[0]);
+            if (valueCol == null){
+                System.out.println("有效的列无法确定");
+            }
+
+            //更改表头的有效列的名称
+            XWPFTableRow row23 = table23.getRow(2);
+            XWPFTableRow row24 = table24.getRow(2);
+            String name = null;
+            for (int i = 0; i < 3; i++){
+                name = getName1(valueCol,i);
+                dealCellSM(row23.getCell(1+i),name);
+                dealCellSM(row23.getCell(5+i),name);
+                dealCellSM(row24.getCell(1+i),name);
+                dealCellSM(row24.getCell(5+i),name);
+            }
+
+            for (int i = 0; i < floorH.size(); i++) {
+                floorh[i] = Double.valueOf(floorH.get(i));
+            }
+            int floor = Math.min(displaceAngleNot[0].length, displaceAngle[0].length);
+            floor = Math.min(floor, floorH.size());
+
+            //包络值
+            Double envelopeX = null;
+            Double envelopeXNot = null;
+            Double envelopeY = null;
+            Double envelopeYNot = null;
+
+            //对于包络值得列取最小值
+            Double minEnvelopeX = null;
+            Double minEnvelopeXNot = null;
+            Double minEnvelopeY = null;
+            Double minEnvelopeYNot = null;
+
+            //表头三行，表低两行格式固定，数据加在中间
+            //数据行以表格第四行数据为模版进行加入数据
+            //新加入的行都插入到第五行
+            //最后模板行在数据行的最下边，将其删除
+            XWPFTableRow row210 = table23.getRow(3);
+            XWPFTableRow row220 = table24.getRow(3);
+            for (int i = 0; i < floor; i++) {
+
+                table23.addRow(row210, 4);
+                table24.addRow(row220, 4);
+
+                row23 = table23.getRow(4);
+                row24 = table24.getRow(4);
+
+                //插入值
+                dealCellSM(row23.getCell(0), String.valueOf(i + 1));
+                dealCellSM(row24.getCell(0), String.valueOf(i + 1));
+
+                //数据值插入
+                for (int j = 0 ; j < 3; j++) {
+                    //非减震结构层间位移 x与y
+                    double ddd = Double.valueOf(displaceAngleNot[0][i][valueCol[j]]);
+                    double sss = floorh[i] / Double.valueOf(displaceAngleNot[0][i][valueCol[j]]);
+                    dealCellSM(row23.getCell(j+1), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngleNot[0][i][valueCol[j]]), 0));
+                    dealCellSM(row24.getCell(j+1), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngleNot[1][i][valueCol[j]]), 0));
+                    //减震结构层间位移 x与y
+                    dealCellSM(row23.getCell(j+5), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngle[0][i][valueCol[j]]), 0));
+                    dealCellSM(row24.getCell(j+5), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngle[1][i][valueCol[j]]), 0));
+                }
+
+                //计算包络值
+                //包络值为该行的  这三个数值的最小值
+                envelopeX = floorh[i] / Math.max(Double.valueOf(displaceAngle[0][i][valueCol[0]]), Math.max(Double.valueOf(displaceAngle[0][i][valueCol[1]]), Double.valueOf(displaceAngle[0][i][valueCol[2]])));
+                envelopeXNot = floorh[i] / Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[0]]), Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[1]]), Double.valueOf(displaceAngleNot[0][i][valueCol[2]])));
+                envelopeY = floorh[i] / Math.max(Double.valueOf(displaceAngle[1][i][valueCol[0]]), Math.max(Double.valueOf(displaceAngle[1][i][valueCol[1]]), Double.valueOf(displaceAngle[1][i][valueCol[2]])));
+                envelopeYNot = floorh[i] / Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[0]]), Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[1]]), Double.valueOf(displaceAngleNot[1][i][valueCol[2]])));
+
+                //获取包络值列的最小值
+                minEnvelopeX = minEnvelopeX == null ? envelopeX : Math.min(minEnvelopeX, envelopeX);
+                minEnvelopeXNot = minEnvelopeXNot == null ? envelopeXNot : Math.min(minEnvelopeXNot, envelopeXNot);
+                minEnvelopeY = minEnvelopeY == null ? envelopeY : Math.min(minEnvelopeY, envelopeY);
+                minEnvelopeYNot = minEnvelopeYNot == null ? envelopeY : Math.min(minEnvelopeY, envelopeY);
+
+                //插入包络值
+                dealCellSM(row23.getCell(4), Util.getPrecisionString(envelopeXNot, 0));
+                dealCellSM(row23.getCell(8), Util.getPrecisionString(envelopeX, 0));
+                dealCellSM(row24.getCell(4), Util.getPrecisionString(envelopeYNot, 0));
+                dealCellSM(row24.getCell(8), Util.getPrecisionString(envelopeY, 0));
+            }
+            table23.removeRow(floor + 3);
+            table24.removeRow(floor + 3);
+
+            // 计算位移比
+            Double proX = minEnvelopeXNot / minEnvelopeX;
+            Double proY = minEnvelopeYNot / minEnvelopeY;
+
+            //插入最小包络值和位移比例
+            dealCellSM(table23.getRow(3 + floor).getCell(1), Util.getPrecisionString(minEnvelopeXNot, 0));
+            dealCellSM(table23.getRow(3 + floor).getCell(2), Util.getPrecisionString(minEnvelopeX, 0));
+            dealCellSM(table23.getRow(3 + floor + 1).getCell(1), proX.toString());
+            dealCellSM(table24.getRow(3 + floor).getCell(1), Util.getPrecisionString(minEnvelopeYNot, 0));
+            dealCellSM(table24.getRow(3 + floor).getCell(2), Util.getPrecisionString(minEnvelopeY, 0));
+            dealCellSM(table24.getRow(3 + floor + 1).getCell(1), proY.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 大震下非减震和减震的结构层间位移角表发生异常");
         }
     }
