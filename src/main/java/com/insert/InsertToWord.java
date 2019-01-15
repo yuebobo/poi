@@ -72,7 +72,7 @@ public class InsertToWord {
 
             //结构各层阻尼器最大出力及位移包络值汇总
             //粘滞阻尼器性能规格表
-            maxEarthquakeDapmerForceDisplace(tables.get(28), tables.get(29), tables.get(3), tables.get(4));
+            maxEarthquakeDapmerForceDisplace1(tables.get(28), tables.get(29), tables.get(3), tables.get(4));
 
         } catch (FileNotFoundException e) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + wordPath + "没找到");
@@ -159,7 +159,7 @@ public class InsertToWord {
 
             //结构各层阻尼器最大出力及位移包络值汇总
             //粘滞阻尼器性能规格表
-            maxEarthquakeDapmerForceDisplace(tables.get(27), tables.get(28), tables.get(3), tables.get(4));
+            maxEarthquakeDapmerForceDisplace2(tables.get(27), tables.get(28), tables.get(3), tables.get(4));
 
 
             //计算最后几个表里的值
@@ -984,6 +984,148 @@ public class InsertToWord {
         }
     }
 
+
+
+    /**
+     * 结构层间位移角
+     * 大震下非减震和减震的结构层间位移角
+     *
+     * @param table23
+     * @param table24
+     */
+    private static void insertFloorDisplaceAngle(XWPFTable table23, XWPFTable table24) {
+        System.out.println("\n处理  大震下非减震和减震的结构层间位移角表");
+        try {
+            //非减震结构层间位移
+            String[][][] displaceAngle = GetExcelValue.getDisplaceAngle(basePath + "\\excel\\工作簿5.xlsx",2);
+            // 减震结构层间位移displaceAngleNot
+            String[][][] displaceAngleNot = GetExcelValue.getDisplaceAngle(basePath + "\\excel\\工作簿6.xlsx",0);
+
+            //层高
+            List<String> floorH = GetExcelValue.getFloorHigh(basePath + "\\excel\\floorH.xlsx",0);
+            //楼层高度单位毫米
+            Double[] floorh = new Double[floorH.size()];
+
+            //获取有效列
+            Integer[] valueCol = Util.getValueCol(displaceAngleNot[0],7);
+            if (valueCol == null){
+                System.out.println("有效的列无法确定");
+            }
+
+            //更改表头的有效列的名称
+            XWPFTableRow row23 ;
+            XWPFTableRow row24 ;
+
+            for (int i = 0; i < floorH.size(); i++) {
+                floorh[i] = Double.valueOf(floorH.get(i));
+            }
+            int floor = Math.min(displaceAngleNot[0].length, displaceAngle[0].length);
+            floor = Math.min(floor, floorH.size());
+
+            //包络值
+            Double envelopeX = null;
+            Double envelopeXNot = null;
+            Double envelopeY = null;
+            Double envelopeYNot = null;
+
+            //对于包络值得列取最小值
+            Double minEnvelopeX = null;
+            Double minEnvelopeXNot = null;
+            Double minEnvelopeY = null;
+            Double minEnvelopeYNot = null;
+
+            //表头三行，表低两行格式固定，数据加在中间
+            //数据行以表格第四行数据为模版进行加入数据
+            //新加入的行都插入到第五行
+            //最后模板行在数据行的最下边，将其删除
+            XWPFTableRow row210 = table23.getRow(3);
+            XWPFTableRow row220 = table24.getRow(3);
+            for (int i = 0; i < floor; i++) {
+
+                table23.addRow(row210, 4);
+                table24.addRow(row220, 4);
+
+                row23 = table23.getRow(4);
+                row24 = table24.getRow(4);
+
+                //插入值
+                dealCellSM(row23.getCell(0), String.valueOf(i + 1));
+                dealCellSM(row24.getCell(0), String.valueOf(i + 1));
+
+                //数据值插入
+                for (int j = 0 ; j < 7; j++) {
+                    //非减震结构层间位移 x与y
+                    dealCellSM(row23.getCell(j+1), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngleNot[0][i][valueCol[j]]), 0));
+                    dealCellSM(row24.getCell(j+1), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngleNot[1][i][valueCol[j]]), 0));
+                    //减震结构层间位移 x与y
+                    dealCellSM(row23.getCell(j+8), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngle[0][i][valueCol[j]]), 0));
+                    dealCellSM(row24.getCell(j+8), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngle[1][i][valueCol[j]]), 0));
+                }
+
+                //计算包络值
+                //包络值为该行的  这三个数值的最小值
+                envelopeX = floorh[i] / Math.max(Double.valueOf(displaceAngle[0][i][valueCol[0]]),
+                        Math.max(Double.valueOf(displaceAngle[0][i][valueCol[1]]),
+                                Math.max(Double.valueOf(displaceAngle[0][i][valueCol[2]]),
+                                        Math.max(Double.valueOf(displaceAngle[0][i][valueCol[3]]),
+                                                Math.max(Double.valueOf(displaceAngle[0][i][valueCol[4]]),
+                                                        Math.max(Double.valueOf(displaceAngle[0][i][valueCol[5]]),
+                                                                Double.valueOf(displaceAngle[0][i][valueCol[6]])))))));
+                envelopeXNot = floorh[i] / Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[0]]),
+                        Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[1]]),
+                                Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[2]]),
+                                        Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[3]]),
+                                                Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[4]]),
+                                                        Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[5]]),
+                                                                Double.valueOf(displaceAngleNot[0][i][valueCol[6]])))))));
+                envelopeY = floorh[i] / Math.max(Double.valueOf(displaceAngle[1][i][valueCol[0]]),
+                        Math.max(Double.valueOf(displaceAngle[1][i][valueCol[1]]),
+                                Math.max(Double.valueOf(displaceAngle[1][i][valueCol[2]]),
+                                        Math.max(Double.valueOf(displaceAngle[1][i][valueCol[3]]),
+                                                Math.max(Double.valueOf(displaceAngle[1][i][valueCol[4]]),
+                                                        Math.max(Double.valueOf(displaceAngle[1][i][valueCol[5]]),
+                                                                Double.valueOf(displaceAngle[1][i][valueCol[6]])))))));
+                envelopeYNot = floorh[i] / Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[0]]),
+                        Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[1]]),
+                                Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[2]]),
+                                        Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[3]]),
+                                                Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[4]]),
+                                                        Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[5]]),
+                                                                Double.valueOf(displaceAngleNot[1][i][valueCol[6]])))))));
+
+                //获取包络值列的最小值
+                minEnvelopeX = minEnvelopeX == null ? envelopeX : Math.min(minEnvelopeX, envelopeX);
+                minEnvelopeXNot = minEnvelopeXNot == null ? envelopeXNot : Math.min(minEnvelopeXNot, envelopeXNot);
+                minEnvelopeY = minEnvelopeY == null ? envelopeY : Math.min(minEnvelopeY, envelopeY);
+                minEnvelopeYNot = minEnvelopeYNot == null ? envelopeYNot : Math.min(minEnvelopeYNot, envelopeYNot);
+
+                //插入包络值
+                dealCellSM(row23.getCell(8), Util.getPrecisionString(envelopeXNot, 0));
+                dealCellSM(row23.getCell(16), Util.getPrecisionString(envelopeX, 0));
+                dealCellSM(row24.getCell(8), Util.getPrecisionString(envelopeYNot, 0));
+                dealCellSM(row24.getCell(16), Util.getPrecisionString(envelopeY, 0));
+            }
+            table23.removeRow(floor + 3);
+            table24.removeRow(floor + 3);
+
+            // 计算位移比
+            Double proX = minEnvelopeXNot / minEnvelopeX;
+            Double proY = minEnvelopeYNot / minEnvelopeY;
+
+            //插入最小包络值和位移比例
+            dealCellSM(table23.getRow(3 + floor).getCell(1), Util.getPrecisionString(minEnvelopeXNot, 0));
+            dealCellSM(table23.getRow(3 + floor).getCell(2), Util.getPrecisionString(minEnvelopeX, 0));
+            dealCellSM(table23.getRow(3 + floor + 1).getCell(1),Util.getPrecisionString(proX.toString(),2));
+            dealCellSM(table24.getRow(3 + floor).getCell(1), Util.getPrecisionString(minEnvelopeYNot, 0));
+            dealCellSM(table24.getRow(3 + floor).getCell(2), Util.getPrecisionString(minEnvelopeY, 0));
+            dealCellSM(table24.getRow(3 + floor + 1).getCell(1), Util.getPrecisionString(proY.toString(),2));
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 大震下非减震和减震的结构层间位移角表发生异常");
+        }
+    }
+
+
     /**
      * 结构层间位移角
      * 大震下非减震和减震的结构层间位移角
@@ -1001,7 +1143,7 @@ public class InsertToWord {
             Double[] floorh = new Double[floorH.size()];
 
             //获取有效列
-            Integer[] valueCol = Util.getValueCol(displaceAngle[0]);
+            Integer[] valueCol = Util.getValueCol(displaceAngle[0],3);
             if (valueCol == null) {
                 System.out.println("有效的列无法确定");
             }
@@ -1078,132 +1220,6 @@ public class InsertToWord {
     }
 
 
-
-    /**
-     * 结构层间位移角
-     * 大震下非减震和减震的结构层间位移角
-     *
-     * @param table23
-     * @param table24
-     */
-    private static void insertFloorDisplaceAngle(XWPFTable table23, XWPFTable table24) {
-        System.out.println("\n处理  大震下非减震和减震的结构层间位移角表");
-        try {
-            //非减震结构层间位移
-            String[][][] displaceAngle = GetExcelValue.getDisplaceAngle(basePath + "\\excel\\工作簿5.xlsx",2);
-            // 减震结构层间位移displaceAngleNot
-            String[][][] displaceAngleNot = GetExcelValue.getDisplaceAngle(basePath + "\\excel\\工作簿6.xlsx",0);
-
-            //层高
-            List<String> floorH = GetExcelValue.getFloorHigh(basePath + "\\excel\\floorH.xlsx",0);
-            //楼层高度单位毫米
-            Double[] floorh = new Double[floorH.size()];
-
-            //获取有效列
-            Integer[] valueCol = Util.getValueCol(displaceAngleNot[0]);
-            if (valueCol == null){
-                System.out.println("有效的列无法确定");
-            }
-
-            //更改表头的有效列的名称
-            XWPFTableRow row23 = table23.getRow(2);
-            XWPFTableRow row24 = table24.getRow(2);
-            String name = null;
-            for (int i = 0; i < 3; i++){
-                name = getName1(valueCol,i);
-                dealCellSM(row23.getCell(1+i),name);
-                dealCellSM(row23.getCell(5+i),name);
-                dealCellSM(row24.getCell(1+i),name);
-                dealCellSM(row24.getCell(5+i),name);
-            }
-
-            for (int i = 0; i < floorH.size(); i++) {
-                floorh[i] = Double.valueOf(floorH.get(i));
-            }
-            int floor = Math.min(displaceAngleNot[0].length, displaceAngle[0].length);
-            floor = Math.min(floor, floorH.size());
-
-            //包络值
-            Double envelopeX = null;
-            Double envelopeXNot = null;
-            Double envelopeY = null;
-            Double envelopeYNot = null;
-
-            //对于包络值得列取最小值
-            Double minEnvelopeX = null;
-            Double minEnvelopeXNot = null;
-            Double minEnvelopeY = null;
-            Double minEnvelopeYNot = null;
-
-            //表头三行，表低两行格式固定，数据加在中间
-            //数据行以表格第四行数据为模版进行加入数据
-            //新加入的行都插入到第五行
-            //最后模板行在数据行的最下边，将其删除
-            XWPFTableRow row210 = table23.getRow(3);
-            XWPFTableRow row220 = table24.getRow(3);
-            for (int i = 0; i < floor; i++) {
-
-                table23.addRow(row210, 4);
-                table24.addRow(row220, 4);
-
-                row23 = table23.getRow(4);
-                row24 = table24.getRow(4);
-
-                //插入值
-                dealCellSM(row23.getCell(0), String.valueOf(i + 1));
-                dealCellSM(row24.getCell(0), String.valueOf(i + 1));
-
-                //数据值插入
-                for (int j = 0 ; j < 3; j++) {
-                    //非减震结构层间位移 x与y
-                    double ddd = Double.valueOf(displaceAngleNot[0][i][valueCol[j]]);
-                    double sss = floorh[i] / Double.valueOf(displaceAngleNot[0][i][valueCol[j]]);
-                    dealCellSM(row23.getCell(j+1), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngleNot[0][i][valueCol[j]]), 0));
-                    dealCellSM(row24.getCell(j+1), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngleNot[1][i][valueCol[j]]), 0));
-                    //减震结构层间位移 x与y
-                    dealCellSM(row23.getCell(j+5), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngle[0][i][valueCol[j]]), 0));
-                    dealCellSM(row24.getCell(j+5), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngle[1][i][valueCol[j]]), 0));
-                }
-
-                //计算包络值
-                //包络值为该行的  这三个数值的最小值
-                envelopeX = floorh[i] / Math.max(Double.valueOf(displaceAngle[0][i][valueCol[0]]), Math.max(Double.valueOf(displaceAngle[0][i][valueCol[1]]), Double.valueOf(displaceAngle[0][i][valueCol[2]])));
-                envelopeXNot = floorh[i] / Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[0]]), Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[1]]), Double.valueOf(displaceAngleNot[0][i][valueCol[2]])));
-                envelopeY = floorh[i] / Math.max(Double.valueOf(displaceAngle[1][i][valueCol[0]]), Math.max(Double.valueOf(displaceAngle[1][i][valueCol[1]]), Double.valueOf(displaceAngle[1][i][valueCol[2]])));
-                envelopeYNot = floorh[i] / Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[0]]), Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[1]]), Double.valueOf(displaceAngleNot[1][i][valueCol[2]])));
-
-                //获取包络值列的最小值
-                minEnvelopeX = minEnvelopeX == null ? envelopeX : Math.min(minEnvelopeX, envelopeX);
-                minEnvelopeXNot = minEnvelopeXNot == null ? envelopeXNot : Math.min(minEnvelopeXNot, envelopeXNot);
-                minEnvelopeY = minEnvelopeY == null ? envelopeY : Math.min(minEnvelopeY, envelopeY);
-                minEnvelopeYNot = minEnvelopeYNot == null ? envelopeY : Math.min(minEnvelopeY, envelopeY);
-
-                //插入包络值
-                dealCellSM(row23.getCell(4), Util.getPrecisionString(envelopeXNot, 0));
-                dealCellSM(row23.getCell(8), Util.getPrecisionString(envelopeX, 0));
-                dealCellSM(row24.getCell(4), Util.getPrecisionString(envelopeYNot, 0));
-                dealCellSM(row24.getCell(8), Util.getPrecisionString(envelopeY, 0));
-            }
-            table23.removeRow(floor + 3);
-            table24.removeRow(floor + 3);
-
-            // 计算位移比
-            Double proX = minEnvelopeXNot / minEnvelopeX;
-            Double proY = minEnvelopeYNot / minEnvelopeY;
-
-            //插入最小包络值和位移比例
-            dealCellSM(table23.getRow(3 + floor).getCell(1), Util.getPrecisionString(minEnvelopeXNot, 0));
-            dealCellSM(table23.getRow(3 + floor).getCell(2), Util.getPrecisionString(minEnvelopeX, 0));
-            dealCellSM(table23.getRow(3 + floor + 1).getCell(1), proX.toString());
-            dealCellSM(table24.getRow(3 + floor).getCell(1), Util.getPrecisionString(minEnvelopeYNot, 0));
-            dealCellSM(table24.getRow(3 + floor).getCell(2), Util.getPrecisionString(minEnvelopeY, 0));
-            dealCellSM(table24.getRow(3 + floor + 1).getCell(1), proY.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 大震下非减震和减震的结构层间位移角表发生异常");
-        }
-    }
-
     /**
      * 结构各层阻尼器最大出力及位移包络值汇总
      * 粘滞阻尼器性能规格表
@@ -1213,7 +1229,7 @@ public class InsertToWord {
      * @param table1  table1 的部分数据来源于table24   和   table25
      *                单独写方法时 table24和table25获取到的各行的对象都一样，无法获取数据，所以直接就写在一个方法里
      */
-    private static void maxEarthquakeDapmerForceDisplace(XWPFTable table25, XWPFTable table26, XWPFTable table1, XWPFTable table2) {
+    private static void maxEarthquakeDapmerForceDisplace1(XWPFTable table25, XWPFTable table26, XWPFTable table1, XWPFTable table2) {
         System.out.println("\n处理  结构各层阻尼器最大出力及位移包络值汇总表");
         try {
             //获取CAD 编号
@@ -1235,7 +1251,215 @@ public class InsertToWord {
             Double[][] forceY = valueY[1];
 
             //获取有效列
-            Integer[] valueCol = Util.getValueCol(shapeX);
+            Integer[] valueCol = Util.getValueCol(shapeX,7);
+            if (valueCol == null) {
+                System.out.println("有效的列无法确定");
+            }
+
+            //更改表头的有效列的名称
+            XWPFTableRow row25 ;
+            XWPFTableRow row26 ;
+
+            //表头四行，
+            //数据行以表格第五行数据为模版进行加入数据
+            //新加入的行都插入到第六行
+            //最后模板行在数据行的最下边，数据插入完成将其删除
+            XWPFTableRow row250 = table25.getRow(4);
+            XWPFTableRow row260 = table26.getRow(4);
+
+            //包络值     内力/形变/速度
+            double forceEnvelope;
+            double shapeEnvelope;
+            double speedEnvelope;
+
+            //极限值     内力/形变/速度
+            double forceLimit;
+            double shapeLimit;
+            double speedLimit;
+
+            //各属性的较大值
+            Double[] propertyMax = {0d, 0d, 0d, 0d, 0d, 0d};
+
+            int floor = Math.min(shapeX.length, forceX.length);
+            floor = Math.min(floor, modelValue[0].length);
+            floor = Math.min(floor, modelValue[1].length);
+            if (floor != shapeX.length || floor != forceY.length || floor != modelValue[0].length || floor != modelValue[1].length) {
+                System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$ CAD编号数量与原始表格里的数据的数量不一致 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+            }
+            for (int i = 0; i < floor; i++) {
+
+                table25.addRow(row250, 5);
+                table26.addRow(row260, 5);
+
+                row25 = table25.getRow(5);
+                row26 = table26.getRow(5);
+
+                //插入CAD编号
+                dealCellSM(row25.getCell(0), modelValue[0][floor - 1 - i]);
+                dealCellSM(row26.getCell(0), modelValue[1][floor - 1 - i]);
+                //插入模型编号
+                dealCellSM(row25.getCell(1), Util.getPrecisionString(forceX[floor - i - 1][0], 0));
+                dealCellSM(row26.getCell(1), Util.getPrecisionString(shapeY[floor - i - 1][0], 0));
+
+                //x方向
+                //数据值插入
+                dealCellSM(row25.getCell(4), Util.getPrecisionString(forceX[floor - i - 1][valueCol[0]], 0));
+                dealCellSM(row25.getCell(5), Util.getPrecisionString(forceX[floor - i - 1][valueCol[1]], 0));
+                dealCellSM(row25.getCell(6), Util.getPrecisionString(forceX[floor - i - 1][valueCol[2]], 0));
+                dealCellSM(row25.getCell(7), Util.getPrecisionString(forceX[floor - i - 1][valueCol[3]], 0));
+                dealCellSM(row25.getCell(8), Util.getPrecisionString(forceX[floor - i - 1][valueCol[4]], 0));
+                dealCellSM(row25.getCell(9), Util.getPrecisionString(forceX[floor - i - 1][valueCol[5]], 0));
+                dealCellSM(row25.getCell(10), Util.getPrecisionString(forceX[floor - i - 1][valueCol[6]], 0));
+
+                dealCellSM(row25.getCell(11), Util.getPrecisionString(shapeX[floor - i - 1][valueCol[0]], 2));
+                dealCellSM(row25.getCell(12), Util.getPrecisionString(shapeX[floor - i - 1][valueCol[1]], 2));
+                dealCellSM(row25.getCell(13), Util.getPrecisionString(shapeX[floor - i - 1][valueCol[2]], 2));
+                dealCellSM(row25.getCell(14), Util.getPrecisionString(shapeX[floor - i - 1][valueCol[3]], 2));
+                dealCellSM(row25.getCell(15), Util.getPrecisionString(shapeX[floor - i - 1][valueCol[4]], 2));
+                dealCellSM(row25.getCell(16), Util.getPrecisionString(shapeX[floor - i - 1][valueCol[5]], 2));
+                dealCellSM(row25.getCell(17), Util.getPrecisionString(shapeX[floor - i - 1][valueCol[6]], 2));
+
+                //y方向
+                dealCellSM(row26.getCell(4), Util.getPrecisionString(forceY[floor - i - 1][valueCol[0]], 0));
+                dealCellSM(row26.getCell(5), Util.getPrecisionString(forceY[floor - i - 1][valueCol[1]], 0));
+                dealCellSM(row26.getCell(6), Util.getPrecisionString(forceY[floor - i - 1][valueCol[2]], 0));
+                dealCellSM(row26.getCell(7), Util.getPrecisionString(forceY[floor - i - 1][valueCol[3]], 0));
+                dealCellSM(row26.getCell(8), Util.getPrecisionString(forceY[floor - i - 1][valueCol[4]], 0));
+                dealCellSM(row26.getCell(9), Util.getPrecisionString(forceY[floor - i - 1][valueCol[5]], 0));
+                dealCellSM(row26.getCell(10), Util.getPrecisionString(forceY[floor - i - 1][valueCol[6]], 0));
+
+                dealCellSM(row26.getCell(11), Util.getPrecisionString(shapeY[floor - i - 1][valueCol[0]], 2));
+                dealCellSM(row26.getCell(12), Util.getPrecisionString(shapeY[floor - i - 1][valueCol[1]], 2));
+                dealCellSM(row26.getCell(13), Util.getPrecisionString(shapeY[floor - i - 1][valueCol[2]], 2));
+                dealCellSM(row26.getCell(14), Util.getPrecisionString(shapeY[floor - i - 1][valueCol[3]], 2));
+                dealCellSM(row26.getCell(15), Util.getPrecisionString(shapeY[floor - i - 1][valueCol[4]], 2));
+                dealCellSM(row26.getCell(16), Util.getPrecisionString(shapeY[floor - i - 1][valueCol[5]], 2));
+                dealCellSM(row26.getCell(17), Util.getPrecisionString(shapeY[floor - i - 1][valueCol[6]], 2));
+
+
+                //x方向
+                //包络值
+                forceEnvelope = Math.max(forceX[floor - i - 1][valueCol[0]],
+                        Math.max(forceX[floor - i - 1][valueCol[1]],
+                                        Math.max(forceX[floor - i - 1][valueCol[2]],
+                                                Math.max(forceX[floor - i - 1][valueCol[3]],
+                                                        Math.max(forceX[floor - i - 1][valueCol[4]],
+                                                                Math.max(forceX[floor - i - 1][valueCol[5]],
+                                                                                forceX[floor - i - 1][valueCol[6]]))))));
+                shapeEnvelope = Math.max(shapeX[floor - i - 1][valueCol[0]],
+                        Math.max(shapeX[floor - i - 1][valueCol[1]],
+                                Math.max(shapeX[floor - i - 1][valueCol[2]],
+                                        Math.max(shapeX[floor - i - 1][valueCol[3]],
+                                                Math.max(shapeX[floor - i - 1][valueCol[4]],
+                                                        Math.max(shapeX[floor - i - 1][valueCol[5]],
+                                                                shapeX[floor - i - 1][valueCol[6]]))))));
+                speedEnvelope = Math.pow(forceEnvelope / Double.valueOf(row25.getCell(2).getText()), 1d / Double.valueOf(row25.getCell(3).getText()));
+                dealCellSM(row25.getCell(18), Util.getPrecisionString(forceEnvelope, 0));
+                dealCellSM(row25.getCell(19), Util.getPrecisionString(shapeEnvelope, 2));
+                dealCellSM(row25.getCell(20), Util.getPrecisionString(speedEnvelope, 0));
+                //极限值
+                speedLimit = Double.valueOf(row25.getCell(20).getText()) * 1.2d;
+                forceLimit = Math.pow(speedLimit, Double.valueOf(row25.getCell(3).getText())) * Double.valueOf(row25.getCell(2).getText());
+                shapeLimit = shapeEnvelope * 1.2d;
+                dealCellSM(row25.getCell(21), Util.getPrecisionString(forceLimit, 0));
+                dealCellSM(row25.getCell(22), Util.getPrecisionString(shapeLimit, 1));
+                dealCellSM(row25.getCell(23), Util.getPrecisionString(speedLimit, 0));
+                //较大值比较选择
+                propertyMax[0] = Math.max(propertyMax[0], forceEnvelope);
+                propertyMax[1] = Math.max(propertyMax[1], shapeEnvelope);
+                propertyMax[2] = Math.max(propertyMax[2], speedEnvelope);
+                propertyMax[3] = Math.max(propertyMax[3], forceLimit);
+                propertyMax[4] = Math.max(propertyMax[4], shapeLimit);
+                propertyMax[5] = Math.max(propertyMax[5], speedLimit);
+
+                //y方向
+                //包络值
+                forceEnvelope = Math.max(forceY[floor - i - 1][valueCol[0]],
+                        Math.max(forceY[floor - i - 1][valueCol[1]],
+                                Math.max(forceY[floor - i - 1][valueCol[2]],
+                                        Math.max(forceY[floor - i - 1][valueCol[3]],
+                                                Math.max(forceY[floor - i - 1][valueCol[4]],
+                                                        Math.max(forceY[floor - i - 1][valueCol[5]],
+                                                               forceY[floor - i - 1][valueCol[6]]))))));
+                shapeEnvelope = Math.max(shapeY[floor - i - 1][valueCol[0]],
+                        Math.max(shapeY[floor - i - 1][valueCol[1]],
+                                Math.max(shapeY[floor - i - 1][valueCol[2]],
+                                        Math.max(shapeY[floor - i - 1][valueCol[3]],
+                                                Math.max(shapeY[floor - i - 1][valueCol[4]],
+                                                        Math.max(shapeY[floor - i - 1][valueCol[5]],
+                                                                 shapeY[floor - i - 1][valueCol[6]]))))));
+                speedEnvelope = Math.pow(forceEnvelope / Double.valueOf(row26.getCell(2).getText()), 1d / Double.valueOf(row26.getCell(3).getText()));
+                dealCellSM(row26.getCell(18), Util.getPrecisionString(forceEnvelope, 0));
+                dealCellSM(row26.getCell(19), Util.getPrecisionString(shapeEnvelope, 2));
+                dealCellSM(row26.getCell(20), Util.getPrecisionString(speedEnvelope, 0));
+                //极限值
+                speedLimit = Double.valueOf(row26.getCell(20).getText()) * 1.2d;
+                forceLimit = Math.pow(speedLimit, Double.valueOf(row26.getCell(3).getText())) * Double.valueOf(row26.getCell(2).getText());
+                shapeLimit = shapeEnvelope * 1.2d;
+                dealCellSM(row26.getCell(21), Util.getPrecisionString(forceLimit, 0));
+                dealCellSM(row26.getCell(22), Util.getPrecisionString(shapeLimit, 1));
+                dealCellSM(row26.getCell(23), Util.getPrecisionString(speedLimit, 0));
+
+
+                //较大值比较选择
+                propertyMax[0] = Math.max(propertyMax[0], forceEnvelope);
+                propertyMax[1] = Math.max(propertyMax[1], shapeEnvelope);
+                propertyMax[2] = Math.max(propertyMax[2], speedEnvelope);
+                propertyMax[3] = Math.max(propertyMax[3], forceLimit);
+                propertyMax[4] = Math.max(propertyMax[4], shapeLimit);
+                propertyMax[5] = Math.max(propertyMax[5], speedLimit);
+            }
+            //移除模板行
+            table25.removeRow(floor + 4);
+            table26.removeRow(floor + 4);
+
+            //处理table1
+            dealCellSM(table1.getRow(3).getCell(2), table25.getRow(4).getCell(2).getText());
+            dealCellSM(table1.getRow(4).getCell(2), table25.getRow(4).getCell(3).getText());
+            dealCellSM(table1.getRow(5).getCell(2), Util.getPrecisionString(propertyMax[0], 0));
+            dealCellSM(table1.getRow(6).getCell(2), Util.getPrecisionString(propertyMax[3], 0));
+            dealCellSM(table1.getRow(9).getCell(2), String.valueOf(floor * 2));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 结构各层阻尼器最大出力及位移包络值汇总表发生异常");
+        }
+    }
+
+
+
+    /**
+     * 结构各层阻尼器最大出力及位移包络值汇总
+     * 粘滞阻尼器性能规格表
+     *
+     * @param table25
+     * @param table26
+     * @param table1  table1 的部分数据来源于table24   和   table25
+     *                单独写方法时 table24和table25获取到的各行的对象都一样，无法获取数据，所以直接就写在一个方法里
+     */
+    private static void maxEarthquakeDapmerForceDisplace2(XWPFTable table25, XWPFTable table26, XWPFTable table1, XWPFTable table2) {
+        System.out.println("\n处理  结构各层阻尼器最大出力及位移包络值汇总表");
+        try {
+            //获取CAD 编号
+            String[][] modelValue = getModelNo(table2);
+
+            //X方向  //原来工作簿11
+            Double[][][] valueX = GetExcelValue.getEarthquakeDamperDisEnergyX(basePath + "\\excel\\工作簿5.xlsx");
+            //阻尼器形变
+            Double[][] shapeX = valueX[0];
+            //阻尼器内力
+            Double[][] forceX = valueX[1];
+
+            //Y方向
+            //原来是工作簿12
+            Double[][][] valueY = GetExcelValue.getEarthquakeDamperDisEnergyY(basePath + "\\excel\\工作簿5.xlsx");
+            //阻尼器形变
+            Double[][] shapeY = valueY[0];
+            //阻尼器内力
+            Double[][] forceY = valueY[1];
+
+            //获取有效列
+            Integer[] valueCol = Util.getValueCol(shapeX,3);
             if (valueCol == null) {
                 System.out.println("有效的列无法确定");
             }

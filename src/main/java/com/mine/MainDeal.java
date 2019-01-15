@@ -82,7 +82,7 @@ public class MainDeal {
 
 
         //==================================================  第二套模板  (江苏）======================================================
-        //InsertToWord.getValueInsertWord2(basePath,wordPath);
+//        InsertToWord.getValueInsertWord2(basePath,wordPath);
         //==================================================  第二套模板  （江苏）======================================================
 
 //		if(excel0IsExist){

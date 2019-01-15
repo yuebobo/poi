@@ -315,15 +315,15 @@ public class Util {
 	 * @param arrays
 	 * @return
 	 */
-	public  static  Integer[] getValueCol(Double[][] arrays){
-		Integer[] valueCol = new Integer[3];
+	public  static  Integer[] getValueCol(Double[][] arrays,int length){
+		Integer[] valueCol = new Integer[length];
 		double zero = 0d;
 		int count = 0;
 		for (int i = 0 ; i < arrays.length ; i++){
 			for (int j = 1; j < arrays[i].length ; j++){
 				if ( zero != arrays[i][j]){
 					valueCol[count] = j;
-					if(count++ == 2){
+					if(count++ == length -1){
 						return valueCol;
 					}
 				}
@@ -332,15 +332,15 @@ public class Util {
 		return null;
 	}
 
-	public  static  Integer[] getValueCol(String[][] arrays){
-		Integer[] valueCol = new Integer[3];
+	public  static  Integer[] getValueCol(String[][] arrays,int length){
+		Integer[] valueCol = new Integer[length];
 		double zero = 0d;
 		int count = 0;
 		for (int i = 0 ; i < arrays.length ; i++){
 			for (int j = 0; j < arrays[i].length ; j++){
 				if ( zero != Double.valueOf(arrays[i][j])){
 					valueCol[count] = j;
-					if(count++ == 2){
+					if(count++ == length - 1){
 						return valueCol;
 					}
 				}

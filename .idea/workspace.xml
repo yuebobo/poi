@@ -5,10 +5,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/insert/InsertToWord.java" afterPath="$PROJECT_DIR$/src/main/java/com/insert/InsertToWord.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mine/MainDeal.java" afterPath="$PROJECT_DIR$/src/main/java/com/mine/MainDeal.java" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/insert/CaculateTable.class" afterPath="$PROJECT_DIR$/target/classes/com/insert/CaculateTable.class" />
-      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" />
-      <change beforePath="$PROJECT_DIR$/target/poi-1.0-SNAPSHOT-jar-with-dependencies.jar" afterPath="$PROJECT_DIR$/target/poi-1.0-SNAPSHOT-jar-with-dependencies.jar" />
-      <change beforePath="$PROJECT_DIR$/target/poi-1.0-SNAPSHOT.jar" afterPath="$PROJECT_DIR$/target/poi-1.0-SNAPSHOT.jar" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/util/Util.java" afterPath="$PROJECT_DIR$/src/main/java/com/util/Util.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -29,11 +26,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="InsertToWord.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="InsertToWord.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/insert/InsertToWord.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="80" column="70" lean-forward="true" selection-start-line="80" selection-start-column="70" selection-end-line="80" selection-end-column="70" />
+            <state relative-caret-position="195">
+              <caret line="1080" column="0" lean-forward="false" selection-start-line="1080" selection-start-column="0" selection-end-line="1080" selection-end-column="0" />
               <folding>
                 <element signature="method#insertModelCompare#0;class#InsertToWord#0" expanded="false" />
                 <element signature="method#insertBaseShearCopmpare#0;class#InsertToWord#0" expanded="false" />
@@ -45,6 +42,8 @@
                 <element signature="method#insertEarthquakeDamperDisEnergy#0;class#InsertToWord#0" expanded="false" />
                 <element signature="method#insertAnnexDamperRatio#0;class#InsertToWord#0" expanded="false" />
                 <element signature="method#insertDamperFloorRatio#0;class#InsertToWord#0" expanded="false" />
+                <element signature="method#maxEarthquakeDapmerForceDisplace1#0;class#InsertToWord#0" expanded="false" />
+                <element signature="method#maxEarthquakeDapmerForceDisplace2#0;class#InsertToWord#0" expanded="false" />
                 <element signature="method#calculateTable#0;class#InsertToWord#0" expanded="false" />
                 <element signature="method#getModelNo#0;class#InsertToWord#0" expanded="false" />
                 <element signature="method#getDamperFloorAdd#0;class#InsertToWord#0" expanded="false" />
@@ -54,11 +53,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainDeal.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Util.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/util/Util.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="513">
+              <caret line="325" column="36" lean-forward="false" selection-start-line="325" selection-start-column="36" selection-end-line="325" selection-end-column="36" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MainDeal.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/mine/MainDeal.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="581">
-              <caret line="86" column="0" lean-forward="true" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
+            <state relative-caret-position="461">
+              <caret line="85" column="60" lean-forward="true" selection-start-line="85" selection-start-column="60" selection-end-line="85" selection-end-column="60" />
               <folding />
             </state>
           </provider>
@@ -77,8 +86,8 @@
       <file leaf-file-name="ExcelFloorHigh.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/excel/sheet/ExcelFloorHigh.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="41">
-              <caret line="24" column="20" lean-forward="true" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
+            <state relative-caret-position="510">
+              <caret line="24" column="20" lean-forward="false" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -87,7 +96,7 @@
       <file leaf-file-name="GetExcelValue.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/file/GetExcelValue.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="48">
+            <state relative-caret-position="8550">
               <caret line="294" column="43" lean-forward="false" selection-start-line="294" selection-start-column="43" selection-end-line="294" selection-end-column="43" />
               <folding />
             </state>
@@ -100,86 +109,6 @@
             <state relative-caret-position="2190">
               <caret line="77" column="64" lean-forward="false" selection-start-line="77" selection-start-column="64" selection-end-line="77" selection-end-column="64" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="XSSFCell.class" pinned="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml/3.9/poi-ooxml-3.9.jar!/org/apache/poi/xssf/usermodel/XSSFCell.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4110">
-              <caret line="174" column="16" lean-forward="false" selection-start-line="174" selection-start-column="16" selection-end-line="174" selection-end-column="16" />
-              <folding>
-                <marker date="1515030058000" expanded="false" signature="0:104" ph="/.../" />
-                <marker date="1515030058000" expanded="false" signature="153:1464" ph="..." />
-                <marker date="1515030058000" expanded="true" signature="1852:2194" ph="{...}" />
-                <marker date="1515030058000" expanded="false" signature="2252:2263" ph=" { " />
-                <marker date="1515030058000" expanded="false" signature="2295:2301" ph=" }" />
-                <marker date="1515030058000" expanded="false" signature="2346:2357" ph=" { " />
-                <marker date="1515030058000" expanded="false" signature="2383:2389" ph=" }" />
-                <marker date="1515030058000" expanded="false" signature="2422:2433" ph=" { " />
-                <marker date="1515030058000" expanded="false" signature="2465:2471" ph=" }" />
-                <marker date="1515030058000" expanded="false" signature="2500:2511" ph=" { " />
-                <marker date="1515030058000" expanded="false" signature="2528:2534" ph=" }" />
-                <marker date="1515030058000" expanded="true" signature="2577:2953" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="2999:3089" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="3131:3669" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="3714:4131" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="4172:4296" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="4353:5748" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="5845:5986" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="6029:6131" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="6182:7052" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="7089:7650" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="7700:8689" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="8738:8888" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="8959:9161" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="9224:9866" ph="{...}" />
-                <marker date="1515030058000" expanded="false" signature="9899:9910" ph=" { " />
-                <marker date="1515030058000" expanded="false" signature="9931:9937" ph=" }" />
-                <marker date="1515030058000" expanded="false" signature="9967:9978" ph=" { " />
-                <marker date="1515030058000" expanded="false" signature="10007:10013" ph=" }" />
-                <marker date="1515030058000" expanded="false" signature="10047:10058" ph=" { " />
-                <marker date="1515030058000" expanded="false" signature="10083:10089" ph=" }" />
-                <marker date="1515030058000" expanded="true" signature="10131:10394" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="10442:10821" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="10852:10988" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="11034:11244" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="11298:11746" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="11783:12102" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="12145:12290" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="12337:12482" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="12523:12727" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="12765:12895" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="12947:13054" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="13110:13200" ph="{...}" />
-                <marker date="1515030058000" expanded="false" signature="13235:13246" ph=" { " />
-                <marker date="1515030058000" expanded="false" signature="13295:13301" ph=" }" />
-                <marker date="1515030058000" expanded="true" signature="13331:13602" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="13643:13837" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="13881:15579" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="15610:16347" ph="{...}" />
-                <marker date="1515030058000" expanded="false" signature="16380:16391" ph=" { " />
-                <marker date="1515030058000" expanded="false" signature="16416:16422" ph=" }" />
-                <marker date="1515030058000" expanded="true" signature="16484:16883" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="16999:17231" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="17284:17688" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="17730:17830" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="17880:18085" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="18123:18471" ph="{...}" />
-                <marker date="1515030058000" expanded="false" signature="18512:18523" ph=" { " />
-                <marker date="1515030058000" expanded="false" signature="18597:18603" ph=" }" />
-                <marker date="1515030058000" expanded="true" signature="18655:18868" ph="{...}" />
-                <marker date="1515030058000" expanded="false" signature="18913:18924" ph=" { " />
-                <marker date="1515030058000" expanded="false" signature="18942:18948" ph=" }" />
-                <marker date="1515030058000" expanded="true" signature="18998:19775" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="19823:21223" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="21276:21641" ph="{...}" />
-                <marker date="1515030058000" expanded="false" signature="21689:21700" ph=" { " />
-                <marker date="1515030058000" expanded="false" signature="21757:21763" ph=" }" />
-                <marker date="1515030058000" expanded="true" signature="21813:22121" ph="{...}" />
-                <marker date="1515030058000" expanded="true" signature="22161:22405" ph="{...}" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -251,7 +180,6 @@
         <option value="$PROJECT_DIR$/src/main/java/com/insert/ExcelGetValueTest.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/CaculateTable.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/util/Util.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/mine/ButtonFrame.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/entity/Constants.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/txt/TxtGetValue.java" />
@@ -260,8 +188,9 @@
         <option value="$PROJECT_DIR$/src/main/java/com/test/GetExcelTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/excel/sheet/ExcelCaculateParams.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/insert/CaculateTable.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/mine/MainDeal.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/util/Util.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/insert/InsertToWord.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/mine/MainDeal.java" />
       </list>
     </option>
   </component>
@@ -278,10 +207,10 @@
       </MavenImportingSettings>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="410" />
-    <option name="y" value="377" />
-    <option name="width" value="1415" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
+    <option name="width" value="1934" />
     <option name="height" value="1058" />
   </component>
   <component name="ProjectView">
@@ -299,8 +228,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="AndroidView" />
-      <pane id="PackagesPane" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -341,15 +269,6 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="insert" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="poi" type="b2602c69:ProjectViewProjectNode" />
-              <item name="poi 2" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
               <item name="mine" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -361,7 +280,8 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -616,15 +536,18 @@
       <workItem from="1546259920300" duration="682000" />
       <workItem from="1547283208036" duration="1216000" />
       <workItem from="1547348854512" duration="1550000" />
-      <workItem from="1547476669270" duration="2364000" />
+      <workItem from="1547476669270" duration="2438000" />
+      <workItem from="1547513033583" duration="9000" />
+      <workItem from="1547556111116" duration="5927000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="115932000" />
+    <option name="totallyTimeSpent" value="121942000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1938" height="1048" extended-state="7" />
+    <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -634,26 +557,26 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295325" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295325" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295325" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.48802736" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23497854" sideWeight="0.49438202" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2414163" sideWeight="0.49438202" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4355758" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19796138" sideWeight="0.505618" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.8415051" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299356" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -683,26 +606,8 @@
           <properties />
           <option name="timeStamp" value="16" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/insert/InsertToWord.java</url>
-          <line>1092</line>
-          <properties />
-          <option name="timeStamp" value="59" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/insert/InsertToWord.java</url>
-          <line>1123</line>
-          <properties />
-          <option name="timeStamp" value="60" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/insert/InsertToWord.java</url>
-          <line>1186</line>
-          <properties />
-          <option name="timeStamp" value="62" />
-        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="63" />
+      <option name="time" value="64" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -976,14 +881,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/util/Util.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8490">
-          <caret line="294" column="40" lean-forward="false" selection-start-line="294" selection-start-column="40" selection-end-line="294" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml/3.9/poi-ooxml-3.9.jar!/org/apache/poi/xssf/usermodel/XSSFWorkbook.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="728">
@@ -1094,32 +991,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/excel/sheet/ExcelFloorHigh.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="41">
-          <caret line="24" column="20" lean-forward="true" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/mine/MainDeal.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="581">
-          <caret line="86" column="0" lean-forward="true" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
+        <state relative-caret-position="510">
+          <caret line="24" column="20" lean-forward="false" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/file/GetExcelValue.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
+        <state relative-caret-position="8550">
           <caret line="294" column="43" lean-forward="false" selection-start-line="294" selection-start-column="43" selection-end-line="294" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/util/Util.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="325" column="36" lean-forward="false" selection-start-line="325" selection-start-column="36" selection-end-line="325" selection-end-column="36" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/insert/InsertToWord.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="80" column="70" lean-forward="true" selection-start-line="80" selection-start-column="70" selection-end-line="80" selection-end-column="70" />
+        <state relative-caret-position="195">
+          <caret line="1080" column="0" lean-forward="false" selection-start-line="1080" selection-start-column="0" selection-end-line="1080" selection-end-column="0" />
           <folding>
             <element signature="method#insertModelCompare#0;class#InsertToWord#0" expanded="false" />
             <element signature="method#insertBaseShearCopmpare#0;class#InsertToWord#0" expanded="false" />
@@ -1131,11 +1028,21 @@
             <element signature="method#insertEarthquakeDamperDisEnergy#0;class#InsertToWord#0" expanded="false" />
             <element signature="method#insertAnnexDamperRatio#0;class#InsertToWord#0" expanded="false" />
             <element signature="method#insertDamperFloorRatio#0;class#InsertToWord#0" expanded="false" />
+            <element signature="method#maxEarthquakeDapmerForceDisplace1#0;class#InsertToWord#0" expanded="false" />
+            <element signature="method#maxEarthquakeDapmerForceDisplace2#0;class#InsertToWord#0" expanded="false" />
             <element signature="method#calculateTable#0;class#InsertToWord#0" expanded="false" />
             <element signature="method#getModelNo#0;class#InsertToWord#0" expanded="false" />
             <element signature="method#getDamperFloorAdd#0;class#InsertToWord#0" expanded="false" />
             <element signature="method#getModelNo1#0;class#InsertToWord#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/mine/MainDeal.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="461">
+          <caret line="85" column="60" lean-forward="true" selection-start-line="85" selection-start-column="60" selection-end-line="85" selection-end-column="60" />
+          <folding />
         </state>
       </provider>
     </entry>
