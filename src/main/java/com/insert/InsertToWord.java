@@ -1421,9 +1421,13 @@ public class InsertToWord {
             dealCellSM(table1.getRow(3).getCell(2), table25.getRow(4).getCell(2).getText());
             dealCellSM(table1.getRow(4).getCell(2), table25.getRow(4).getCell(3).getText());
             dealCellSM(table1.getRow(5).getCell(2), Util.getPrecisionString(propertyMax[0], 0));
-            dealCellSM(table1.getRow(6).getCell(2), Util.getPrecisionString(propertyMax[3], 0));
-            dealCellSM(table1.getRow(9).getCell(2), String.valueOf(floor * 2));
+            dealCellSM(table1.getRow(6).getCell(2), Util.getPrecisionString(propertyMax[1], 0));
+            dealCellSM(table1.getRow(7).getCell(2), Util.getPrecisionString(propertyMax[2], 0));
 
+            dealCellSM(table1.getRow(8).getCell(2), Util.getPrecisionString(propertyMax[3], 0));
+            dealCellSM(table1.getRow(9).getCell(2), Util.getPrecisionString(propertyMax[4], 0));
+            dealCellSM(table1.getRow(10).getCell(2), Util.getPrecisionString(propertyMax[5], 0));
+            dealCellSM(table1.getRow(13).getCell(2), String.valueOf(floor * 2));
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 结构各层阻尼器最大出力及位移包络值汇总表发生异常");
