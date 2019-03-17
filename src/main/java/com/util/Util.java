@@ -2,6 +2,7 @@ package com.util;
 
 import com.entity.Constants;
 import com.entity.ValueNote;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -9,9 +10,8 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 
 public class Util {
@@ -397,5 +397,58 @@ public class Util {
 		cell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
 		pr.setAlignment(ParagraphAlignment.CENTER);
 	}
+
+    public static Integer getAvg(Integer... ts){
+        Objects.requireNonNull(ts);
+        Integer sum = 0;
+        boolean flag = true;
+        for (Integer t : ts) {
+            if (t != null){
+                flag = false;
+                sum += t;
+            }
+        }
+        return flag ? null : sum / ts.length;
+    }
+
+	public static Long getAvg(Long... ts){
+		Objects.requireNonNull(ts);
+        Long sum = 0L;
+		boolean flag = true;
+		for (Long t : ts) {
+			if (t != null){
+                flag = false;
+                sum += t;
+			}
+		}
+		return flag ? null : sum / ts.length;
+	}
+
+
+    public static Float getAvg(Float... ts){
+        Objects.requireNonNull(ts);
+        Float sum = 0F;
+        boolean flag = true;
+        for (Float t : ts) {
+            if (t != null){
+                flag = false;
+                sum += t;
+            }
+        }
+        return flag ? null : sum / ts.length;
+    }
+
+    public static Double getAvg(Double... ts){
+        Objects.requireNonNull(ts);
+        Double sum = 0D;
+        boolean flag = true;
+        for (Double t : ts) {
+            if (t != null){
+                flag = false;
+                sum += t;
+            }
+        }
+        return flag ? null : sum / ts.length;
+    }
 
 }
