@@ -1,46 +1,29 @@
 package com.insert;
 
+import com.data.Cantilever_3;
+import com.data.Floor_8;
+import com.data.Girder_0;
+import com.data.Pillar_2;
 import com.util.Util;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class DataInfo {
 
     /**
      * 基础路径
      */
-    public static String BASE_PATH ;
+    public static String BASE_PATH;
 
-    /**
-     * 楼层总层数
-     */
-    public static int FLOORS;
+    //图纸编号 X 方向
+    public static String[] DRAWING_NUMBER_X;
+    //图纸编号 Y 方向
+    public static String[] DRAWING_NUMBER_Y;
 
-    /**
-     * 楼层高度
-     * 从底层到高层
-     */
-    public static Integer[] FLOOR_HEIGHT;
-
-    /**
-     * 阻尼器排列方式
-     */
-    public static Integer DAMPER_ARRANGEMENT;
-
-    /**
-     * 阻尼器数量 X 方向
-     */
-    public static Integer[] DAMPER_COUNT_X;
-
-    /**
-     * 阻尼器数量 Y方向
-     */
-    public static Integer[] DAMPER_COUNT_Y;
 
     public static void initBaseData(String basePath) throws IOException {
         BASE_PATH = basePath;
@@ -48,31 +31,39 @@ public class DataInfo {
         //初始化材料数据 excel 里的数据
         initMaterialData();
 
-
+        initDrawingNumber();
     }
 
     /**
      * 初始化材料数据 excel 里的数据
+     *
      * @throws IOException
      */
     private static void initMaterialData() throws IOException {
         String path = BASE_PATH + "\\excel\\材料数据.xlsx";
-        FileInputStream  e = null;
+        FileInputStream e = null;
 
         try {
             e = new FileInputStream(path);
             XSSFWorkbook excel = new XSSFWorkbook(e);
 
-            //初始化 楼层数量，楼层高度
-            initFloor(excel.getSheetAt(8));
+            //================================= 梁属性 ========================
+            Girder_0.initGirderInfo(excel.getSheetAt(0));
+            //================================= 梁属性 ========================
 
-            //初始化 阻尼器排列方式
-            initDamperArrangement(excel.getSheetAt(8));
+            //================================= 柱属性 ========================
+            Pillar_2.initPillarInfo(excel.getSheetAt(2));
+            //================================= 柱属性 ========================
 
-            //初始化 阻尼器数量
-            initDamperCount(excel.getSheetAt(8));
+            //================================= 悬臂墙属性 ========================
+            Cantilever_3.initCantileverInfo(excel.getSheetAt(3));
+            //================================= 悬臂墙属性 ========================
 
-        }finally {
+            //================================= 楼层参数 ========================
+            Floor_8.initFloorInfo(excel.getSheetAt(8));
+            //================================= 楼层参数 ========================
+
+        } finally {
             if (e != null) {
                 try {
                     e.close();
@@ -84,60 +75,43 @@ public class DataInfo {
     }
 
 
+
+
+
     /**
-     * 初始化楼层高度，楼层数量
-     * @param sheet
+     * 生成图纸编号
      */
-    private static void initFloor(XSSFSheet sheet) {
+    private static void initDrawingNumber() {
 
-        //获取出楼层高度
-        XSSFCell c = sheet.getRow(1).getCell(7);
+        Integer sum_x = Util.getSum(Floor_8.DAMPER_COUNT_X);
+        Integer sum_y = Util.getSum(Floor_8.DAMPER_COUNT_Y);
 
-        FLOORS = Util.getIntValueFromXssCell(c);
-        Util.printInfo("楼层层数:" + FLOORS);
+        DRAWING_NUMBER_X = new String[sum_x];
+        DRAWING_NUMBER_Y = new String[sum_y];
 
-        //获取每层楼层的高度
-        FLOOR_HEIGHT = new Integer[FLOORS];
-        for (int i = 2; i < FLOORS + 2; i++) {
-            XSSFRow row = sheet.getRow(i);
-            XSSFCell cell = row.getCell(3);
-            FLOOR_HEIGHT[i - 2] = Util.getIntValueFromXssCell(cell);
+        int m = 0;
+        for (int i = 0; i < Floor_8.DAMPER_COUNT_X.length; i++) {
+            for (int j = 0; j < Floor_8.DAMPER_COUNT_X[i]; j++) {
+                DRAWING_NUMBER_X[m++] = "X-" + (i + 1) + "-" + (j + 1);
+            }
         }
-        Util.printInfo("楼层层高");
-        Util.printArray(FLOOR_HEIGHT);
-    }
-
-    /**
-     * 初始化阻尼器的排序方式
-     * @param sheet
-     */
-    private static void initDamperArrangement(XSSFSheet sheet){
-        XSSFCell cell = sheet.getRow(0).getCell(7);
-        DAMPER_ARRANGEMENT = Util.getIntValueFromXssCell(cell);
-        Util.printInfo("阻尼器排列方式:"+DAMPER_ARRANGEMENT);
-    }
-
-    /**
-     * 初始化阻尼器数量
-     * @param sheet
-     */
-    private static void initDamperCount(XSSFSheet sheet){
-
-        XSSFCell cell = sheet.getRow(2).getCell(7);
-        Integer v = Util.getIntValueFromXssCell(cell);
-        DAMPER_COUNT_X = new Integer[v];
-        DAMPER_COUNT_Y = new Integer[v];
-
-        for (int i = 2; i < v + 2; i++) {
-            XSSFRow row = sheet.getRow(i);
-            XSSFCell cell_x = row.getCell(1);
-            XSSFCell cell_y = row.getCell(2);
-            DAMPER_COUNT_X[i-2] = Util.getIntValueFromXssCell(cell_x);
-            DAMPER_COUNT_Y[i-2] = Util.getIntValueFromXssCell(cell_y);
+        m = 0;
+        for (int i = 0; i < Floor_8.DAMPER_COUNT_Y.length; i++) {
+            for (int j = 0; j < Floor_8.DAMPER_COUNT_Y[i]; j++) {
+                DRAWING_NUMBER_Y[m++] = "Y-" + (i + 1) + "-" + (j + 1);
+            }
         }
-        Util.printInfo("阻尼器数量 X-Y");
-        Util.printArray(DAMPER_COUNT_X);
-        Util.printArray(DAMPER_COUNT_Y);
+
+        //重新排序
+        if (Floor_8.DAMPER_ARRANGEMENT == 2) {
+            Arrays.sort(DRAWING_NUMBER_X, Comparator.comparingInt(a -> Integer.valueOf(a.substring(a.length() - 1))));
+            Arrays.sort(DRAWING_NUMBER_Y, Comparator.comparingInt(a -> Integer.valueOf(a.substring(a.length() - 1))));
+        }
+
+        Util.printInfo("图纸编号");
+        Util.printArray(DRAWING_NUMBER_X);
+        Util.printArray(DRAWING_NUMBER_Y);
     }
+
 
 }

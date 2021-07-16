@@ -10,23 +10,23 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by lizhongxiang on
- *
- * @author : lzx
  * 时间 : 2018/9/2.
  */
 public class ExcelFloorHigh {
 
-    public static List<String> getFloorH(XSSFSheet sheet, int col){
+    public static List<String> getFloorH(XSSFSheet sheet){
+        XSSFCell c = sheet.getRow(1).getCell(7);
+
+
         Iterator it = sheet.iterator();
-        it.next();
+        Util.iteratorNext(it,2);
         List<String> list = new ArrayList<>();
         String h;
         XSSFRow row;
         XSSFCell cell;
         while(it.hasNext()) {
             row = (XSSFRow) it.next();
-            cell = row.getCell(col);
+            cell = row.getCell(3);
             try {
                 h = Util.getPrecisionString(cell.getNumericCellValue(),0);
             }catch (Exception e){
@@ -36,6 +36,10 @@ public class ExcelFloorHigh {
                     h = cell.getRawValue();
                 }
             }
+            if ("0".equals(h)){
+                break;
+            }
+
           list.add(h);
         }
         return list;

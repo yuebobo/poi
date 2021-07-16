@@ -9,9 +9,12 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 
+import javax.sound.sampled.Line;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import static com.entity.Constants.LINE;
 
 
 public class Util {
@@ -21,19 +24,22 @@ public class Util {
 			return ;
 		}
 		for (ValueNote valueNote : valueNotes) {
-			System.out.println("===================================================");
 			System.out.println(valueNote.getFloor());
 
 		}
 	}
 
 	public static void printArray(Object[] objects){
-		int i = 0;
 		for (Object object : objects){
-			System.out.println( "   "+(++i)+"      "+object.toString());
+			System.out.print( object.toString()+",");
 		}
+		System.out.println();
 	}
 
+	public static void printInfo(String info){
+		System.out.println(LINE);
+		System.out.println(info);
+	}
 	/**
 	 * 四舍五入 返回String类型
 	 * @param value
@@ -292,13 +298,13 @@ public class Util {
 	 * @param floorHight
 	 * @return
 	 */
-	public static String[][][] getDisplaceAngle(String[][][] displace,List<String> floorHight){
+	public static String[][][] getDisplaceAngle(String[][][] displace,Integer[] floorHight){
 		String[][][] returnValue = new String[2][displace[0].length][displace[0][0].length];
 		Double floorH;
 		int floor = displace[0].length;
 		//楼层循环
 		for (int i = 0; i < displace[0].length; i++) {
-			floorH = Double.valueOf(floorHight.get(displace[0].length - i - 1));
+			floorH = Double.valueOf(floorHight[displace[0].length - i - 1]);
 			//循环列
 			for (int j = 0; j < displace[0][0].length ; j++) {
 				returnValue[0][floor - i - 1][j] = String.valueOf(floorH/Double.valueOf(displace[0][floor - i - 1][j]));
@@ -365,6 +371,27 @@ public class Util {
 				return cell.getRawValue();
 			}
 		}
+	}
+
+	/**
+	 * 从单元格里获取整数
+	 * @param cell
+	 * @return
+	 */
+	public static Integer getIntValueFromXssCell(XSSFCell cell){
+		String value = getValueFromXssfcell(cell);
+		value = value.substring(0,value.indexOf("."));
+		return Integer.valueOf(value);
+	}
+
+	/**
+	 * 四舍五入 获取单元格里的数值
+	 * @param cell
+	 * @return
+	 */
+	public static Double getDoubleValueFromXssCell(XSSFCell cell,int precision){
+		String value = getValueFromXssfcell(cell);
+		return getPrecisionDouble(value, precision);
 	}
 
 
@@ -450,5 +477,20 @@ public class Util {
         }
         return flag ? null : sum / ts.length;
     }
+
+	public static Integer getSum(Integer... integer) {
+		int sum = 0;
+		for (Integer i : integer) {
+			sum += i;
+		}
+		return sum;
+	}
+
+
+    public static void iteratorNext(Iterator it,int count){
+		for (int i = 0; i < count; i++) {
+			it.next();
+		}
+	}
 
 }

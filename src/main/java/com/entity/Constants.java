@@ -67,6 +67,6 @@ public  class Constants {
 	//阻尼器高度
 	public static final String DAMPER_H = "DAMPER_H";
 
-
+	public static String LINE = "=========================================";
 
 }
