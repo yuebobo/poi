@@ -2,16 +2,14 @@ package com.util;
 
 import com.entity.Constants;
 import com.entity.ValueNote;
-import org.apache.poi.ss.formula.functions.T;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 
-import javax.sound.sampled.Line;
 import java.math.BigDecimal;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.entity.Constants.LINE;
@@ -51,6 +49,10 @@ public class Util {
 		double v =Math.abs(Double.valueOf(value));
 		if(precision < 0) return String.format("%.0f",v); 
 		return String.format("%." + precision + "f",v); 
+	}
+
+	public static String getPrecisionString(Integer value,int precision){
+		return getPrecisionString(value.toString(),precision);
 	}
 
 	/**
@@ -360,7 +362,7 @@ public class Util {
 	 * @param cell
 	 * @return
 	 */
-	public static String getValueFromXssfcell(XSSFCell cell){
+	public static String getValueFromXssfcell(Cell cell){
 		if (cell == null) return null;
 		try {
 			return cell.getNumericCellValue()+"";
@@ -368,7 +370,10 @@ public class Util {
 			try {
 				return cell.getStringCellValue();
 			}catch (Exception e1){
-				return cell.getRawValue();
+				if (cell instanceof XSSFCell) {
+					return ((XSSFCell) cell).getRawValue();
+				}
+				return cell.getRichStringCellValue().toString();
 			}
 		}
 	}
@@ -378,7 +383,7 @@ public class Util {
 	 * @param cell
 	 * @return
 	 */
-	public static Integer getIntValueFromXssCell(XSSFCell cell){
+	public static Integer getIntValueFromXssCell(Cell cell){
 		String value = getValueFromXssfcell(cell);
 		value = value.substring(0,value.indexOf("."));
 		return Integer.valueOf(value);
@@ -389,7 +394,7 @@ public class Util {
 	 * @param cell
 	 * @return
 	 */
-	public static Double getDoubleValueFromXssCell(XSSFCell cell,int precision){
+	public static Double getDoubleValueFromXssCell(Cell cell,int precision){
 		String value = getValueFromXssfcell(cell);
 		return getPrecisionDouble(value, precision);
 	}
@@ -493,4 +498,11 @@ public class Util {
 		}
 	}
 
+
+	public static boolean stringIsBlack(String value){
+		if (value == null || value.length() < 1){
+			return true;
+		}
+		return false;
+	}
 }

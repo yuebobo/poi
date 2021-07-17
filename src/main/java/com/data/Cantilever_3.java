@@ -4,6 +4,9 @@ import com.util.Util;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
+/**
+ * 悬臂墙信息
+ */
 public class Cantilever_3 {
 
     //横截面属性 b，h

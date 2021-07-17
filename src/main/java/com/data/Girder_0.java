@@ -4,7 +4,9 @@ import com.util.Util;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
-
+/**
+ * 梁属性
+ */
 public class Girder_0 {
 
     //横截面属性 b，h

@@ -1,9 +1,6 @@
 package com.insert;
 
-import com.data.Cantilever_3;
-import com.data.Floor_8;
-import com.data.Girder_0;
-import com.data.Pillar_2;
+import com.data.*;
 import com.util.Util;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -50,6 +47,10 @@ public class DataInfo {
             //================================= 梁属性 ========================
             Girder_0.initGirderInfo(excel.getSheetAt(0));
             //================================= 梁属性 ========================
+
+            //================================= 材料属性 ========================
+            MaterialProperty_1.initMaterialPropertyInfo(excel.getSheetAt(1));
+            //================================= 材料属性 ========================
 
             //================================= 柱属性 ========================
             Pillar_2.initPillarInfo(excel.getSheetAt(2));
