@@ -1,6 +1,9 @@
 package com.insert;
 
+import com.data.DampingShearForce_6_7;
 import com.data.Floor_8;
+import com.data.OtherData_4_10;
+import com.data.Period_5;
 import com.file.GetExcelValue;
 import com.txt.TxtGetValue;
 import com.util.Util;
@@ -11,7 +14,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -225,19 +227,19 @@ public class InsertToWord {
 //            String qualityOfStructure1 = TxtGetValue.getValueFor1(basePath + "\\txt\\3.txt");
 
             //  == == 从材料数据文件里获取周期，减震剪力对比,质量
-            Map<Integer,Object> map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
+//            Map<Integer,Object> map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
 
             //4.周期对比                           （表2   PKPM）
-            String[] cycle1 = (String[]) map.get(1);
+//            String[] cycle1 = (String[]) map.get(1);
             //结构质量对比
-            String qualityOfStructure1 = (String) map.get(2);
+//            String qualityOfStructure1 = (String) map.get(2);
             //
-            List[] fxFy = (List[]) map.get(3);
+//            List[] fxFy = (List[]) map.get(3);
 
             //5.地震剪力对比Fx    （表1   PKPM   X）
-            List<String> fx = fxFy[0];
+//            List<String> fx = fxFy[0];
             //6."地震剪力对比Fy"  （表1   PKPM   Y）
-            List<String> fy =  fxFy[1];
+//            List<String> fy =  fxFy[1];
 
             //7.结构质量对比               (表3 SAP2000)
             String qualityOfStructure2 = (String) modelMap.get(1);
@@ -248,22 +250,22 @@ public class InsertToWord {
 
             //===================================  表3  结构质量对比  ====================================
             XWPFTableRow row3 = table3.getRow(1);
-            dealCellBig(row3.getCell(0), Util.getPrecisionString(qualityOfStructure1, 1));
+            dealCellBig(row3.getCell(0), Util.getPrecisionString(OtherData_4_10.QUALITY, 1));
             dealCellBig(row3.getCell(1), Util.getPrecisionString(Double.valueOf(qualityOfStructure2) / 10, 1));
             //计算差值并填入
-            dealCellBig(row3.getCell(2), Util.subAndDiv(qualityOfStructure1, String.valueOf(Double.valueOf(qualityOfStructure2) / 10), 2));
+            dealCellBig(row3.getCell(2), Util.subAndDiv(OtherData_4_10.QUALITY.toString(), String.valueOf(Double.valueOf(qualityOfStructure2) / 10), 2));
 
             //===================================  表4  结构周期对比  ====================================
             XWPFTableRow row4;
             for (int i = 1; i < 4; i++) {
                 row4 = table4.getRow(i);
-                dealCellBig(row4.getCell(1), Util.getPrecisionString(cycle1[i-1], 3));
+                dealCellBig(row4.getCell(1), Util.getPrecisionString(Period_5.PERIODS.get(i - 1).period, 3));
                 dealCellBig(row4.getCell(2), Util.getPrecisionString(cycle2[i - 1], 3));
-                dealCellBig(row4.getCell(3), Util.subAndDiv(cycle1[i - 1], cycle2[i - 1], 2));
+                dealCellBig(row4.getCell(3), Util.subAndDiv(Period_5.PERIODS.get(i - 1).period.toString(), cycle2[i - 1], 2));
             }
 
             //===================================  表5  结构地震剪力对比  ====================================
-            int floor5 = Math.min(fx.size(), f[0].length);
+            int floor5 = Math.min(DampingShearForce_6_7.DAMPING.size(), f[0].length);
             XWPFTableRow row5;
             for (int i = 0; i < floor5; i++) {
 
@@ -277,12 +279,12 @@ public class InsertToWord {
                 row5.addNewTableCell();
 
                 dealCellBig(row5.getCell(0), String.valueOf(floor5 - i));
-                dealCellBig(row5.getCell(1), Util.getPrecisionString(fx.get(i), 0));
-                dealCellBig(row5.getCell(2), Util.getPrecisionString(fy.get(i), 0));
+                dealCellBig(row5.getCell(1), Util.getPrecisionString(DampingShearForce_6_7.DAMPING.get(i).vx, 0));
+                dealCellBig(row5.getCell(2), Util.getPrecisionString(DampingShearForce_6_7.DAMPING.get(i).vy, 0));
                 dealCellBig(row5.getCell(3), Util.getPrecisionString(f[0][floor5 - i - 1], 0));
                 dealCellBig(row5.getCell(4), Util.getPrecisionString(f[1][floor5 - i - 1], 0));
-                dealCellBig(row5.getCell(5), Util.subAndDiv(fx.get(i), f[0][floor5 - i - 1], 2));
-                dealCellBig(row5.getCell(6), Util.subAndDiv(fy.get(i), f[1][floor5 - i - 1], 2));
+                dealCellBig(row5.getCell(5), Util.subAndDiv(DampingShearForce_6_7.DAMPING.get(i).vx.toString(), f[0][floor5 - i - 1], 2));
+                dealCellBig(row5.getCell(6), Util.subAndDiv(DampingShearForce_6_7.DAMPING.get(i).vy.toString(), f[1][floor5 - i - 1], 2));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -309,12 +311,12 @@ public class InsertToWord {
             XWPFTableCell celly;
 
 
-            Map<Integer,Object> map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
-            List[] notFxFy = (List[]) map.get(4);
-            List<String> fx = notFxFy[0];
-            List<String> fy =  notFxFy[1];
-            e2T5R2[0][0] = fx.get(fx.size()-1);
-            e2T5R2[1][0] = fy.get(fy.size()-1);
+//            Map<Integer,Object> map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
+//            List[] notFxFy = (List[]) map.get(4);
+//            List<String> fx = notFxFy[0];
+//            List<String> fy =  notFxFy[1];
+            e2T5R2[0][0] = DampingShearForce_6_7.DAMPING_NOT.get(DampingShearForce_6_7.DAMPING_NOT.size() - 1).vx.toString();
+            e2T5R2[1][0] = DampingShearForce_6_7.DAMPING_NOT.get(DampingShearForce_6_7.DAMPING_NOT.size() - 1).vy.toString();
 
             //用于计算T1-R2的平均值
             double x = 0d;
@@ -415,9 +417,9 @@ public class InsertToWord {
         try {
             //获取周期
 //            String singleT = TxtGetValue.getSingleT(basePath + "\\txt\\1.txt");
-            Map<Integer,Object> map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
-            String[] cycle1 = (String[]) map.get(1);
-            String singleT = cycle1[0];
+//            Map<Integer,Object> map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
+//            String[] cycle1 = (String[]) map.get(1);
+//            String singleT = cycle1[0];
 
             String path;
             String[] value;
@@ -433,8 +435,8 @@ public class InsertToWord {
                 dealCellSM(table8.getRow(i).getCell(2), Util.getPrecisionString(value[1], 2));
                 dealCellSM(table8.getRow(i).getCell(3), Util.getPrecisionString(value[2], 2));
                 dealCellSM(table8.getRow(i).getCell(4), Util.getPrecisionString(Double.valueOf(value[2]) - Double.valueOf(value[1]), 2));
-                dealCellSM(table8.getRow(i).getCell(5), singleT);
-                dealCellSM(table8.getRow(i).getCell(6), Util.getPrecisionString((Double.valueOf(value[2]) - Double.valueOf(value[1])) / Double.valueOf(singleT), 2));
+                dealCellSM(table8.getRow(i).getCell(5), Period_5.PERIODS.get(0).period.toString());
+                dealCellSM(table8.getRow(i).getCell(6), Util.getPrecisionString((Double.valueOf(value[2]) - Double.valueOf(value[1])) / Period_5.PERIODS.get(0).period, 2));
             }
         } catch (NumberFormatException e) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理地震波持时表发生异常");
@@ -463,33 +465,32 @@ public class InsertToWord {
 //            Map<Integer, List<String>> mapBefore = TxtGetValue.getValueFor3(basePath + "\\txt\\1.txt");
             //获取反应谱数据 震后（map里key为2（x），3（y）
 //            Map<Integer, List<String>> mapAfter = TxtGetValue.getValueFor3(basePath + "\\txt\\2.txt");
-            Map<Integer,Object>  map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
+//            Map<Integer,Object>  map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
             //
-            List[] fxFy = (List[]) map.get(3);
-            List[] notFxFy = (List[]) map.get(4);
+//            List[] fxFy = (List[]) map.get(3);
+//            List[] notFxFy = (List[]) map.get(4);
 
             //5.地震剪力对比Fx    （表1   PKPM   X）
-            List<String> fx = fxFy[0];
+//            List<String> fx = fxFy[0];
             //6."地震剪力对比Fy"  （表1   PKPM   Y）
-            List<String> fy =  fxFy[1];
+//            List<String> fy =  fxFy[1];
 
 
             //获取反应谱
-            List<String> earthquakeBeforeX = notFxFy[0];
-            List<String> earthquakeBeforeY =  notFxFy[1];
-            List<String> earthquakeAfterX =  fxFy[0];
-            List<String> earthquakeAfterY =  fxFy[1];
+//            List<String> earthquakeBeforeX = notFxFy[0];
+//            List<String> earthquakeBeforeY =  notFxFy[1];
+//            List<String> earthquakeAfterX =  fxFy[0];
+//            List<String> earthquakeAfterY =  fxFy[1];
 
             //楼层数
             int floor = Math.min(shear[0].length, shearNot[0].length);
             if (shear[0].length != shearNot[0].length) {
                 System.out.println("楼层剪力对比表的  “减震结构与非减震结构的楼层数不一致");
             }
-            if (earthquakeBeforeX.size() != floor || earthquakeAfterX.size() != floor) {
+            if (DampingShearForce_6_7.DAMPING_NOT.size() != floor || DampingShearForce_6_7.DAMPING.size() != floor) {
                 System.out.println("楼层剪力对比表的  来自记事本WZQ里的反应谱的数据的楼层数与来自excel里的楼层数不一致");
             }
-            floor = Math.min(floor, earthquakeAfterY.size());
-            floor = Math.min(floor, earthquakeAfterY.size());
+            floor = Math.min(floor, DampingShearForce_6_7.DAMPING.size());
 
             XWPFTableRow row10;
             XWPFTableRow row11;
@@ -530,13 +531,13 @@ public class InsertToWord {
                 dealCellSM(row11.getCell(22), pro[1][floor - i - 1][7]);
 
                 //反应谱
-                dealCellSM(row10.getCell(23), Util.getPrecisionString(earthquakeBeforeX.get(i), 0));
-                dealCellSM(row10.getCell(24), Util.getPrecisionString(earthquakeAfterX.get(i), 0));
-                dealCellSM(row10.getCell(25), Util.getPrecisionString(Double.valueOf(earthquakeAfterX.get(i)) / Double.valueOf(earthquakeBeforeX.get(i)), 3));
+                dealCellSM(row10.getCell(23), Util.getPrecisionString(DampingShearForce_6_7.DAMPING_NOT.get(i).vx, 0));
+                dealCellSM(row10.getCell(24), Util.getPrecisionString(DampingShearForce_6_7.DAMPING.get(i).vx, 0));
+                dealCellSM(row10.getCell(25), Util.getPrecisionString(DampingShearForce_6_7.DAMPING.get(i).vx / DampingShearForce_6_7.DAMPING_NOT.get(i).vx, 3));
 
-                dealCellSM(row11.getCell(23), Util.getPrecisionString(earthquakeBeforeY.get(i), 0));
-                dealCellSM(row11.getCell(24), Util.getPrecisionString(earthquakeAfterY.get(i), 0));
-                dealCellSM(row11.getCell(25), Util.getPrecisionString(Double.valueOf(earthquakeAfterY.get(i)) / Double.valueOf(earthquakeBeforeY.get(i)), 3));
+                dealCellSM(row11.getCell(23), Util.getPrecisionString(DampingShearForce_6_7.DAMPING_NOT.get(i).vy, 0));
+                dealCellSM(row11.getCell(24), Util.getPrecisionString(DampingShearForce_6_7.DAMPING.get(i).vy, 0));
+                dealCellSM(row11.getCell(25), Util.getPrecisionString(DampingShearForce_6_7.DAMPING.get(i).vy / DampingShearForce_6_7.DAMPING_NOT.get(i).vy, 3));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -562,7 +563,7 @@ public class InsertToWord {
 
             //楼层层间位移角
             //非减震结构层间位移
-            String[][][] displaceNotAngle = Util.getDisplaceAngle(displaceNot,  Floor_8.FLOOR_HEIGHT);
+            String[][][] displaceNotAngle = Util.getDisplaceAngle(displaceNot, Floor_8.FLOOR_HEIGHT);
             // 减震结构层间位移
             String[][][] displaceAngle = Util.getDisplaceAngle(displace, Floor_8.FLOOR_HEIGHT);
 
@@ -617,7 +618,7 @@ public class InsertToWord {
                 dealCellSM(row15.getCell(1), String.valueOf(floor - i));
 
                 //层高
-                dealCellSM(row13.getCell(0),Floor_8.FLOOR_HEIGHT[floor - i - 1].toString());
+                dealCellSM(row13.getCell(0), Floor_8.FLOOR_HEIGHT[floor - i - 1].toString());
                 dealCellSM(row14.getCell(0), Floor_8.FLOOR_HEIGHT[floor - i - 1].toString());
                 dealCellSM(row15.getCell(0), Floor_8.FLOOR_HEIGHT[floor - i - 1].toString());
 
@@ -988,7 +989,6 @@ public class InsertToWord {
     }
 
 
-
     /**
      * 结构层间位移角
      * 大震下非减震和减震的结构层间位移角
@@ -1000,19 +1000,19 @@ public class InsertToWord {
         System.out.println("\n处理  大震下非减震和减震的结构层间位移角表");
         try {
             //非减震结构层间位移
-            String[][][] displaceAngle = GetExcelValue.getDisplaceAngle(basePath + "\\excel\\工作簿5.xlsx",2);
+            String[][][] displaceAngle = GetExcelValue.getDisplaceAngle(basePath + "\\excel\\工作簿5.xlsx", 2);
             // 减震结构层间位移displaceAngleNot
-            String[][][] displaceAngleNot = GetExcelValue.getDisplaceAngle(basePath + "\\excel\\工作簿6.xlsx",0);
+            String[][][] displaceAngleNot = GetExcelValue.getDisplaceAngle(basePath + "\\excel\\工作簿6.xlsx", 0);
 
             //获取有效列
-            Integer[] valueCol = Util.getValueCol(displaceAngleNot[0],7);
-            if (valueCol == null){
+            Integer[] valueCol = Util.getValueCol(displaceAngleNot[0], 7);
+            if (valueCol == null) {
                 System.out.println("有效的列无法确定");
             }
 
             //更改表头的有效列的名称
-            XWPFTableRow row23 ;
-            XWPFTableRow row24 ;
+            XWPFTableRow row23;
+            XWPFTableRow row24;
 
             int floor = Math.min(displaceAngleNot[0].length, displaceAngle[0].length);
             floor = Math.min(floor, Floor_8.FLOORS);
@@ -1049,13 +1049,13 @@ public class InsertToWord {
                 dealCellSM(row24.getCell(0), String.valueOf(i + 1));
 
                 //数据值插入
-                for (int j = 0 ; j < 7; j++) {
+                for (int j = 0; j < 7; j++) {
                     //非减震结构层间位移 x与y
-                    dealCellSM(row23.getCell(j+1), Util.getPrecisionString(Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Double.valueOf(displaceAngleNot[0][i][valueCol[j]]), 0));
-                    dealCellSM(row24.getCell(j+1), Util.getPrecisionString(Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Double.valueOf(displaceAngleNot[1][i][valueCol[j]]), 0));
+                    dealCellSM(row23.getCell(j + 1), Util.getPrecisionString(Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Double.valueOf(displaceAngleNot[0][i][valueCol[j]]), 0));
+                    dealCellSM(row24.getCell(j + 1), Util.getPrecisionString(Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Double.valueOf(displaceAngleNot[1][i][valueCol[j]]), 0));
                     //减震结构层间位移 x与y
-                    dealCellSM(row23.getCell(j+8), Util.getPrecisionString(Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Double.valueOf(displaceAngle[0][i][valueCol[j]]), 0));
-                    dealCellSM(row24.getCell(j+8), Util.getPrecisionString(Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Double.valueOf(displaceAngle[1][i][valueCol[j]]), 0));
+                    dealCellSM(row23.getCell(j + 8), Util.getPrecisionString(Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Double.valueOf(displaceAngle[0][i][valueCol[j]]), 0));
+                    dealCellSM(row24.getCell(j + 8), Util.getPrecisionString(Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Double.valueOf(displaceAngle[1][i][valueCol[j]]), 0));
                 }
 
                 //计算包络值
@@ -1147,10 +1147,10 @@ public class InsertToWord {
             //插入最小包络值和位移比例
             dealCellSM(table23.getRow(3 + floor).getCell(1), Util.getPrecisionString(minEnvelopeXNot, 0));
             dealCellSM(table23.getRow(3 + floor).getCell(2), Util.getPrecisionString(minEnvelopeX, 0));
-            dealCellSM(table23.getRow(3 + floor + 1).getCell(1),Util.getPrecisionString(proX.toString(),2));
+            dealCellSM(table23.getRow(3 + floor + 1).getCell(1), Util.getPrecisionString(proX.toString(), 2));
             dealCellSM(table24.getRow(3 + floor).getCell(1), Util.getPrecisionString(minEnvelopeYNot, 0));
             dealCellSM(table24.getRow(3 + floor).getCell(2), Util.getPrecisionString(minEnvelopeY, 0));
-            dealCellSM(table24.getRow(3 + floor + 1).getCell(1), Util.getPrecisionString(proY.toString(),2));
+            dealCellSM(table24.getRow(3 + floor + 1).getCell(1), Util.getPrecisionString(proY.toString(), 2));
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 大震下非减震和减震的结构层间位移角表发生异常");
@@ -1170,7 +1170,7 @@ public class InsertToWord {
             String[][][] displaceAngle = GetExcelValue.getDisplaceAngle(basePath + "\\excel\\工作簿5.xlsx", 2);
 
             //获取有效列
-            Integer[] valueCol = Util.getValueCol(displaceAngle[0],3);
+            Integer[] valueCol = Util.getValueCol(displaceAngle[0], 3);
             if (valueCol == null) {
                 System.out.println("有效的列无法确定");
             }
@@ -1187,7 +1187,7 @@ public class InsertToWord {
             int floor = Math.min(displaceAngle[1].length, displaceAngle[0].length);
             floor = Math.min(floor, Floor_8.FLOORS);
             if (floor != Floor_8.FLOORS || floor != displaceAngle[0].length || floor != displaceAngle[1].length) {
-               Util.printInfo("$$$$$$$$$$$$$$$$$$$$$$$$  楼层数据不一致 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                Util.printInfo("$$$$$$$$$$$$$$$$$$$$$$$$  楼层数据不一致 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             }
 
             //包络值
@@ -1221,7 +1221,7 @@ public class InsertToWord {
 
                 //计算包络值
                 //包络值为该行的  这三个数值的最小值
-                envelopeX =Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Math.max(Double.valueOf(displaceAngle[0][i][valueCol[0]]), Math.max(Double.valueOf(displaceAngle[0][i][valueCol[1]]), Double.valueOf(displaceAngle[0][i][valueCol[2]])));
+                envelopeX = Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Math.max(Double.valueOf(displaceAngle[0][i][valueCol[0]]), Math.max(Double.valueOf(displaceAngle[0][i][valueCol[1]]), Double.valueOf(displaceAngle[0][i][valueCol[2]])));
                 envelopeY = Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Math.max(Double.valueOf(displaceAngle[1][i][valueCol[0]]), Math.max(Double.valueOf(displaceAngle[1][i][valueCol[1]]), Double.valueOf(displaceAngle[1][i][valueCol[2]])));
 
                 //获取包络值列的最小值
@@ -1274,14 +1274,14 @@ public class InsertToWord {
             Double[][] forceY = valueY[1];
 
             //获取有效列
-            Integer[] valueCol = Util.getValueCol(shapeX,7);
+            Integer[] valueCol = Util.getValueCol(shapeX, 7);
             if (valueCol == null) {
                 System.out.println("有效的列无法确定");
             }
 
             //更改表头的有效列的名称
-            XWPFTableRow row25 ;
-            XWPFTableRow row26 ;
+            XWPFTableRow row25;
+            XWPFTableRow row26;
 
             //表头四行，
             //数据行以表格第五行数据为模版进行加入数据
@@ -1491,7 +1491,6 @@ public class InsertToWord {
     }
 
 
-
     /**
      * 结构各层阻尼器最大出力及位移包络值汇总
      * 粘滞阻尼器性能规格表
@@ -1523,7 +1522,7 @@ public class InsertToWord {
             Double[][] forceY = valueY[1];
 
             //获取有效列
-            Integer[] valueCol = Util.getValueCol(shapeX,3);
+            Integer[] valueCol = Util.getValueCol(shapeX, 3);
             if (valueCol == null) {
                 System.out.println("有效的列无法确定");
             }
@@ -1668,6 +1667,7 @@ public class InsertToWord {
     /**
      * 计算最后几个表里的值
      * 减震器周边子结构的设计计算方法
+     *
      * @param table29
      * @param table30
      * @param table31
