@@ -5,8 +5,8 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 楼层信息
@@ -20,10 +20,10 @@ public class Floor_8 {
 
     //楼层高度 从底层到高层
     public static Integer[] FLOOR_HEIGHT;
-    //阻尼器数量 X 方向
-    public static Integer[] DAMPER_COUNT_X;
-    //阻尼器数量 Y方向
-    public static Integer[] DAMPER_COUNT_Y;
+
+    //阻尼器数量 k -> 楼层 ， v -> [x数量，y数量]
+    public static Map<Integer,Integer[]> DAMPER_COUNT;
+
 
     /**
      * 楼层信息初始化
@@ -36,23 +36,22 @@ public class Floor_8 {
        cell = sheet.getRow(1).getCell(7);
        FLOORS = Util.getIntValueFromXssCell(cell);
 
-       List<Integer> x = new ArrayList<>();
-       List<Integer> y = new ArrayList<>();
+       DAMPER_COUNT = new HashMap<>();
        FLOOR_HEIGHT = new Integer[FLOORS];
        for (int i = 2; i < FLOORS + 2; i++) {
            XSSFRow row = sheet.getRow(i);
+           cell = row.getCell(3);
+           FLOOR_HEIGHT[i - 2] = Util.getIntValueFromXssCell(cell);
+
            XSSFCell cell_x = row.getCell(1);
            XSSFCell cell_y = row.getCell(2);
-           cell = row.getCell(3);
-           x.add(Util.getIntValueFromXssCell(cell_x));
-           y.add(Util.getIntValueFromXssCell(cell_y));
-           FLOOR_HEIGHT[i - 2] = Util.getIntValueFromXssCell(cell);
+           Integer x = Util.getIntValueFromXssCell(cell_x);
+           Integer y = Util.getIntValueFromXssCell(cell_y);
+           if (x == 0 && y == 0){
+               continue;
+           }
+           DAMPER_COUNT.put(i - 1, new Integer[]{x, y});
        }
-
-       x.removeIf(c -> 0 == c);
-       y.removeIf(c -> 0 == c);
-       DAMPER_COUNT_X = x.toArray(new Integer[x.size()]);
-       DAMPER_COUNT_Y = y.toArray(new Integer[y.size()]);
 
        Util.printInfo("楼层信息");
        System.out.println("阻尼器排列方式:"+DAMPER_ARRANGEMENT);
@@ -60,9 +59,11 @@ public class Floor_8 {
        System.out.print("楼层高度:");
        Util.printArray(FLOOR_HEIGHT);
        System.out.print("阻尼器数量X向:");
-       Util.printArray(DAMPER_COUNT_X);
+       DAMPER_COUNT.forEach((k,v)-> System.out.print(v[0]+","));
+       System.out.println();
        System.out.print("阻尼器数量Y向:");
-       Util.printArray(DAMPER_COUNT_Y);
+       DAMPER_COUNT.forEach((k,v)-> System.out.print(v[1]+","));
+       System.out.println();
    }
 
 }

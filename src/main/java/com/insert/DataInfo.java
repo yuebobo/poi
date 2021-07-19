@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Map;
 
 public class DataInfo {
 
@@ -101,27 +102,29 @@ public class DataInfo {
      */
     private static void initDrawingNumber() {
 
-        Integer sum_x = Util.getSum(Floor_8.DAMPER_COUNT_X);
-        Integer sum_y = Util.getSum(Floor_8.DAMPER_COUNT_Y);
 
-        DRAWING_NUMBER_X = new String[sum_x];
-        DRAWING_NUMBER_Y = new String[sum_y];
+        int size_x = Floor_8.DAMPER_COUNT.entrySet().stream().mapToInt(e -> e.getValue()[0]).sum();
+        int size_y = Floor_8.DAMPER_COUNT.entrySet().stream().mapToInt(e -> e.getValue()[1]).sum();
+
+        DRAWING_NUMBER_X = new String[size_x];
+        DRAWING_NUMBER_Y = new String[size_y];
 
         int m = 0;
-        for (int i = 0; i < Floor_8.DAMPER_COUNT_X.length; i++) {
-            for (int j = 0; j < Floor_8.DAMPER_COUNT_X[i]; j++) {
-                DRAWING_NUMBER_X[m++] = "X-" + (i + 1) + "-" + (j + 1);
+        int n = 0;
+        for (Map.Entry<Integer, Integer[]> e : Floor_8.DAMPER_COUNT.entrySet()) {
+            Integer x = e.getValue()[0];
+            for (Integer i = 0; i < x; i++) {
+                DRAWING_NUMBER_X[m++] = "X-" + (e.getKey()) + "-" + (i + 1);
             }
-        }
-        m = 0;
-        for (int i = 0; i < Floor_8.DAMPER_COUNT_Y.length; i++) {
-            for (int j = 0; j < Floor_8.DAMPER_COUNT_Y[i]; j++) {
-                DRAWING_NUMBER_Y[m++] = "Y-" + (i + 1) + "-" + (j + 1);
+
+            Integer y = e.getValue()[1];
+            for (Integer i = 0; i < y; i++) {
+                DRAWING_NUMBER_Y[n++] = "Y-" + (e.getKey()) + "-" + (i + 1);
             }
         }
 
         //重新排序
-        if (Floor_8.DAMPER_ARRANGEMENT == 2) {
+        if (Floor_8.DAMPER_ARRANGEMENT == 1) {
             Arrays.sort(DRAWING_NUMBER_X, Comparator.comparingInt(a -> Integer.valueOf(a.substring(a.length() - 1))));
             Arrays.sort(DRAWING_NUMBER_Y, Comparator.comparingInt(a -> Integer.valueOf(a.substring(a.length() - 1))));
         }
