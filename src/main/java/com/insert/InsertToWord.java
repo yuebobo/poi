@@ -1,5 +1,6 @@
 package com.insert;
 
+import com.data.Floor_8;
 import com.file.GetExcelValue;
 import com.txt.TxtGetValue;
 import com.util.Util;
@@ -10,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -557,19 +559,17 @@ public class InsertToWord {
             // 减震结构层间位移
             //原来工作簿6
             String[][][] displace = GetExcelValue.getDisplace(basePath + "\\excel\\工作簿4.xlsx", 2);
-            //获取层高数据  此处数值单位为 豪米
-//            List<String> floorHight = TxtGetValue.getValueForFloorHeigh(basePath + "\\txt\\WMASS.txt");
-            List<String> floorHight = GetExcelValue.getFloorHigh(basePath + "\\excel\\floorH.xlsx", 0);
+
             //楼层层间位移角
             //非减震结构层间位移
-            String[][][] displaceNotAngle = Util.getDisplaceAngle(displaceNot, floorHight);
+            String[][][] displaceNotAngle = Util.getDisplaceAngle(displaceNot,  Floor_8.FLOOR_HEIGHT);
             // 减震结构层间位移
-            String[][][] displaceAngle = Util.getDisplaceAngle(displace, floorHight);
+            String[][][] displaceAngle = Util.getDisplaceAngle(displace, Floor_8.FLOOR_HEIGHT);
 
             //比值
             String[][][] pro = Util.getArrayProportion(displace, displaceNot);
             //楼层数
-            int floor = Math.min(floorHight.size(), Math.min(displace[0].length, displaceNot[0].length));
+            int floor = Math.min(Floor_8.FLOORS, Math.min(displace[0].length, displaceNot[0].length));
             XWPFTableRow row12;
             XWPFTableRow row13;
             XWPFTableRow row14;
@@ -617,10 +617,9 @@ public class InsertToWord {
                 dealCellSM(row15.getCell(1), String.valueOf(floor - i));
 
                 //层高
-                dealCellSM(row12.getCell(0), floorHight.get(floor - i - 1));
-                dealCellSM(row13.getCell(0), floorHight.get(floor - i - 1));
-                dealCellSM(row14.getCell(0), floorHight.get(floor - i - 1));
-                dealCellSM(row15.getCell(0), floorHight.get(floor - i - 1));
+                dealCellSM(row13.getCell(0),Floor_8.FLOOR_HEIGHT[floor - i - 1].toString());
+                dealCellSM(row14.getCell(0), Floor_8.FLOOR_HEIGHT[floor - i - 1].toString());
+                dealCellSM(row15.getCell(0), Floor_8.FLOOR_HEIGHT[floor - i - 1].toString());
 
                 for (int j = 2; j < 9; j++) {
                     //楼层层间位移对比表
@@ -1005,11 +1004,6 @@ public class InsertToWord {
             // 减震结构层间位移displaceAngleNot
             String[][][] displaceAngleNot = GetExcelValue.getDisplaceAngle(basePath + "\\excel\\工作簿6.xlsx",0);
 
-            //层高
-            List<String> floorH = GetExcelValue.getFloorHigh(basePath + "\\excel\\floorH.xlsx",0);
-            //楼层高度单位毫米
-            Double[] floorh = new Double[floorH.size()];
-
             //获取有效列
             Integer[] valueCol = Util.getValueCol(displaceAngleNot[0],7);
             if (valueCol == null){
@@ -1020,11 +1014,9 @@ public class InsertToWord {
             XWPFTableRow row23 ;
             XWPFTableRow row24 ;
 
-            for (int i = 0; i < floorH.size(); i++) {
-                floorh[i] = Double.valueOf(floorH.get(i));
-            }
             int floor = Math.min(displaceAngleNot[0].length, displaceAngle[0].length);
-            floor = Math.min(floor, floorH.size());
+            floor = Math.min(floor, Floor_8.FLOORS);
+
 
             //包络值
             Double envelopeX = null;
@@ -1059,16 +1051,16 @@ public class InsertToWord {
                 //数据值插入
                 for (int j = 0 ; j < 7; j++) {
                     //非减震结构层间位移 x与y
-                    dealCellSM(row23.getCell(j+1), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngleNot[0][i][valueCol[j]]), 0));
-                    dealCellSM(row24.getCell(j+1), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngleNot[1][i][valueCol[j]]), 0));
+                    dealCellSM(row23.getCell(j+1), Util.getPrecisionString(Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Double.valueOf(displaceAngleNot[0][i][valueCol[j]]), 0));
+                    dealCellSM(row24.getCell(j+1), Util.getPrecisionString(Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Double.valueOf(displaceAngleNot[1][i][valueCol[j]]), 0));
                     //减震结构层间位移 x与y
-                    dealCellSM(row23.getCell(j+8), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngle[0][i][valueCol[j]]), 0));
-                    dealCellSM(row24.getCell(j+8), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngle[1][i][valueCol[j]]), 0));
+                    dealCellSM(row23.getCell(j+8), Util.getPrecisionString(Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Double.valueOf(displaceAngle[0][i][valueCol[j]]), 0));
+                    dealCellSM(row24.getCell(j+8), Util.getPrecisionString(Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Double.valueOf(displaceAngle[1][i][valueCol[j]]), 0));
                 }
 
                 //计算包络值
                 //包络值为该行的  七个数的平均数
-                envelopeX = floorh[i] / Util.getAvg(
+                envelopeX = Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Util.getAvg(
                         Double.valueOf(displaceAngle[0][i][valueCol[0]]),
                         Double.valueOf(displaceAngle[0][i][valueCol[1]]),
                         Double.valueOf(displaceAngle[0][i][valueCol[2]]),
@@ -1085,7 +1077,7 @@ public class InsertToWord {
 //                                                                Double.valueOf(displaceAngle[0][i][valueCol[6]])))))));
 //
 
-                envelopeXNot = floorh[i] / Util.getAvg(
+                envelopeXNot = Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Util.getAvg(
                         Double.valueOf(displaceAngleNot[0][i][valueCol[0]]),
                         Double.valueOf(displaceAngleNot[0][i][valueCol[1]]),
                         Double.valueOf(displaceAngleNot[0][i][valueCol[2]]),
@@ -1101,7 +1093,7 @@ public class InsertToWord {
 //                                                        Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[5]]),
 //                                                                Double.valueOf(displaceAngleNot[0][i][valueCol[6]])))))));
 
-                envelopeY = floorh[i] / Util.getAvg(
+                envelopeY = Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Util.getAvg(
                         Double.valueOf(displaceAngle[1][i][valueCol[0]]),
                         Double.valueOf(displaceAngle[1][i][valueCol[1]]),
                         Double.valueOf(displaceAngle[1][i][valueCol[2]]),
@@ -1117,7 +1109,7 @@ public class InsertToWord {
 //                                                        Math.max(Double.valueOf(displaceAngle[1][i][valueCol[5]]),
 //                                                                Double.valueOf(displaceAngle[1][i][valueCol[6]])))))));
 
-                envelopeYNot = floorh[i] / Util.getAvg(
+                envelopeYNot = Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Util.getAvg(
                         Double.valueOf(displaceAngleNot[1][i][valueCol[0]]),
                         Double.valueOf(displaceAngleNot[1][i][valueCol[1]]),
                         Double.valueOf(displaceAngleNot[1][i][valueCol[2]]),
@@ -1176,11 +1168,6 @@ public class InsertToWord {
         System.out.println("\n处理  大震下非减震和减震的结构层间位移角表");
         try {
             String[][][] displaceAngle = GetExcelValue.getDisplaceAngle(basePath + "\\excel\\工作簿5.xlsx", 2);
-            //层高
-
-            List<String> floorH = GetExcelValue.getFloorHigh(basePath + "\\excel\\floorH.xlsx", 0);
-            //楼层高度单位毫米
-            Double[] floorh = new Double[floorH.size()];
 
             //获取有效列
             Integer[] valueCol = Util.getValueCol(displaceAngle[0],3);
@@ -1197,14 +1184,10 @@ public class InsertToWord {
                 dealCellSM(row23.getCell(5 + i), name);
             }
 
-            for (int i = 0; i < floorH.size(); i++) {
-                floorh[i] = Double.valueOf(floorH.get(i));
-            }
-
             int floor = Math.min(displaceAngle[1].length, displaceAngle[0].length);
-            floor = Math.min(floor, floorH.size());
-            if (floor != floorH.size() || floor != displaceAngle[0].length || floor != displaceAngle[1].length) {
-                System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$  楼层数据不一致 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+            floor = Math.min(floor, Floor_8.FLOORS);
+            if (floor != Floor_8.FLOORS || floor != displaceAngle[0].length || floor != displaceAngle[1].length) {
+               Util.printInfo("$$$$$$$$$$$$$$$$$$$$$$$$  楼层数据不一致 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             }
 
             //包络值
@@ -1231,15 +1214,15 @@ public class InsertToWord {
                 //数据值插入
                 for (int j = 0; j < 3; j++) {
                     //减震结构层间位移 x与y
-                    dealCellSM(row23.getCell(j + 1), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngle[0][i][valueCol[j]]), 0));
-                    dealCellSM(row23.getCell(j + 5), Util.getPrecisionString(floorh[i] / Double.valueOf(displaceAngle[1][i][valueCol[j]]), 0));
+                    dealCellSM(row23.getCell(j + 1), Util.getPrecisionString(Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Double.valueOf(displaceAngle[0][i][valueCol[j]]), 0));
+                    dealCellSM(row23.getCell(j + 5), Util.getPrecisionString(Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Double.valueOf(displaceAngle[1][i][valueCol[j]]), 0));
 
                 }
 
                 //计算包络值
                 //包络值为该行的  这三个数值的最小值
-                envelopeX = floorh[i] / Math.max(Double.valueOf(displaceAngle[0][i][valueCol[0]]), Math.max(Double.valueOf(displaceAngle[0][i][valueCol[1]]), Double.valueOf(displaceAngle[0][i][valueCol[2]])));
-                envelopeY = floorh[i] / Math.max(Double.valueOf(displaceAngle[1][i][valueCol[0]]), Math.max(Double.valueOf(displaceAngle[1][i][valueCol[1]]), Double.valueOf(displaceAngle[1][i][valueCol[2]])));
+                envelopeX =Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Math.max(Double.valueOf(displaceAngle[0][i][valueCol[0]]), Math.max(Double.valueOf(displaceAngle[0][i][valueCol[1]]), Double.valueOf(displaceAngle[0][i][valueCol[2]])));
+                envelopeY = Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Math.max(Double.valueOf(displaceAngle[1][i][valueCol[0]]), Math.max(Double.valueOf(displaceAngle[1][i][valueCol[1]]), Double.valueOf(displaceAngle[1][i][valueCol[2]])));
 
                 //获取包络值列的最小值
                 minEnvelopeX = minEnvelopeX == null ? envelopeX : Math.min(minEnvelopeX, envelopeX);
@@ -1691,23 +1674,18 @@ public class InsertToWord {
      */
     private static void calculateTable(XWPFTable table29, XWPFTable table30, XWPFTable table31) {
         System.out.println("======================================= 计算最后三个表的数据 =======================================================");
-        //计算参数所在的位置
-        String paramsPath = basePath + "\\excel\\材料数据.xlsx";
-
-        //1.excle里获取计算参数
-        Map<String, Object>[] caculateParams = GetExcelValue.getCaculateParams(paramsPath);
 
         //2.子结构框架梁 受弯受剪 验算
         System.out.println("===============================子结构框架梁 受弯受剪 验算 =======================================");
-        CaculateTable.caculateTable1(table29, caculateParams[0]);
+        CaculateTable.caculateTable1(table29);
 
         //3.子结构框架柱抗剪验算
         System.out.println("=============================== 子结构框架柱抗剪验算 =======================================");
-        CaculateTable.caculateTable2(table30, caculateParams[1]);
+        CaculateTable.caculateTable2(table30);
 
         //4.悬臂墙配筋验算
         System.out.println("=============================== 悬臂墙配筋验算 =======================================");
-        CaculateTable.caculateTable3(table31, caculateParams[2]);
+        CaculateTable.caculateTable3(table31);
     }
 
     /**
