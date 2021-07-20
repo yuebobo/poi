@@ -59,10 +59,10 @@ public class Floor_8 {
        System.out.print("楼层高度:");
        Util.printArray(FLOOR_HEIGHT);
        System.out.print("阻尼器数量X向:");
-       DAMPER_COUNT.forEach((k,v)-> System.out.print(v[0]+","));
+       DAMPER_COUNT.forEach((k,v)-> System.out.print("{"+k+"楼:"+v[0]+"},"));
        System.out.println();
        System.out.print("阻尼器数量Y向:");
-       DAMPER_COUNT.forEach((k,v)-> System.out.print(v[1]+","));
+       DAMPER_COUNT.forEach((k,v)-> System.out.print("{"+k+"楼:"+v[1]+"},"));
        System.out.println();
    }
 

@@ -1,9 +1,11 @@
 package com.mine;
 
+import com.insert.DataInfo;
 import com.insert.InsertToWord;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Gui获取文件基本路径成功后，调用此类的方法
@@ -76,13 +78,20 @@ public class MainDeal {
             System.out.println("缺少txt文件夹");
         }
 
+
+        try {
+            DataInfo.initBaseData(basePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         //==================================================  第一套模板  (云南) ======================================================
-        InsertToWord.getValueInsertWord1(basePath, wordPath);
+//        InsertToWord.getValueInsertWord1(basePath, wordPath);
         //==================================================  第一套模板 （云南）======================================================
 
 
         //==================================================  第二套模板  (江苏）======================================================
-//        InsertToWord.getValueInsertWord2(basePath,wordPath);
+        InsertToWord.getValueInsertWord2(basePath,wordPath);
         //==================================================  第二套模板  （江苏）======================================================
 
 //		if(excel0IsExist){

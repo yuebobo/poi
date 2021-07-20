@@ -1,9 +1,6 @@
 package com.insert;
 
-import com.data.DampingShearForce_6_7;
-import com.data.Floor_8;
-import com.data.OtherData_4_10;
-import com.data.Period_5;
+import com.data.*;
 import com.file.GetExcelValue;
 import com.txt.TxtGetValue;
 import com.util.Util;
@@ -38,7 +35,9 @@ public class InsertToWord {
             word = new XWPFDocument(in);
             out = new FileOutputStream(basePath + "\\out" + System.currentTimeMillis() + ".docx");
             List<XWPFTable> tables = word.getTables();
-            getModelNo1(tables.get(4));
+
+            //插入CAD 图纸编号
+            insertModelNo(tables.get(4));
 
             //模型对比三个表
             insertModelCompare(tables.get(5), tables.get(6), tables.get(7));
@@ -68,7 +67,7 @@ public class InsertToWord {
             insertAnnexDamperRatio(tables.get(18), tables.get(19), tables.get(20), tables.get(21), tables.get(22));
 
             //阻尼器出力与楼层剪力占比
-            insertDamperFloorRatio(tables.get(23), tables.get(24), tables.get(4));
+            insertDamperFloorRatio(tables.get(23), tables.get(24));
 
             //层间位移角
             insertFloorDisplaceAngle(tables.get(26),tables.get(27));
@@ -129,7 +128,9 @@ public class InsertToWord {
             word = new XWPFDocument(in);
             out = new FileOutputStream(basePath + "\\out" + System.currentTimeMillis() + ".docx");
             List<XWPFTable> tables = word.getTables();
-            getModelNo1(tables.get(4));
+
+            //插入CAD 图纸编号
+            insertModelNo(tables.get(4));
 
             //模型对比三个表
             insertModelCompare(tables.get(5), tables.get(6), tables.get(7));
@@ -159,7 +160,7 @@ public class InsertToWord {
             insertAnnexDamperRatio(tables.get(18), tables.get(19), tables.get(20), tables.get(21), tables.get(22));
 
             //阻尼器出力与楼层剪力占比
-            insertDamperFloorRatio(tables.get(23), tables.get(24), tables.get(4));
+            insertDamperFloorRatio(tables.get(23), tables.get(24));
 
             //层间位移角
             insertFloorDisplaceAngle(tables.get(26));
@@ -758,7 +759,7 @@ public class InsertToWord {
             Double[][] forceY = valueY[1];
 
             //CAD中的编号获取
-            String[][] modelNo = getModelNo(table2);
+//            String[][] modelNo1 = getModelNo(table2);
 
             XWPFTableRow row19;
             XWPFTableRow row20;
@@ -777,8 +778,8 @@ public class InsertToWord {
             double[] energyArrayY = {0d, 0d, 0d, 0d, 0d, 0d, 0d};
 
             int floor = Math.min(shapeX.length, forceY.length);
-            floor = Math.min(floor, modelNo[0].length);
-            if (floor != modelNo[0].length || floor != shapeX.length || floor != forceY.length) {
+            floor = Math.min(floor, DataInfo.DRAWING_NUMBER_X.length);
+            if (floor != DataInfo.DRAWING_NUMBER_X.length || floor != shapeX.length || floor != forceY.length) {
                 System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$ CAD编号数量与原始表格里的数据的数量不一致 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             }
             for (int i = 0; i < floor; i++) {
@@ -790,8 +791,8 @@ public class InsertToWord {
                 row20 = table20.getRow(5);
 
                 //插入模型编号
-                dealCellSM(row19.getCell(0), modelNo[0][floor - 1 - i]);
-                dealCellSM(row20.getCell(0), modelNo[1][floor - 1 - i]);
+                dealCellSM(row19.getCell(0),DataInfo.DRAWING_NUMBER_X[floor - 1 - i]);
+                dealCellSM(row20.getCell(0), DataInfo.DRAWING_NUMBER_Y[floor - 1 - i]);
                 dealCellSM(row19.getCell(1), Util.getPrecisionString(forceX[floor - i - 1][0], 0));
                 dealCellSM(row20.getCell(1), Util.getPrecisionString(forceY[floor - i - 1][0], 0));
 
@@ -884,10 +885,10 @@ public class InsertToWord {
      * @param table21
      * @param table22
      */
-    private static void insertDamperFloorRatio(XWPFTable table21, XWPFTable table22, XWPFTable table2) {
+    private static void insertDamperFloorRatio(XWPFTable table21, XWPFTable table22) {
 
         //CAD中的编号获取
-        String[][] modelNo = getModelNo(table2);
+//        String[][] modelNo = getModelNo(table2);
 
         //X方向
         //原来是工作簿7
@@ -905,7 +906,7 @@ public class InsertToWord {
         Double[][][] force = {forceX, forceY};
 
         //获取出对应楼层的求和的值
-        Map<Integer, Double[]>[] maps = getDamperFloorAdd(table2, force);
+        Map<Integer, Double[]>[] maps = getDamperFloorAdd(force);
 
         // 减震结构层间剪力
         String[][][] shear = GetExcelValue.getShear(basePath + "\\excel\\工作簿4.xlsx", 3);
@@ -1256,7 +1257,7 @@ public class InsertToWord {
         System.out.println("\n处理  结构各层阻尼器最大出力及位移包络值汇总表");
         try {
             //获取CAD 编号
-            String[][] modelValue = getModelNo(table2);
+//            String[][] modelValue1 = getModelNo(table2);
 
             //X方向  //原来工作簿11
             Double[][][] valueX = GetExcelValue.getEarthquakeDamperDisEnergyX(basePath + "\\excel\\工作簿5.xlsx");
@@ -1304,9 +1305,9 @@ public class InsertToWord {
             Double[] propertyMax = {0d, 0d, 0d, 0d, 0d, 0d};
 
             int floor = Math.min(shapeX.length, forceX.length);
-            floor = Math.min(floor, modelValue[0].length);
-            floor = Math.min(floor, modelValue[1].length);
-            if (floor != shapeX.length || floor != forceY.length || floor != modelValue[0].length || floor != modelValue[1].length) {
+            floor = Math.min(floor, DataInfo.DRAWING_NUMBER_X.length);
+            floor = Math.min(floor, DataInfo.DRAWING_NUMBER_Y.length);
+            if (floor != shapeX.length || floor != forceY.length || floor != DataInfo.DRAWING_NUMBER_X.length || floor != DataInfo.DRAWING_NUMBER_Y.length) {
                 System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$ CAD编号数量与原始表格里的数据的数量不一致 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             }
             for (int i = 0; i < floor; i++) {
@@ -1318,8 +1319,8 @@ public class InsertToWord {
                 row26 = table26.getRow(5);
 
                 //插入CAD编号
-                dealCellSM(row25.getCell(0), modelValue[0][floor - 1 - i]);
-                dealCellSM(row26.getCell(0), modelValue[1][floor - 1 - i]);
+                dealCellSM(row25.getCell(0), DataInfo.DRAWING_NUMBER_X[floor - 1 - i]);
+                dealCellSM(row26.getCell(0), DataInfo.DRAWING_NUMBER_Y[floor - 1 - i]);
                 //插入模型编号
                 dealCellSM(row25.getCell(1), Util.getPrecisionString(forceX[floor - i - 1][0], 0));
                 dealCellSM(row26.getCell(1), Util.getPrecisionString(shapeY[floor - i - 1][0], 0));
@@ -1504,7 +1505,7 @@ public class InsertToWord {
         System.out.println("\n处理  结构各层阻尼器最大出力及位移包络值汇总表");
         try {
             //获取CAD 编号
-            String[][] modelValue = getModelNo(table2);
+//            String[][] modelValue1 = getModelNo(table2);
 
             //X方向  //原来工作簿11
             Double[][][] valueX = GetExcelValue.getEarthquakeDamperDisEnergyX(basePath + "\\excel\\工作簿5.xlsx");
@@ -1561,9 +1562,9 @@ public class InsertToWord {
             Double[] propertyMax = {0d, 0d, 0d, 0d, 0d, 0d};
 
             int floor = Math.min(shapeX.length, forceX.length);
-            floor = Math.min(floor, modelValue[0].length);
-            floor = Math.min(floor, modelValue[1].length);
-            if (floor != shapeX.length || floor != forceY.length || floor != modelValue[0].length || floor != modelValue[1].length) {
+            floor = Math.min(floor, DataInfo.DRAWING_NUMBER_X.length);
+            floor = Math.min(floor, DataInfo.DRAWING_NUMBER_Y.length);
+            if (floor != shapeX.length || floor != forceY.length || floor != DataInfo.DRAWING_NUMBER_X.length || floor != DataInfo.DRAWING_NUMBER_Y.length) {
                 System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$ CAD编号数量与原始表格里的数据的数量不一致 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             }
             for (int i = 0; i < floor; i++) {
@@ -1575,8 +1576,8 @@ public class InsertToWord {
                 row26 = table26.getRow(5);
 
                 //插入CAD编号
-                dealCellSM(row25.getCell(0), modelValue[0][floor - 1 - i]);
-                dealCellSM(row26.getCell(0), modelValue[1][floor - 1 - i]);
+                dealCellSM(row25.getCell(0), DataInfo.DRAWING_NUMBER_X[floor - 1 - i]);
+                dealCellSM(row26.getCell(0), DataInfo.DRAWING_NUMBER_Y[floor - 1 - i]);
                 //插入模型编号
                 dealCellSM(row25.getCell(1), Util.getPrecisionString(forceX[floor - i - 1][0], 0));
                 dealCellSM(row26.getCell(1), Util.getPrecisionString(shapeY[floor - i - 1][0], 0));
@@ -1655,6 +1656,7 @@ public class InsertToWord {
             dealCellSM(table1.getRow(4).getCell(2), table25.getRow(4).getCell(3).getText());
             dealCellSM(table1.getRow(5).getCell(2), Util.getPrecisionString(propertyMax[0], 0));
             dealCellSM(table1.getRow(6).getCell(2), Util.getPrecisionString(propertyMax[3], 0));
+            dealCellSM(table1.getRow(8).getCell(2), Cantilever_3.SECTION_B+"×"+Cantilever_3.SECTION_H);
             dealCellSM(table1.getRow(9).getCell(2), String.valueOf(floor * 2));
 
         } catch (Exception e) {
@@ -1689,35 +1691,30 @@ public class InsertToWord {
     }
 
     /**
-     * 获取CAD中的编号
-     *
-     * @param table2
+     * 插入编号
      * @return
      */
-    private static String[][] getModelNo(XWPFTable table2) {
-        System.out.println();
-        System.out.println("========================================================");
-        System.out.println("获取模型中的编号");
-        List<XWPFTableRow> rows = table2.getRows();
-        String[][] returnValue = new String[2][rows.size() - 1];
-        for (int i = 1; i < rows.size(); i++) {
-            returnValue[0][i - 1] = rows.get(i).getCell(0).getText();
-            returnValue[1][i - 1] = rows.get(i).getCell(2).getText();
+    private static void insertModelNo(XWPFTable table) {
+        int count = Math.max(DataInfo.DRAWING_NUMBER_X.length, DataInfo.DRAWING_NUMBER_Y.length);
+        int x = 0;
+        for (int i = 0; i < count; i++) {
+            table.createRow();
+            XWPFTableRow row = table.getRow(i + 1);
+            if (DataInfo.DRAWING_NUMBER_X.length > i) {
+                dealCellSM(row.getCell(0), DataInfo.DRAWING_NUMBER_X[i]);
+                dealCellSM(row.getCell(1), String.valueOf(++x));
+            }
         }
-        for (int i = 0; i < returnValue[0].length; i++) {
-            System.out.println(returnValue[0][i]);
+        for (int i = 0; i < DataInfo.DRAWING_NUMBER_Y.length; i++) {
+            XWPFTableRow row = table.getRow(i + 1);
+            dealCellSM(row.getCell(2), DataInfo.DRAWING_NUMBER_Y[i]);
+            dealCellSM(row.getCell(3), String.valueOf(++x));
         }
-        System.out.println();
-        for (int i = 0; i < returnValue[1].length; i++) {
-            System.out.println(returnValue[1][i]);
-        }
-        return returnValue;
     }
 
 
-    private static Map<Integer, Double[]>[] getDamperFloorAdd(XWPFTable table2, Double[][][] force) {
-        String[][][] modelNo = getModelNo1(table2);
-
+    private static Map<Integer, Double[]>[] getDamperFloorAdd(Double[][][] force) {
+        String[][][] modelNo = getModelNo1();
         Map<Integer, Double[]>[] returnValue = new Map[2];
         Integer floor;
         String no;
@@ -1772,26 +1769,17 @@ public class InsertToWord {
      * @param table2
      * @return
      */
-    private static String[][][] getModelNo1(XWPFTable table2) {
-        System.out.println();
-        System.out.println("===============================================");
-        System.out.println("获取模型中的编号和CAD中的编号");
-        List<XWPFTableRow> rows = table2.getRows();
-        String[][][] returnValue = new String[2][rows.size() - 1][2];
-        for (int i = 1; i < rows.size(); i++) {
-            returnValue[0][i - 1][0] = rows.get(i).getCell(0).getText();
-            returnValue[0][i - 1][1] = rows.get(i).getCell(1).getText();
-
-            returnValue[1][i - 1][0] = rows.get(i).getCell(2).getText();
-            returnValue[1][i - 1][1] = rows.get(i).getCell(3).getText();
+    private static String[][][] getModelNo1() {
+        int max = Math.max(DataInfo.DRAWING_NUMBER_X.length, DataInfo.DRAWING_NUMBER_Y.length);
+        String[][][] returnValue = new String[2][max][2];
+        int number = 1;
+        for (int i = 0; i < DataInfo.DRAWING_NUMBER_X.length; i++) {
+            returnValue[0][i][0] = DataInfo.DRAWING_NUMBER_X[i];
+            returnValue[0][i][1] = String.valueOf(number++);
         }
-        for (int i = 0; i < returnValue[0].length; i++) {
-            System.out.println(returnValue[0][i][0] + " : " + returnValue[0][i][1]);
-        }
-        System.out.println();
-        System.out.println();
-        for (int i = 0; i < returnValue[1].length; i++) {
-            System.out.println(returnValue[1][i][0] + " : " + returnValue[1][i][1]);
+        for (int i = 0; i < DataInfo.DRAWING_NUMBER_Y.length; i++) {
+            returnValue[1][i][0] = DataInfo.DRAWING_NUMBER_Y[i];
+            returnValue[1][i][1] = String.valueOf(number++);
         }
         return returnValue;
     }
