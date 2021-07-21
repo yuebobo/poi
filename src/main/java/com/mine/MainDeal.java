@@ -1,6 +1,6 @@
 package com.mine;
 
-import com.insert.DataInfo;
+import com.data.DataInfo;
 import com.insert.InsertToWord;
 
 import java.io.File;
@@ -82,6 +82,7 @@ public class MainDeal {
         try {
             DataInfo.initBaseData(basePath);
         } catch (IOException e) {
+            System.out.println("初始化数据加载异常："+e.getMessage());
             e.printStackTrace();
         }
 

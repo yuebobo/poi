@@ -701,8 +701,6 @@ public class InsertToWord {
     private static void insertEarthquakeDamperDisEnergy(XWPFTable table2, XWPFTable table19, XWPFTable table20) {
         System.out.println("\n处理 各地震波下X/Y方向阻尼器耗能表");
         try {
-            //数据获取
-
             //X方向
             //原来是工作簿7
             Double[][][] valueX = GetExcelValue.getEarthquakeDamperDisEnergyX(basePath + "\\excel\\工作簿4.xlsx");

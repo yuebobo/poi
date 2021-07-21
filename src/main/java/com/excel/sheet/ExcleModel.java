@@ -21,7 +21,6 @@ public class ExcleModel {
 	 * 首行为DEAD和LIVE的G列里的数据
 	 * 并按照 1*DEAD+0.5*LIVE的方式进行计算 获得返回值
 	 * @return
-	 * @throws IOException 
 	 */
 	public static String get_DEAD_LIVE(XSSFSheet sheet){
 		Iterator it = sheet.iterator();

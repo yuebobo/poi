@@ -1,6 +1,5 @@
-package com.insert;
+package com.data;
 
-import com.data.*;
 import com.util.Util;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 

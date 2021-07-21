@@ -18,28 +18,6 @@ import java.util.Map;
 public class ExcelDamper {
 
 	/**
-	 * 内力
-	 * @param sheet
-	 * @param precision
-	 * @return
-	 */
-//	public static String[][][] getInnerForce(XSSFSheet sheet,int precision,int flagPosition, int valuePosition){
-////		return getDamperValue(sheet, precision, 3, 8);
-//		return getDamperValue(sheet, precision, flagPosition, valuePosition);
-//	}
-	
-	/**
-	 * 变形
-	 * @param sheet
-	 * @param precision
-	 * @return
-	 */
-//	public static String[][][] getShapeChange(XSSFSheet sheet,int precision, int flagPosition, int valuePosition){
-////		return getDamperValue(sheet, precision, 2, 6);
-//	}
-
-
-	/**
 	 * 地震波下阻尼器处理位移/阻尼器形变
 	 * @param sheet
 	 * @return

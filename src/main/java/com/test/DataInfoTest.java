@@ -1,6 +1,6 @@
 package com.test;
 
-import com.insert.DataInfo;
+import com.data.DataInfo;
 
 import java.io.IOException;
 

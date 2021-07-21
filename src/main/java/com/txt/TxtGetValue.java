@@ -1,7 +1,6 @@
 package com.txt;
 
 import com.entity.Constants;
-import com.util.Util;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -228,119 +227,6 @@ public class TxtGetValue {
 		}
 	}
 
-	/**
-	 * 质量结构对比
-	 * 获取WMASS.txt文件的一个数据
-	 * 结构的总质量
-	 * <p>
-	 * 获取每一行的元素个数（多个空格合并成一个空格，按空格进行分开获得元素数量）
-	 * 按照从上往下的方式逐行获取，当元素个数为12，则到达该数据位置上方表的表头  if(strs.length == 12)
-	 * 再次往下获取 第四个元素个数为3 的行 ，并获取第三列数据，此数据就是目标数据 if(flag && strs.length == 3)   if(count == 4)
-	 *
-	 * @param txtPath
-	 * @return
-	 * @throws IOException
-	 */
-	public static String getValueFor1(String txtPath) {
-		boolean flag = false;
-		String line;
-		String[] strs;
-		int count = 1;
-		FileInputStream fileIn = null;
-		BufferedReader br = null;
-		try {
-			fileIn = new FileInputStream(txtPath);
-			br = new BufferedReader(new InputStreamReader(fileIn, "GBK"));
-			while ((line = br.readLine()) != null) {
-				strs = line.trim().replaceAll(" +", " ").split(" ");
-				if (strs.length == 12) {
-					flag = true;
-				}
-				if (flag && strs.length == 3) {
-					if (count == 4) {
-						System.out.println("==========================================");
-						System.out.println(txtPath);
-						System.out.println("质量结构对比");
-						System.out.println(strs[2]);
-						return strs[2];
-					} else {
-						count++;
-					}
-				}
-			}
-			System.out.println("$$$$$$$$$$$$" + txtPath + "WMASS.txt文件里的    结构的总质量   数据没有获取到");
-			return null;
-		} catch (FileNotFoundException e) {
-			System.out.println("$$$$$$$$$$$$" + txtPath + "没有找到");
-			return null;
-		} catch (IOException e) {
-			System.out.println("$$$$$$$$$$$$" + txtPath + "处理异常");
-			return null;
-		} finally {
-			if (fileIn != null) {
-				try {
-					fileIn.close();
-				} catch (IOException e) {
-				}
-			}
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-				}
-			}
-		}
-	}
-
-	/**
-	 * 获取WMASS.txt文件的 层高
-	 * 元素个数为15的行
-	 *
-	 * @param txtPath
-	 * @return
-	 */
-	public static List<String> getValueForFloorHeigh(String txtPath) {
-		System.out.println();
-		System.out.println("获取层高：");
-		String line;
-		List<String> floorH = new ArrayList<>();
-		String[] strs;
-		FileInputStream fileIn = null;
-		BufferedReader br = null;
-		try {
-			fileIn = new FileInputStream(txtPath);
-			br = new BufferedReader(new InputStreamReader(fileIn, "GBK"));
-			while ((line = br.readLine()) != null) {
-				strs = line.trim().replaceAll(" +", " ").split(" ");
-				if (strs.length == 15) {
-					floorH.add(Util.getPrecisionString(Double.valueOf(strs[13])*1000,0));
-				} else if (floorH.size() > 0) {
-					return floorH;
-				}
-			}
-			System.out.println("$$$$$$$$$$$$" + txtPath + "WMASS.txt文件里的   楼层高度  数据没有获取到");
-			return null;
-		} catch (FileNotFoundException e) {
-			System.out.println("$$$$$$$$$$$$" + txtPath + "没有找到");
-			return null;
-		} catch (IOException e) {
-			System.out.println("$$$$$$$$$$$$" + txtPath + "处理异常");
-			return null;
-		} finally {
-			if (fileIn != null) {
-				try {
-					fileIn.close();
-				} catch (IOException e) {
-				}
-			}
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-				}
-			}
-		}
-	}
 
 	/**
 	 * 获取地震波持时表 里的数据
@@ -455,49 +341,6 @@ public class TxtGetValue {
 			return false;
 		} else {
 			return 0.1 > Double.valueOf(value);
-		}
-	}
-
-	/**
-	 * 获取第一个周期的数值
-	 *
-	 * @param txtPath
-	 * @return
-	 */
-	public static String getSingleT(String txtPath) {
-		String line;
-		String[] strs;
-		boolean flag = false;
-		FileInputStream fileIn = null;
-		BufferedReader br = null;
-		try {
-			fileIn = new FileInputStream(txtPath);
-			br = new BufferedReader(new InputStreamReader(fileIn, "GBK"));
-			while ((line = br.readLine()) != null) {
-				strs = line.trim().replaceAll(" +", " ").split(" ");
-				if (strs.length == 8) {
-					if (flag)  return strs[1];
-					flag = true;
-				}
-			}
-			return null;
-		} catch (Exception e) {
-			System.out.println("$$$$ 获取单个周期的数值 $$$$$$$$" + txtPath + "出现异常");
-			e.printStackTrace();
-			return null;
-		} finally {
-			if (fileIn != null) {
-				try {
-					fileIn.close();
-				} catch (IOException e) {
-				}
-			}
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-				}
-			}
 		}
 	}
 
