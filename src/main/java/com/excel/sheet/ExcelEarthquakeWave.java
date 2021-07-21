@@ -1,5 +1,6 @@
 package com.excel.sheet;
 
+import com.data.EarthquakeWave_9;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
@@ -17,10 +18,9 @@ public class ExcelEarthquakeWave {
     /**
      * 根据编号获取地震波信息
      * @param sheet
-     * @param number
      * @return
      */
-    public static  Map<String,String[]> getEarthquakeWaveInfo(XSSFSheet sheet,String[] number){
+    public static  Map<String,String[]> getEarthquakeWaveInfo(XSSFSheet sheet){
         String[] value ;
         Map<String,String[]> map = new HashMap<>();
         Iterator it = sheet.iterator();
@@ -36,7 +36,9 @@ public class ExcelEarthquakeWave {
             if (str == null ||"".equals(str)){
                 return map;
             }
-            for (String s : number){
+
+            for (int i = 0; i < 5; i++) {
+                String s = EarthquakeWave_9.EARTHQUAKE_WAVE_NUMBER[i];
                 if (str.equals(s)){
                     value = new String[3];
                     try {

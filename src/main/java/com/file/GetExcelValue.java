@@ -1,7 +1,6 @@
 package com.file;
 
 import com.excel.sheet.*;
-import com.util.Util;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
@@ -174,13 +173,13 @@ public class GetExcelValue {
 	 * @param path
 	 * @return
 	 */
-	public static Map<String,String[]> getEarthquakeWaveInfo(String path,String[] number ){
+	public static Map<String,String[]> getEarthquakeWaveInfo(String path){
 		FileInputStream e = null;
 		try {
 			System.out.println("\n"+path);
 			e = new FileInputStream(path);
 			XSSFWorkbook excel = new XSSFWorkbook(e);
-			Map<String,String[]> value =  ExcelEarthquakeWave.getEarthquakeWaveInfo(excel.getSheetAt(0),number);
+			Map<String,String[]> value =  ExcelEarthquakeWave.getEarthquakeWaveInfo(excel.getSheetAt(0));
 			return value;
 		} catch (FileNotFoundException e1) {
 			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"没找到");

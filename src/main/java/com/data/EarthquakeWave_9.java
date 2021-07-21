@@ -43,6 +43,10 @@ public class EarthquakeWave_9 {
         for (int i = 1; i < 8; i++) {
             cell = sheet.getRow(i).getCell(0);
             EARTHQUAKE_WAVE_NUMBER[i - 1] = Util.getValueFromXssfcell(cell);
+            //如果获取出浮点数，则取整
+            if (EARTHQUAKE_WAVE_NUMBER[i - 1].contains(".")){
+                EARTHQUAKE_WAVE_NUMBER[i - 1] = EARTHQUAKE_WAVE_NUMBER[i - 1].substring(0,EARTHQUAKE_WAVE_NUMBER[i - 1].lastIndexOf("."));
+            }
         }
 
         Util.printInfo("地震波信息");

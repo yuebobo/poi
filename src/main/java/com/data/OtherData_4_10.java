@@ -12,7 +12,7 @@ public class OtherData_4_10 {
     /**
      * 阻尼系数
      */
-    public static Double DAMPING_FACTOR;
+    public static Integer DAMPING_FACTOR;
 
     /**
      * 阻尼器指数
@@ -30,7 +30,7 @@ public class OtherData_4_10 {
      * @param sheet4
      */
     public static void  initOtherData(XSSFSheet sheet4,XSSFSheet sheet10){
-        DAMPING_FACTOR = Util.getDoubleValueFromXssCell(sheet10.getRow(0).getCell(1),2);
+        DAMPING_FACTOR = Util.getIntValueFromXssCell(sheet10.getRow(0).getCell(1));
         DAMPING_EXPONENT = Util.getDoubleValueFromXssCell(sheet10.getRow(2).getCell(1),2);
         QUALITY = Util.getDoubleValueFromXssCell(sheet4.getRow(0).getCell(0),3);
 

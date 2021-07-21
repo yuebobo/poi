@@ -51,6 +51,9 @@ public class InsertToWord {
             //地震波持时
             insertEarthquakeWave(tables.get(10));
 
+            //时程反应谱
+            insertPeriod(tables.get(11));
+
             //层间剪力对比
             insertFloorShearCopmare(tables.get(12), tables.get(13));
 
@@ -69,13 +72,16 @@ public class InsertToWord {
             //阻尼器出力与楼层剪力占比
             insertDamperFloorRatio(tables.get(23), tables.get(24));
 
+            //时程反应谱
+            insertPeriod(tables.get(25));
+
             //层间位移角
             insertFloorDisplaceAngle(tables.get(26),tables.get(27));
 
 
             //结构各层阻尼器最大出力及位移包络值汇总
             //粘滞阻尼器性能规格表
-            maxEarthquakeDapmerForceDisplace1(tables.get(28), tables.get(29), tables.get(3), tables.get(4));
+            maxEarthquakeDapmerForceDisplace1(tables.get(28), tables.get(29), tables.get(3));
 
             //计算最后几个表里的值
             //减震器周边子结构的设计计算方法
@@ -144,6 +150,9 @@ public class InsertToWord {
             //地震波持时
             insertEarthquakeWave(tables.get(10));
 
+            //时程反应谱
+            insertPeriod(tables.get(11));
+
             //层间剪力对比
             insertFloorShearCopmare(tables.get(12), tables.get(13));
 
@@ -162,13 +171,16 @@ public class InsertToWord {
             //阻尼器出力与楼层剪力占比
             insertDamperFloorRatio(tables.get(23), tables.get(24));
 
+            //时程反应谱
+            insertPeriod(tables.get(25));
+
             //层间位移角
             insertFloorDisplaceAngle(tables.get(26));
 
 
             //结构各层阻尼器最大出力及位移包络值汇总
             //粘滞阻尼器性能规格表
-            maxEarthquakeDapmerForceDisplace2(tables.get(27), tables.get(28), tables.get(3), tables.get(4));
+            maxEarthquakeDapmerForceDisplace2(tables.get(27), tables.get(28), tables.get(3));
 
 
             //计算最后几个表里的值
@@ -216,31 +228,8 @@ public class InsertToWord {
     private static void insertModelCompare(XWPFTable table3, XWPFTable table4, XWPFTable table5) {
         System.out.println("\n处理模型对比三张表");
         try {
-            //1.结构周期对比   //地震剪力对比Fx  //地震剪力对比Fy
-            //从记事本WZQ中 获取
-//            Map<Integer, List<String>> map = TxtGetValue.getValueFor3(basePath + "\\txt\\2.txt");
-
-
             //2.结构质量对比  周期对比    地震剪力对比
             Map<Integer, Object> modelMap = GetExcelValue.getModel(basePath + "\\excel\\工作簿1.xlsx");
-
-            //3.结构质量对比    从记事本WMASS中获取 ：结构的总质量       (表3 PKPM)
-//            String qualityOfStructure1 = TxtGetValue.getValueFor1(basePath + "\\txt\\3.txt");
-
-            //  == == 从材料数据文件里获取周期，减震剪力对比,质量
-//            Map<Integer,Object> map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
-
-            //4.周期对比                           （表2   PKPM）
-//            String[] cycle1 = (String[]) map.get(1);
-            //结构质量对比
-//            String qualityOfStructure1 = (String) map.get(2);
-            //
-//            List[] fxFy = (List[]) map.get(3);
-
-            //5.地震剪力对比Fx    （表1   PKPM   X）
-//            List<String> fx = fxFy[0];
-            //6."地震剪力对比Fy"  （表1   PKPM   Y）
-//            List<String> fy =  fxFy[1];
 
             //7.结构质量对比               (表3 SAP2000)
             String qualityOfStructure2 = (String) modelMap.get(1);
@@ -311,11 +300,6 @@ public class InsertToWord {
             XWPFTableCell cellx;
             XWPFTableCell celly;
 
-
-//            Map<Integer,Object> map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
-//            List[] notFxFy = (List[]) map.get(4);
-//            List<String> fx = notFxFy[0];
-//            List<String> fy =  notFxFy[1];
             e2T5R2[0][0] = DampingShearForce_6_7.DAMPING_NOT.get(DampingShearForce_6_7.DAMPING_NOT.size() - 1).vx.toString();
             e2T5R2[1][0] = DampingShearForce_6_7.DAMPING_NOT.get(DampingShearForce_6_7.DAMPING_NOT.size() - 1).vy.toString();
 
@@ -355,10 +339,9 @@ public class InsertToWord {
         System.out.println("\n处理 地震波信息表");
         String path = basePath + "\\excel\\地震波信息.xlsx";
         try {
-            //获取word表里的编号数据 T1~T5
-            String[] number = new String[5];
-            for (int i = 0; i < 5; i++) {
-                number[i] = table7.getRow(i + 2).getCell(1).getText();
+            //插入word表里的编号数据 T1~T5 R1,R2
+            for (int i = 0; i < 7; i++) {
+                dealCellSM(table7.getRow(i + 2).getCell(1),EarthquakeWave_9.EARTHQUAKE_WAVE_NUMBER[i]);
             }
 
             String[] value;
@@ -366,11 +349,11 @@ public class InsertToWord {
 
             //地点,测震台站,发震时间
             //获取数据
-            Map<String, String[]> maps = GetExcelValue.getEarthquakeWaveInfo(path, number);
+            Map<String, String[]> maps = GetExcelValue.getEarthquakeWaveInfo(path);
             for (int i = 0; i < 5; i++) {
-                value = maps.get(number[i]);
+                value = maps.get(EarthquakeWave_9.EARTHQUAKE_WAVE_NUMBER[i]);
                 if (value == null) {
-                    System.out.println("编号为：" + number[i] + " 的数据为空");
+                    System.out.println("编号为：" + EarthquakeWave_9.EARTHQUAKE_WAVE_NUMBER[i] + " 的数据为空");
                     continue;
                 }
                 row = table7.getRow(i + 2);
@@ -379,23 +362,19 @@ public class InsertToWord {
                 dealCellSM(row.getCell(4), value[2]);
             }
 
-            row = table7.getRow(2);
-            String str1 = row.getCell(5).getText();
-            String str2 = row.getCell(6).getText();
-
             //采集间隔,采点数量  以及前两列数据
             for (int i = 1; i < 8; i++) {
                 row = table7.getRow(i + 1);
                 if (i < 6) {
-                    dealCellSM(row.getCell(5), str1);
-                    dealCellSM(row.getCell(6), str2);
+                    dealCellSM(row.getCell(5), EarthquakeWave_9.COMMON_MAX.toString());
+                    dealCellSM(row.getCell(6), EarthquakeWave_9.RARE_MAX.toString());
                     path = basePath + "\\txt\\T" + (i) + ".txt";
                     value = TxtGetValue.eathquakeWave1(path);
                     dealCellSM(row.getCell(7), value[0]);
                     dealCellSM(row.getCell(8), value[1]);
                 } else {
-                    dealCellSM(row.getCell(3), str1);
-                    dealCellSM(row.getCell(4), str2);
+                    dealCellSM(row.getCell(3), EarthquakeWave_9.COMMON_MAX.toString());
+                    dealCellSM(row.getCell(4), EarthquakeWave_9.RARE_MAX.toString());
                     path = basePath + "\\txt\\R" + (i - 5) + ".txt";
                     value = TxtGetValue.eathquakeWave1(path);
                     dealCellSM(row.getCell(5), value[0]);
@@ -416,12 +395,6 @@ public class InsertToWord {
     private static void insertEarthquakeWave(XWPFTable table8) {
         System.out.println("\n处理 地震波持时表");
         try {
-            //获取周期
-//            String singleT = TxtGetValue.getSingleT(basePath + "\\txt\\1.txt");
-//            Map<Integer,Object> map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
-//            String[] cycle1 = (String[]) map.get(1);
-//            String singleT = cycle1[0];
-
             String path;
             String[] value;
             for (int i = 2; i < 9; i++) {
@@ -446,6 +419,15 @@ public class InsertToWord {
     }
 
     /**
+     * 时程反应谱周期插入
+     * @param table
+     */
+    private static void insertPeriod(XWPFTable table){
+        for (int i = 0; i < Period_5.PERIODS.size(); i++) {
+            dealCellSM(table.getRow(i+2).getCell(1),Period_5.PERIODS.get(i).period.toString());
+        }
+    }
+    /**
      * 层间剪力对比
      *
      * @param table10
@@ -461,27 +443,6 @@ public class InsertToWord {
             String[][][] shear = GetExcelValue.getShear(basePath + "\\excel\\工作簿4.xlsx", 3);
             // 计算剪力比值
             String[][][] pro = Util.getArrayProportion(shear, shearNot);
-
-            //获取反应谱数据 震前 （map里key为2（x），3（y）
-//            Map<Integer, List<String>> mapBefore = TxtGetValue.getValueFor3(basePath + "\\txt\\1.txt");
-            //获取反应谱数据 震后（map里key为2（x），3（y）
-//            Map<Integer, List<String>> mapAfter = TxtGetValue.getValueFor3(basePath + "\\txt\\2.txt");
-//            Map<Integer,Object>  map = GetExcelValue.getCycleAndFxFy(basePath + "\\excel\\材料数据.xlsx");
-            //
-//            List[] fxFy = (List[]) map.get(3);
-//            List[] notFxFy = (List[]) map.get(4);
-
-            //5.地震剪力对比Fx    （表1   PKPM   X）
-//            List<String> fx = fxFy[0];
-            //6."地震剪力对比Fy"  （表1   PKPM   Y）
-//            List<String> fy =  fxFy[1];
-
-
-            //获取反应谱
-//            List<String> earthquakeBeforeX = notFxFy[0];
-//            List<String> earthquakeBeforeY =  notFxFy[1];
-//            List<String> earthquakeAfterX =  fxFy[0];
-//            List<String> earthquakeAfterY =  fxFy[1];
 
             //楼层数
             int floor = Math.min(shear[0].length, shearNot[0].length);
@@ -887,9 +848,6 @@ public class InsertToWord {
      */
     private static void insertDamperFloorRatio(XWPFTable table21, XWPFTable table22) {
 
-        //CAD中的编号获取
-//        String[][] modelNo = getModelNo(table2);
-
         //X方向
         //原来是工作簿7
         Double[][][] valueX = GetExcelValue.getEarthquakeDamperDisEnergyX(basePath + "\\excel\\工作簿4.xlsx");
@@ -1069,14 +1027,6 @@ public class InsertToWord {
                         Double.valueOf(displaceAngle[0][i][valueCol[4]]),
                         Double.valueOf(displaceAngle[0][i][valueCol[5]]),
                         Double.valueOf(displaceAngle[0][i][valueCol[6]]));
-//                envelopeX = floorh[i] / Math.max(Double.valueOf(displaceAngle[0][i][valueCol[0]]),
-//                        Math.max(Double.valueOf(displaceAngle[0][i][valueCol[1]]),
-//                                Math.max(Double.valueOf(displaceAngle[0][i][valueCol[2]]),
-//                                        Math.max(Double.valueOf(displaceAngle[0][i][valueCol[3]]),
-//                                                Math.max(Double.valueOf(displaceAngle[0][i][valueCol[4]]),
-//                                                        Math.max(Double.valueOf(displaceAngle[0][i][valueCol[5]]),
-//                                                                Double.valueOf(displaceAngle[0][i][valueCol[6]])))))));
-//
 
                 envelopeXNot = Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Util.getAvg(
                         Double.valueOf(displaceAngleNot[0][i][valueCol[0]]),
@@ -1086,13 +1036,6 @@ public class InsertToWord {
                         Double.valueOf(displaceAngleNot[0][i][valueCol[4]]),
                         Double.valueOf(displaceAngleNot[0][i][valueCol[5]]),
                         Double.valueOf(displaceAngleNot[0][i][valueCol[6]]));
-//                envelopeXNot = floorh[i] / Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[0]]),
-//                        Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[1]]),
-//                                Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[2]]),
-//                                        Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[3]]),
-//                                                Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[4]]),
-//                                                        Math.max(Double.valueOf(displaceAngleNot[0][i][valueCol[5]]),
-//                                                                Double.valueOf(displaceAngleNot[0][i][valueCol[6]])))))));
 
                 envelopeY = Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Util.getAvg(
                         Double.valueOf(displaceAngle[1][i][valueCol[0]]),
@@ -1102,13 +1045,6 @@ public class InsertToWord {
                         Double.valueOf(displaceAngle[1][i][valueCol[4]]),
                         Double.valueOf(displaceAngle[1][i][valueCol[5]]),
                         Double.valueOf(displaceAngle[1][i][valueCol[6]]));
-//                envelopeY = floorh[i] / Math.max(Double.valueOf(displaceAngle[1][i][valueCol[0]]),
-//                        Math.max(Double.valueOf(displaceAngle[1][i][valueCol[1]]),
-//                                Math.max(Double.valueOf(displaceAngle[1][i][valueCol[2]]),
-//                                        Math.max(Double.valueOf(displaceAngle[1][i][valueCol[3]]),
-//                                                Math.max(Double.valueOf(displaceAngle[1][i][valueCol[4]]),
-//                                                        Math.max(Double.valueOf(displaceAngle[1][i][valueCol[5]]),
-//                                                                Double.valueOf(displaceAngle[1][i][valueCol[6]])))))));
 
                 envelopeYNot = Double.valueOf(Floor_8.FLOOR_HEIGHT[i]) / Util.getAvg(
                         Double.valueOf(displaceAngleNot[1][i][valueCol[0]]),
@@ -1118,13 +1054,6 @@ public class InsertToWord {
                         Double.valueOf(displaceAngleNot[1][i][valueCol[4]]),
                         Double.valueOf(displaceAngleNot[1][i][valueCol[5]]),
                         Double.valueOf(displaceAngleNot[1][i][valueCol[6]]));
-//                envelopeYNot = floorh[i] / Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[0]]),
-//                        Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[1]]),
-//                                Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[2]]),
-//                                        Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[3]]),
-//                                                Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[4]]),
-//                                                        Math.max(Double.valueOf(displaceAngleNot[1][i][valueCol[5]]),
-//                                                                Double.valueOf(displaceAngleNot[1][i][valueCol[6]])))))));
 
                 //获取包络值列的最小值
                 minEnvelopeX = minEnvelopeX == null ? envelopeX : Math.min(minEnvelopeX, envelopeX);
@@ -1253,11 +1182,14 @@ public class InsertToWord {
      * @param table1  table1 的部分数据来源于table24   和   table25
      *                单独写方法时 table24和table25获取到的各行的对象都一样，无法获取数据，所以直接就写在一个方法里
      */
-    private static void maxEarthquakeDapmerForceDisplace1(XWPFTable table25, XWPFTable table26, XWPFTable table1, XWPFTable table2) {
+    private static void maxEarthquakeDapmerForceDisplace1(XWPFTable table25, XWPFTable table26, XWPFTable table1) {
         System.out.println("\n处理  结构各层阻尼器最大出力及位移包络值汇总表");
         try {
-            //获取CAD 编号
-//            String[][] modelValue1 = getModelNo(table2);
+            //插入阻尼系数，阻尼指数
+            dealCellSM(table25.getRow(4).getCell(2),OtherData_4_10.DAMPING_FACTOR.toString());
+            dealCellSM(table25.getRow(4).getCell(3),OtherData_4_10.DAMPING_EXPONENT.toString());
+            dealCellSM(table26.getRow(4).getCell(2),OtherData_4_10.DAMPING_FACTOR.toString());
+            dealCellSM(table26.getRow(4).getCell(3),OtherData_4_10.DAMPING_EXPONENT.toString());
 
             //X方向  //原来工作簿11
             Double[][][] valueX = GetExcelValue.getEarthquakeDamperDisEnergyX(basePath + "\\excel\\工作簿5.xlsx");
@@ -1360,7 +1292,6 @@ public class InsertToWord {
                 dealCellSM(row26.getCell(16), Util.getPrecisionString(shapeY[floor - i - 1][valueCol[5]], 2));
                 dealCellSM(row26.getCell(17), Util.getPrecisionString(shapeY[floor - i - 1][valueCol[6]], 2));
 
-
                 //x方向
                 //包络值
                 forceEnvelope = Util.getAvg(
@@ -1371,13 +1302,6 @@ public class InsertToWord {
                         forceX[floor - i - 1][valueCol[4]],
                         forceX[floor - i - 1][valueCol[5]],
                         forceX[floor - i - 1][valueCol[6]]);
-//                forceEnvelope = Math.max(forceX[floor - i - 1][valueCol[0]],
-//                        Math.max(forceX[floor - i - 1][valueCol[1]],
-//                                        Math.max(forceX[floor - i - 1][valueCol[2]],
-//                                                Math.max(forceX[floor - i - 1][valueCol[3]],
-//                                                        Math.max(forceX[floor - i - 1][valueCol[4]],
-//                                                                Math.max(forceX[floor - i - 1][valueCol[5]],
-//                                                                                forceX[floor - i - 1][valueCol[6]]))))));
 
                 shapeEnvelope = Util.getAvg(
                         shapeX[floor - i - 1][valueCol[0]],
@@ -1387,14 +1311,6 @@ public class InsertToWord {
                         shapeX[floor - i - 1][valueCol[4]],
                         shapeX[floor - i - 1][valueCol[5]],
                         shapeX[floor - i - 1][valueCol[6]]);
-//                shapeEnvelope = Math.max(shapeX[floor - i - 1][valueCol[0]],
-//                        Math.max(shapeX[floor - i - 1][valueCol[1]],
-//                                Math.max(shapeX[floor - i - 1][valueCol[2]],
-//                                        Math.max(shapeX[floor - i - 1][valueCol[3]],
-//                                                Math.max(shapeX[floor - i - 1][valueCol[4]],
-//                                                        Math.max(shapeX[floor - i - 1][valueCol[5]],
-//                                                                shapeX[floor - i - 1][valueCol[6]]))))));
-
 
                 speedEnvelope = Math.pow(forceEnvelope / Double.valueOf(row25.getCell(2).getText()), 1d / Double.valueOf(row25.getCell(3).getText()));
                 dealCellSM(row25.getCell(18), Util.getPrecisionString(forceEnvelope, 0));
@@ -1425,13 +1341,6 @@ public class InsertToWord {
                         forceY[floor - i - 1][valueCol[4]],
                         forceY[floor - i - 1][valueCol[5]],
                         forceY[floor - i - 1][valueCol[6]]);
-//                forceEnvelope = Math.max(forceY[floor - i - 1][valueCol[0]],
-//                        Math.max(forceY[floor - i - 1][valueCol[1]],
-//                                Math.max(forceY[floor - i - 1][valueCol[2]],
-//                                        Math.max(forceY[floor - i - 1][valueCol[3]],
-//                                                Math.max(forceY[floor - i - 1][valueCol[4]],
-//                                                        Math.max(forceY[floor - i - 1][valueCol[5]],
-//                                                               forceY[floor - i - 1][valueCol[6]]))))));
 
                 shapeEnvelope = Util.getAvg(
                         shapeY[floor - i - 1][valueCol[0]],
@@ -1441,13 +1350,6 @@ public class InsertToWord {
                         shapeY[floor - i - 1][valueCol[4]],
                         shapeY[floor - i - 1][valueCol[5]],
                         shapeY[floor - i - 1][valueCol[6]]);
-//                shapeEnvelope = Math.max(shapeY[floor - i - 1][valueCol[0]],
-//                        Math.max(shapeY[floor - i - 1][valueCol[1]],
-//                                Math.max(shapeY[floor - i - 1][valueCol[2]],
-//                                        Math.max(shapeY[floor - i - 1][valueCol[3]],
-//                                                Math.max(shapeY[floor - i - 1][valueCol[4]],
-//                                                        Math.max(shapeY[floor - i - 1][valueCol[5]],
-//                                                                 shapeY[floor - i - 1][valueCol[6]]))))));
 
                 speedEnvelope = Math.pow(forceEnvelope / Double.valueOf(row26.getCell(2).getText()), 1d / Double.valueOf(row26.getCell(3).getText()));
                 dealCellSM(row26.getCell(18), Util.getPrecisionString(forceEnvelope, 0));
@@ -1474,9 +1376,9 @@ public class InsertToWord {
             table25.removeRow(floor + 4);
             table26.removeRow(floor + 4);
 
-            //处理table1
-            dealCellSM(table1.getRow(3).getCell(2), table25.getRow(4).getCell(2).getText());
-            dealCellSM(table1.getRow(4).getCell(2), table25.getRow(4).getCell(3).getText());
+
+            dealCellSM(table1.getRow(3).getCell(2), OtherData_4_10.DAMPING_FACTOR.toString());
+            dealCellSM(table1.getRow(4).getCell(2), OtherData_4_10.DAMPING_EXPONENT.toString());
             dealCellSM(table1.getRow(5).getCell(2), Util.getPrecisionString(propertyMax[0], 0));
             dealCellSM(table1.getRow(6).getCell(2), Util.getPrecisionString(propertyMax[1], 0));
             dealCellSM(table1.getRow(7).getCell(2), Util.getPrecisionString(propertyMax[2], 0));
@@ -1501,11 +1403,14 @@ public class InsertToWord {
      * @param table1  table1 的部分数据来源于table24   和   table25
      *                单独写方法时 table24和table25获取到的各行的对象都一样，无法获取数据，所以直接就写在一个方法里
      */
-    private static void maxEarthquakeDapmerForceDisplace2(XWPFTable table25, XWPFTable table26, XWPFTable table1, XWPFTable table2) {
+    private static void maxEarthquakeDapmerForceDisplace2(XWPFTable table25, XWPFTable table26, XWPFTable table1) {
         System.out.println("\n处理  结构各层阻尼器最大出力及位移包络值汇总表");
         try {
-            //获取CAD 编号
-//            String[][] modelValue1 = getModelNo(table2);
+            //插入阻尼系数，阻尼指数
+            dealCellSM(table25.getRow(4).getCell(2),OtherData_4_10.DAMPING_FACTOR.toString());
+            dealCellSM(table25.getRow(4).getCell(3),OtherData_4_10.DAMPING_EXPONENT.toString());
+            dealCellSM(table26.getRow(4).getCell(2),OtherData_4_10.DAMPING_FACTOR.toString());
+            dealCellSM(table26.getRow(4).getCell(3),OtherData_4_10.DAMPING_EXPONENT.toString());
 
             //X方向  //原来工作簿11
             Double[][][] valueX = GetExcelValue.getEarthquakeDamperDisEnergyX(basePath + "\\excel\\工作簿5.xlsx");
@@ -1766,7 +1671,6 @@ public class InsertToWord {
     /**
      * 获取CAD中的编号和模型中的编号
      *
-     * @param table2
      * @return
      */
     private static String[][][] getModelNo1() {
@@ -1858,21 +1762,4 @@ public class InsertToWord {
         }
         return name;
     }
-
-
-//    public static void main(String args[]) throws IOException {
-//        String wordPath = "C:\\Users\\lizhongxiang\\Desktop\\workSpace\\最终\\cccc.docx";
-//        FileInputStream in = null;
-//        XWPFDocument word = null;
-//        FileOutputStream out = null;
-//        in = new FileInputStream(wordPath);
-//        word = new XWPFDocument(in);
-//        out = new FileOutputStream("C:\\Users\\lizhongxiang\\Desktop\\workSpace\\最终\\out"+System.currentTimeMillis()+" .docx");
-//        List<XWPFTable> tables = word.getTables();
-//        calculateTable(tables.get(29), tables.get(30), tables.get(31));
-//        word.write(out);
-//        out.flush();
-//        out.close();
-//        in.close();
-//    }
 }
