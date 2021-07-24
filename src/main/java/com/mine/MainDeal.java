@@ -2,10 +2,10 @@ package com.mine;
 
 import com.data.DataInfo;
 import com.insert.InsertToWord;
+import com.ui.WordTab;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 /**
  * Gui获取文件基本路径成功后，调用此类的方法
@@ -21,7 +21,7 @@ public class MainDeal {
      * @param wordPath
      * @throws FileNotFoundException
      */
-    public static void getBasePath(String wordPath) throws FileNotFoundException {
+    public static void getBasePath(String wordPath) throws Exception {
         String basePath;
         System.out.println(wordPath);
         if (wordPath.contains("\\")) {
@@ -33,7 +33,6 @@ public class MainDeal {
         }
         System.out.println("基本路径：" + basePath);
 
-//        boolean excel0IsExist = false;
         boolean excelDirectoryIsExist = false;
         boolean txtDirectoryIsExist = false;
 
@@ -43,9 +42,6 @@ public class MainDeal {
         for (File file2 : fileList) {
             System.out.println(file2.getPath());
             //将值直接插入到excel里，暂时不做
-//			if(file2.isFile()){
-//				if((basePath+"\\excel0.xlsx").equals(file2.getPath())) excel0IsExist = true;
-//			}
             if (file2.isDirectory()) {
                 if ((basePath + "\\excel").equals(file2.getPath())) {
                     excelDirectoryIsExist = true;
@@ -78,21 +74,21 @@ public class MainDeal {
             System.out.println("缺少txt文件夹");
         }
 
+        //初始化数据
+         DataInfo.initBaseData(basePath);
 
-        try {
-            DataInfo.initBaseData(basePath);
-        } catch (IOException e) {
-            System.out.println("初始化数据加载异常："+e.getMessage());
-            e.printStackTrace();
-        }
 
         //==================================================  第一套模板  (云南) ======================================================
-//        InsertToWord.getValueInsertWord1(basePath, wordPath);
+        if (WordTab.FunctionType.YUNNAN_WORD.equals(WordTab.FUNCTION_TYPE)) {
+            InsertToWord.getValueInsertWord1(basePath, wordPath);
+        }
         //==================================================  第一套模板 （云南）======================================================
 
 
         //==================================================  第二套模板  (江苏）======================================================
-        InsertToWord.getValueInsertWord2(basePath,wordPath);
+        if (WordTab.FunctionType.JIANGSU_WORD.equals(WordTab.FUNCTION_TYPE)) {
+            InsertToWord.getValueInsertWord2(basePath, wordPath);
+        }
         //==================================================  第二套模板  （江苏）======================================================
 
 //		if(excel0IsExist){

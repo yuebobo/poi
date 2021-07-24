@@ -3,6 +3,7 @@ package com.insert;
 import com.data.*;
 import com.file.GetExcelValue;
 import com.txt.TxtGetValue;
+import com.ui.WordTab;
 import com.util.Util;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
@@ -29,11 +30,10 @@ public class InsertToWord {
         basePath = path;
         FileInputStream in = null;
         XWPFDocument word = null;
-        FileOutputStream out = null;
+        WordTab.Step step = WordTab.STEP;
         try {
             in = new FileInputStream(wordPath);
             word = new XWPFDocument(in);
-            out = new FileOutputStream(basePath + "\\out" + System.currentTimeMillis() + ".docx");
             List<XWPFTable> tables = word.getTables();
 
             //插入CAD 图纸编号
@@ -41,9 +41,17 @@ public class InsertToWord {
 
             //模型对比三个表
             insertModelCompare(tables.get(5), tables.get(6), tables.get(7));
+            if (WordTab.Step.ONE.equals(step) && !WordTab.IS_EXPORT) {
+                System.out.println("执行结束1");
+                return;
+            }
 
             //基低剪力对比          （非减震结构底部剪力对比表）
             insertBaseShearCopmpare(tables.get(8));
+            if (WordTab.Step.TWO.equals(step) && !WordTab.IS_EXPORT){
+                System.out.println("执行结束2");
+                return;
+            }
 
             //地震波信息
             insertEarthquakeWaveInfo(tables.get(9));
@@ -68,6 +76,10 @@ public class InsertToWord {
 
             //结构附加阻尼比计算  该表的数据依赖与上边四个表的数据(此表要后处理)
             insertAnnexDamperRatio(tables.get(18), tables.get(19), tables.get(20), tables.get(21), tables.get(22));
+            if (WordTab.Step.THREE.equals(step) && !WordTab.IS_EXPORT){
+                System.out.println("执行结束3");
+                return;
+            }
 
             //阻尼器出力与楼层剪力占比
             insertDamperFloorRatio(tables.get(23), tables.get(24));
@@ -77,7 +89,10 @@ public class InsertToWord {
 
             //层间位移角
             insertFloorDisplaceAngle(tables.get(26),tables.get(27));
-
+            if (WordTab.Step.FOUR.equals(step) && !WordTab.IS_EXPORT){
+                System.out.println("执行结束4");
+                return;
+            }
 
             //结构各层阻尼器最大出力及位移包络值汇总
             //粘滞阻尼器性能规格表
@@ -94,11 +109,15 @@ public class InsertToWord {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + wordPath + "处理异常");
             e.printStackTrace();
         } finally {
-            try {
-                word.write(out);
-            } catch (IOException e) {
-                System.out.println("输出流异常");
-                e.printStackTrace();
+            FileOutputStream out = null;
+            if (WordTab.IS_EXPORT) {
+                try {
+                    out = new FileOutputStream(basePath + "\\out" + System.currentTimeMillis() + ".docx");
+                    word.write(out);
+                } catch (IOException e) {
+                    System.out.println("输出流异常");
+                    e.printStackTrace();
+                }
             }
             if (in != null) {
                 try {
@@ -128,11 +147,10 @@ public class InsertToWord {
         basePath = path;
         FileInputStream in = null;
         XWPFDocument word = null;
-        FileOutputStream out = null;
+        WordTab.Step step = WordTab.STEP;
         try {
             in = new FileInputStream(wordPath);
             word = new XWPFDocument(in);
-            out = new FileOutputStream(basePath + "\\out" + System.currentTimeMillis() + ".docx");
             List<XWPFTable> tables = word.getTables();
 
             //插入CAD 图纸编号
@@ -140,9 +158,17 @@ public class InsertToWord {
 
             //模型对比三个表
             insertModelCompare(tables.get(5), tables.get(6), tables.get(7));
+            if (WordTab.Step.ONE.equals(step) && !WordTab.IS_EXPORT) {
+                System.out.println("执行结束1");
+                return;
+            }
 
             //基低剪力对比          （非减震结构底部剪力对比表）
             insertBaseShearCopmpare(tables.get(8));
+            if (WordTab.Step.TWO.equals(step) && !WordTab.IS_EXPORT){
+                System.out.println("执行结束2");
+                return;
+            }
 
             //地震波信息
             insertEarthquakeWaveInfo(tables.get(9));
@@ -167,6 +193,10 @@ public class InsertToWord {
 
             //结构附加阻尼比计算  该表的数据依赖与上边四个表的数据(此表要后处理)
             insertAnnexDamperRatio(tables.get(18), tables.get(19), tables.get(20), tables.get(21), tables.get(22));
+            if (WordTab.Step.THREE.equals(step) && !WordTab.IS_EXPORT){
+                System.out.println("执行结束3");
+                return;
+            }
 
             //阻尼器出力与楼层剪力占比
             insertDamperFloorRatio(tables.get(23), tables.get(24));
@@ -176,7 +206,10 @@ public class InsertToWord {
 
             //层间位移角
             insertFloorDisplaceAngle(tables.get(26));
-
+            if (WordTab.Step.FOUR.equals(step) && !WordTab.IS_EXPORT){
+                System.out.println("执行结束4");
+                return;
+            }
 
             //结构各层阻尼器最大出力及位移包络值汇总
             //粘滞阻尼器性能规格表
@@ -194,11 +227,15 @@ public class InsertToWord {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + wordPath + "处理异常");
             e.printStackTrace();
         } finally {
-            try {
-                word.write(out);
-            } catch (IOException e) {
-                System.out.println("输出流异常");
-                e.printStackTrace();
+            FileOutputStream out = null;
+            if (WordTab.IS_EXPORT) {
+                try {
+                    out = new FileOutputStream(basePath + "\\out" + System.currentTimeMillis() + ".docx");
+                    word.write(out);
+                } catch (IOException e) {
+                    System.out.println("输出流异常");
+                    e.printStackTrace();
+                }
             }
             if (in != null) {
                 try {
@@ -243,20 +280,34 @@ public class InsertToWord {
             dealCellBig(row3.getCell(0), Util.getPrecisionString(OtherData_4_10.QUALITY, 1));
             dealCellBig(row3.getCell(1), Util.getPrecisionString(Double.valueOf(qualityOfStructure2) / 10, 1));
             //计算差值并填入
-            dealCellBig(row3.getCell(2), Util.subAndDiv(OtherData_4_10.QUALITY.toString(), String.valueOf(Double.valueOf(qualityOfStructure2) / 10), 2));
-
+            String v1 = Util.subAndDiv(OtherData_4_10.QUALITY.toString(), String.valueOf(Double.valueOf(qualityOfStructure2) / 10), 2);
+            dealCellBig(row3.getCell(2), v1);
+            WordTab.setV11(v1);
             //===================================  表4  结构周期对比  ====================================
+
+            String v = "";
+
             XWPFTableRow row4;
             for (int i = 1; i < 4; i++) {
                 row4 = table4.getRow(i);
-                dealCellBig(row4.getCell(1), Util.getPrecisionString(Period_5.PERIODS.get(i - 1).period, 3));
+                dealCellBig(row4.getCell(1),Util.getPrecisionString(Period_5.PERIODS.get(i - 1).period, 3));
                 dealCellBig(row4.getCell(2), Util.getPrecisionString(cycle2[i - 1], 3));
-                dealCellBig(row4.getCell(3), Util.subAndDiv(Period_5.PERIODS.get(i - 1).period.toString(), cycle2[i - 1], 2));
+
+                v = Util.subAndDiv(Period_5.PERIODS.get(i - 1).period.toString(), cycle2[i - 1], 2);
+                v = ","+v;
+                dealCellBig(row4.getCell(3), v);
             }
+
+            WordTab.setV12(v.substring(1));
 
             //===================================  表5  结构地震剪力对比  ====================================
             int floor5 = Math.min(DampingShearForce_6_7.DAMPING.size(), f[0].length);
             XWPFTableRow row5;
+            String vx;
+            String vy;
+            Double vv;
+            String vs = "";
+            boolean flag = true;
             for (int i = 0; i < floor5; i++) {
 
                 //按照表头的单元格数进行添加
@@ -273,9 +324,19 @@ public class InsertToWord {
                 dealCellBig(row5.getCell(2), Util.getPrecisionString(DampingShearForce_6_7.DAMPING.get(i).vy, 0));
                 dealCellBig(row5.getCell(3), Util.getPrecisionString(f[0][floor5 - i - 1], 0));
                 dealCellBig(row5.getCell(4), Util.getPrecisionString(f[1][floor5 - i - 1], 0));
-                dealCellBig(row5.getCell(5), Util.subAndDiv(DampingShearForce_6_7.DAMPING.get(i).vx.toString(), f[0][floor5 - i - 1], 2));
-                dealCellBig(row5.getCell(6), Util.subAndDiv(DampingShearForce_6_7.DAMPING.get(i).vy.toString(), f[1][floor5 - i - 1], 2));
+                vx = Util.subAndDiv(DampingShearForce_6_7.DAMPING.get(i).vx.toString(), f[0][floor5 - i - 1], 2);
+                vy =  Util.subAndDiv(DampingShearForce_6_7.DAMPING.get(i).vy.toString(), f[1][floor5 - i - 1], 2);
+                vv = Double.valueOf(vx) - Double.valueOf(vy);
+                if ( vv >= 10 || vv <= -10){
+                    flag = false;
+                    vs = vv.toString();
+                }
+                dealCellBig(row5.getCell(5), vx);
+                dealCellBig(row5.getCell(6),vy);
             }
+
+            WordTab.setV13(flag ? "满足" : ("不满足，差值:"+vs));
+
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$处理模型对比三张表时发生异常");
@@ -321,8 +382,11 @@ public class InsertToWord {
             y -= Double.valueOf(e2T5R2[1][0]);
             dealCellSM(rowx.getCell(10), Util.getPrecisionString(x / 7d, 0));
             dealCellSM(rowy.getCell(10), Util.getPrecisionString(y / 7d, 0));
-            dealCellSM(table6.getRow(3).getCell(10), Util.getPrecisionString((x / 7d) / Double.valueOf(e2T5R2[0][0]), 2));
-            dealCellSM(table6.getRow(4).getCell(10), Util.getPrecisionString((y / 7d) / Double.valueOf(e2T5R2[1][0]), 2));
+            String v1 = Util.getPrecisionString((x / 7d) / Double.valueOf(e2T5R2[0][0]), 2);
+            dealCellSM(table6.getRow(3).getCell(10), v1);
+            String v2 = Util.getPrecisionString((y / 7d) / Double.valueOf(e2T5R2[1][0]), 2);
+            dealCellSM(table6.getRow(4).getCell(10), v2);
+            WordTab.setV21(v1+" , "+v2);
         } catch (Exception e) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理非减震结构底部剪力对比表发生异常");
             e.printStackTrace();
@@ -824,8 +888,12 @@ public class InsertToWord {
                 sumY += Double.valueOf(ratio);
             }
             //平均值
-            dealCellSM(table16.getRow(5).getCell(1), Util.getPrecisionString(sumX / 7d, 2) + "%");
-            dealCellSM(table16.getRow(11).getCell(1), Util.getPrecisionString(sumY / 7d, 2) + "%");
+            String v1 = Util.getPrecisionString(sumX / 7d, 2) + "%";
+            String v2 = Util.getPrecisionString(sumY / 7d, 2) + "%";
+            dealCellSM(table16.getRow(5).getCell(1), v1);
+            dealCellSM(table16.getRow(11).getCell(1),v2);
+            WordTab.setV31(v1);
+            WordTab.setV32(v2);
         } catch (Exception e) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 X/Y方向结构附加阻尼比计算表发生异常");
         }
@@ -1075,13 +1143,20 @@ public class InsertToWord {
             //插入最小包络值和位移比例
             dealCellSM(table23.getRow(3 + floor).getCell(1), Util.getPrecisionString(minEnvelopeXNot, 0));
             dealCellSM(table23.getRow(3 + floor).getCell(2), Util.getPrecisionString(minEnvelopeX, 0));
-            dealCellSM(table23.getRow(3 + floor + 1).getCell(1), Util.getPrecisionString(proX.toString(), 2));
+            String v1 = Util.getPrecisionString(proX.toString(), 2);
+            dealCellSM(table23.getRow(3 + floor + 1).getCell(1), v1);
+            WordTab.setV41(v1);
+
             dealCellSM(table24.getRow(3 + floor).getCell(1), Util.getPrecisionString(minEnvelopeYNot, 0));
             dealCellSM(table24.getRow(3 + floor).getCell(2), Util.getPrecisionString(minEnvelopeY, 0));
-            dealCellSM(table24.getRow(3 + floor + 1).getCell(1), Util.getPrecisionString(proY.toString(), 2));
+            String v2 = Util.getPrecisionString(proY.toString(), 2);
+            dealCellSM(table24.getRow(3 + floor + 1).getCell(1), v2);
+            WordTab.setV42(v2);
+
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 大震下非减震和减震的结构层间位移角表发生异常");
+            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -1163,8 +1238,14 @@ public class InsertToWord {
             table23.removeRow(floor + 2);
 
             //插入最小包络值和位移比例
-            dealCellSM(table23.getRow(2 + floor).getCell(1), Util.getPrecisionString(minEnvelopeX, 0));
-            dealCellSM(table23.getRow(2 + floor).getCell(2), Util.getPrecisionString(minEnvelopeY, 0));
+            String v1 = Util.getPrecisionString(minEnvelopeX, 0);
+            String v2 = Util.getPrecisionString(minEnvelopeY, 0);
+            dealCellSM(table23.getRow(2 + floor).getCell(1), v1);
+            dealCellSM(table23.getRow(2 + floor).getCell(2), v2);
+
+            WordTab.setV41(v1);
+            WordTab.setV42(v2);
+
         } catch (Exception e) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 大震下非减震和减震的结构层间位移角表发生异常");
         }
