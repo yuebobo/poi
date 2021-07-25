@@ -1,6 +1,7 @@
 package com.ui;
 
 import com.mine.MainDeal;
+import com.util.MyException;
 import com.util.Util;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -11,11 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
+import java.io.*;
 import java.util.Properties;
 
 /**
@@ -64,9 +61,11 @@ public class WordTab implements TabUI{
 
     //执行结果
     private Label resultLabel;
+    private Label resultLabel1;
 
     //执行结果
     private TextField textField;
+    private TextField textField1;
 
 
     /**
@@ -117,15 +116,25 @@ public class WordTab implements TabUI{
         System.out.println("上次操作的缓存路径:" + pathCache);
     }
 
-    public static void updateProperties(String key,String value) {
-        URL url = WordTab.class.getClassLoader().getResource("cache.properties");
-        String filePath = url.getPath();
-        try( OutputStream fos = new FileOutputStream(filePath);) {
+    public static void updateProperties(String key,String value) throws IOException {
+        InputStream in = Object.class.getResourceAsStream("/cache.properties");
+
+//        URL url1 = WordTab.class.getClassLoader().getResource("/cache.properties");
+        System.out.println("0000000000000");
+//        System.out.println("u1"+url1.getPath());
+        final ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
+        int ch;
+        while ((ch = in.read()) != -1) {
+            swapStream.write(ch);
+        }
+        try{
             Properties props = new Properties();
             props.setProperty(key, value);
-            props.store(fos, key);
+            props.store(swapStream, key);
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            swapStream.close();
         }
     }
 
@@ -368,18 +377,32 @@ public class WordTab implements TabUI{
         resultLabel.setVisible(false);
         textField = new TextField();
         textField.setVisible(false);
-        textField.setPrefWidth(130);
+        textField.setPrefWidth(400);
+
+        resultLabel1 = new Label("");
+        resultLabel1.setVisible(false);
+        textField1 = new TextField();
+        textField1.setVisible(false);
+        textField1.setPrefWidth(400);
 
         p =new ProgressBar();
         p.setVisible(false);
         p.setDisable(true);
 
         g.add(p,1,0);
-        g.add(resultLabel,1,2);
-        g.add(textField,2,2);
         g.add(b1,0,1);
         g.add(b2,2,1);
         grid.add(g,0,9);
+
+        GridPane gg = new GridPane();
+        gg.add(resultLabel,1,0);
+        gg.add(textField,2,0);
+        gg.add(resultLabel1,1,1);
+        gg.add(textField1,2,1);
+//        GridPane ggg = new GridPane();
+//        ggg.add(textField1,2,0);
+        grid.add(gg,0,10);
+//        grid.add(ggg,0,11);
     }
 
     /**
@@ -417,15 +440,24 @@ public class WordTab implements TabUI{
                         resultLabel.setText("   执行完成！");
                     } else {
                         resultLabel.setText("   运行异常    错误信息 ：");
-                        textField.setText(exx.getMessage());
+                        resultLabel1.setText("                    异常位置 ：");
+                        resultLabel1.setVisible(true);
+                        Exception ev = exx;
+
+                        if (exx instanceof MyException){
+                            textField1.setVisible(true);
+                            textField1.setText(((MyException) exx).getFunctionName());
+                            ev = ((MyException) exx).getE();
+                        }
+                        String errorMessage = ev instanceof NullPointerException ? "空指针异常":
+                                ev instanceof FileNotFoundException ? "文件找不到:"+ev.getMessage() : ev.getMessage();
+                        textField.setText(errorMessage);
                         textField.setVisible(true);
                     }
 
                     primaryStage.hide();
                     primaryStage.show();
-                    updateProperties(WORD_PATH,modelFilePathText.getText());
                 });
-
                 resultLabel.setVisible(true);
                 p.setVisible(false);
                 p.setDisable(true);
@@ -451,8 +483,12 @@ public class WordTab implements TabUI{
         t42.setText("");
         resultLabel.setVisible(false);
         resultLabel.setText("");
+        resultLabel1.setVisible(false);
+        resultLabel1.setText("");
         textField.setText("");
         textField.setVisible(false);
+        textField1.setText("");
+        textField1.setVisible(false);
 
     }
 

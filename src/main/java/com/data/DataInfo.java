@@ -1,5 +1,6 @@
 package com.data;
 
+import com.util.MyException;
 import com.util.Util;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -22,7 +23,7 @@ public class DataInfo {
     public static String[] DRAWING_NUMBER_Y;
 
 
-    public static void initBaseData(String basePath) throws IOException {
+    public static void initBaseData(String basePath) throws Exception {
         BASE_PATH = basePath;
 
         //初始化材料数据 excel 里的数据
@@ -36,7 +37,7 @@ public class DataInfo {
      *
      * @throws IOException
      */
-    private static void initMaterialData() throws IOException {
+    private static void initMaterialData() throws MyException {
         String path = BASE_PATH + "\\excel\\材料数据.xlsx";
         FileInputStream e = null;
 
@@ -80,8 +81,9 @@ public class DataInfo {
             OtherData_4_10.initOtherData(excel.getSheetAt(4), excel.getSheetAt(10));
             //================================= 其他的一些数据 ========================
 
-
-        } finally {
+        } catch (Exception e1){
+            throw MyException.build("获取【材料数据】信息",e1);
+        }finally {
             if (e != null) {
                 try {
                     e.close();
@@ -134,4 +136,8 @@ public class DataInfo {
     }
 
 
+    static String basePath = "C:\\Users\\Administrator\\Desktop\\WENJ\\weige\\testFile\\file";
+    public static void main(String[] args) throws Exception {
+        DataInfo.initBaseData(basePath);
+    }
 }

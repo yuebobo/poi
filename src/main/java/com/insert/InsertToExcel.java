@@ -41,7 +41,7 @@ public class InsertToExcel {
 	 * @param sheetX
 	 * @param sheetY
 	 */
-	private static void insertShear(XSSFSheet sheetX,XSSFSheet sheetY){
+	private static void insertShear(XSSFSheet sheetX,XSSFSheet sheetY) throws Exception {
 		//非减震结构层间剪力
 		String[][][] shearNot = GetExcelValue.getShear(basePath+"\\excle\\工作簿3.xlsx",1);
 		// 减震结构层间剪力
@@ -65,7 +65,7 @@ public class InsertToExcel {
 	 * @param sheetX
 	 * @param sheetY
 	 */
-	private static void insertDisplace(XSSFSheet sheetX,XSSFSheet sheetY){
+	private static void insertDisplace(XSSFSheet sheetX,XSSFSheet sheetY) throws Exception {
 		//非减震结构层间位移
 		//原来工作簿5
 		String[][][] displaceNot = GetExcelValue.getDisplace(basePath+"\\excle\\工作簿3.xlsx",0);

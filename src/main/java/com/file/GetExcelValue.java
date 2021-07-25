@@ -1,13 +1,13 @@
 package com.file;
 
 import com.excel.sheet.*;
+import com.util.MyException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,7 +21,7 @@ public class GetExcelValue {
 	 * 1.模型对比
 	 * @throws IOException
 	 */
-	public static Map<Integer, Object> getModel(String path) {
+	public static Map<Integer, Object> getModel(String path) throws Exception {
 		FileInputStream e = null;
 		try {
 			e = new FileInputStream(path);
@@ -49,12 +49,8 @@ public class GetExcelValue {
 			map.put(3, value3);
 			return map;
 			
-		} catch (FileNotFoundException e1) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"没找到");
-			return null;
-		} catch (IOException e1) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"处理异常");
-			return null;
+		} catch (Exception e1) {
+			throw MyException.build("工作簿1",e1);
 		}
 		finally {
 			if(e != null){
@@ -73,7 +69,7 @@ public class GetExcelValue {
 	 * @param path
 	 * @return
 	 */
-	public static String[][] getE2_T5_R2(String path){
+	public static String[][] getE2_T5_R2(String path) throws Exception {
 		FileInputStream e = null;
 		try {
 			e = new FileInputStream(path);
@@ -82,12 +78,8 @@ public class GetExcelValue {
 			arrayToString(value[0]);
 			arrayToString(value[1]);
 			return value;
-		} catch (FileNotFoundException e1) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"没找到");
-			return null;
-		} catch (IOException e1) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"处理异常");
-			return null;
+		} catch (Exception e1) {
+			throw MyException.build("工作簿2",e1);
 		}
 		finally {
 			if(e != null){
@@ -106,7 +98,7 @@ public class GetExcelValue {
 	 * @param path
 	 * @return
 	 */
-	public static Map<String,String[]> getEarthquakeWaveInfo(String path){
+	public static Map<String,String[]> getEarthquakeWaveInfo(String path) throws Exception {
 		FileInputStream e = null;
 		try {
 			System.out.println("\n"+path);
@@ -114,12 +106,8 @@ public class GetExcelValue {
 			XSSFWorkbook excel = new XSSFWorkbook(e);
 			Map<String,String[]> value =  ExcelEarthquakeWave.getEarthquakeWaveInfo(excel.getSheetAt(0));
 			return value;
-		} catch (FileNotFoundException e1) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"没找到");
-			return null;
-		} catch (IOException e1) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"处理异常");
-			return null;
+		} catch (Exception e1) {
+			throw MyException.build("地震波信息",e1);
 		}
 		finally {
 			if(e != null){
@@ -138,7 +126,7 @@ public class GetExcelValue {
 	 * @param path
 	 * @return
 	 */
-	public static String[][][] getShear(String path,int sheet){
+	public static String[][][] getShear(String path,int sheet) throws Exception {
 		FileInputStream e = null;
 		try {
 			e = new FileInputStream(path);
@@ -149,12 +137,8 @@ public class GetExcelValue {
 			System.out.println("=================== 层间剪力 =========================");
 			printArrayDisplace(value);
 			return value;
-		} catch (FileNotFoundException e1) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"没找到");
-			return null;
-		} catch (IOException e1) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"处理异常");
-			return null;
+		} catch (Exception e1) {
+			throw MyException.build("处理层间剪力",e1);
 		}
 		finally {
 			if(e != null){
@@ -173,7 +157,7 @@ public class GetExcelValue {
 	 * @param path
 	 * @return
 	 */
-	public static String[][][] getDisplace(String path,int sheet){
+	public static String[][][] getDisplace(String path,int sheet) throws Exception {
 		FileInputStream e = null;
 		try {
 			e = new FileInputStream(path);
@@ -184,12 +168,8 @@ public class GetExcelValue {
 			System.out.println("=================== 层间位移 =========================");
 			printArrayDisplace(value);
 			return value;
-		} catch (FileNotFoundException e1) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"没找到");
-			return null;
-		} catch (IOException e1) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"处理异常");
-			return null;
+		} catch (Exception e1) {
+			throw MyException.build("层间位移",e1);
 		}
 		finally {
 			if(e != null){
@@ -208,7 +188,7 @@ public class GetExcelValue {
 	 * @param path
 	 * @return
 	 */
-	public static Double[][][] getEarthquakeDamperDisEnergyX(String path){
+	public static Double[][][] getEarthquakeDamperDisEnergyX(String path) throws Exception {
 		System.out.println("================================================================");
 		System.out.println("\n"+path);
 		System.out.println("X方向各地震波下X方向阻尼器耗能");
@@ -224,7 +204,7 @@ public class GetExcelValue {
 	 * @param path
 	 * @return
 	 */
-	public static Double[][][] getEarthquakeDamperDisEnergyY(String path){
+	public static Double[][][] getEarthquakeDamperDisEnergyY(String path) throws Exception {
 		System.out.println("================================================================");
 		System.out.println("\n"+path);
 		System.out.println("Y方向各地震波下Y方向阻尼器耗能");
@@ -259,7 +239,7 @@ public class GetExcelValue {
 	 * @param path
 	 * @return
 	 */
-	private static Double[][][][] getEarthquakeDamperDisEnergy(String path, int valuePositionShape, int valuePositionForce){
+	private static Double[][][][] getEarthquakeDamperDisEnergy(String path, int valuePositionShape, int valuePositionForce) throws Exception {
 		FileInputStream e = null;
 		try {
 			e = new FileInputStream(path);
@@ -274,12 +254,8 @@ public class GetExcelValue {
 			printArrayDisplace1(force);
 			Double[][][][] value = {shape,force};
 			return value;
-		}catch (FileNotFoundException e1) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"没找到");
-			return null;
-		} catch (IOException e1) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"处理异常");
-			return null;
+		}catch (Exception e1) {
+			throw MyException.build("阻尼器耗能",e1);
 		}
 		finally {
 			if(e != null){
@@ -297,7 +273,7 @@ public class GetExcelValue {
 	 * @param path
 	 * @return
 	 */
-	public static String[][][] getDisplaceAngle(String path,int sheet){
+	public static String[][][] getDisplaceAngle(String path,int sheet) throws Exception {
 		FileInputStream e = null;
 		try {
 			e = new FileInputStream(path);
@@ -308,12 +284,8 @@ public class GetExcelValue {
 			System.out.println("=================== 层间位移角 =========================");
 			printArrayShear(value);
 			return value;
-		} catch (FileNotFoundException e1) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"没找到");
-			return null;
-		} catch (IOException e1) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+path+"处理异常");
-			return null;
+		} catch (Exception e1) {
+			throw MyException.build("层间角位移",e1);
 		}
 		finally {
 			if(e != null){

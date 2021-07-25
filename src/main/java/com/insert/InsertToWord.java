@@ -4,6 +4,7 @@ import com.data.*;
 import com.file.GetExcelValue;
 import com.txt.TxtGetValue;
 import com.ui.WordTab;
+import com.util.MyException;
 import com.util.Util;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
@@ -26,7 +27,7 @@ public class InsertToWord {
      * @param path
      * @param wordPath
      */
-    public static void getValueInsertWord1(String path, String wordPath) {
+    public static void getValueInsertWord1(String path, String wordPath) throws Exception {
         basePath = path;
         FileInputStream in = null;
         XWPFDocument word = null;
@@ -102,12 +103,11 @@ public class InsertToWord {
             //减震器周边子结构的设计计算方法
             calculateTable(tables.get(30), tables.get(31), tables.get(32));
 
-        } catch (FileNotFoundException e) {
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + wordPath + "没找到");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + wordPath + "处理异常");
-            e.printStackTrace();
+        } catch (Exception e) {
+           if (e instanceof MyException){
+               throw e;
+           }
+           throw MyException.build("word处理异常",e);
         } finally {
             FileOutputStream out = null;
             if (WordTab.IS_EXPORT) {
@@ -143,7 +143,7 @@ public class InsertToWord {
      * @param path
      * @param wordPath
      */
-    public static void getValueInsertWord2(String path, String wordPath) {
+    public static void getValueInsertWord2(String path, String wordPath) throws Exception {
         basePath = path;
         FileInputStream in = null;
         XWPFDocument word = null;
@@ -220,12 +220,11 @@ public class InsertToWord {
             //减震器周边子结构的设计计算方法
             calculateTable(tables.get(29), tables.get(30), tables.get(31));
 
-        } catch (FileNotFoundException e) {
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + wordPath + "没找到");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + wordPath + "处理异常");
-            e.printStackTrace();
+        } catch (Exception e) {
+            if (e instanceof MyException){
+                throw e;
+            }
+            throw MyException.build("word处理异常",e);
         } finally {
             FileOutputStream out = null;
             if (WordTab.IS_EXPORT) {
@@ -262,7 +261,7 @@ public class InsertToWord {
      * @param table4
      * @param table5
      */
-    private static void insertModelCompare(XWPFTable table3, XWPFTable table4, XWPFTable table5) {
+    private static void insertModelCompare(XWPFTable table3, XWPFTable table4, XWPFTable table5) throws Exception {
         System.out.println("\n处理模型对比三张表");
         try {
             //2.结构质量对比  周期对比    地震剪力对比
@@ -338,8 +337,7 @@ public class InsertToWord {
             WordTab.setV13(flag ? "满足" : ("不满足，差值:"+vs));
 
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$处理模型对比三张表时发生异常");
+            throw MyException.build("模型对比三张表",e);
         }
     }
 
@@ -349,7 +347,7 @@ public class InsertToWord {
      *
      * @param table6
      */
-    private static void insertBaseShearCopmpare(XWPFTable table6) {
+    private static void insertBaseShearCopmpare(XWPFTable table6) throws IOException, MyException {
         System.out.println("======================================================");
         System.out.println("\n处理 非减震结构底部剪力对比表");
         try {
@@ -388,8 +386,7 @@ public class InsertToWord {
             dealCellSM(table6.getRow(4).getCell(10), v2);
             WordTab.setV21(v1+" , "+v2);
         } catch (Exception e) {
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理非减震结构底部剪力对比表发生异常");
-            e.printStackTrace();
+            throw MyException.build("非减震结构底部剪力对比表",e);
         }
     }
 
@@ -398,7 +395,7 @@ public class InsertToWord {
      *
      * @param table7
      */
-    private static void insertEarthquakeWaveInfo(XWPFTable table7) {
+    private static void insertEarthquakeWaveInfo(XWPFTable table7) throws MyException {
         System.out.println("=================================================");
         System.out.println("\n处理 地震波信息表");
         String path = basePath + "\\excel\\地震波信息.xlsx";
@@ -446,8 +443,7 @@ public class InsertToWord {
                 }
             }
         } catch (Exception e) {
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理地震波信息表发生异常");
-            e.printStackTrace();
+            throw MyException.build("地震波信息表",e);
         }
     }
 
@@ -456,7 +452,7 @@ public class InsertToWord {
      *
      * @param table8
      */
-    private static void insertEarthquakeWave(XWPFTable table8) {
+    private static void insertEarthquakeWave(XWPFTable table8) throws MyException {
         System.out.println("\n处理 地震波持时表");
         try {
             String path;
@@ -477,8 +473,7 @@ public class InsertToWord {
                 dealCellSM(table8.getRow(i).getCell(6), Util.getPrecisionString((Double.valueOf(value[2]) - Double.valueOf(value[1])) / Period_5.PERIODS.get(0).period, 2));
             }
         } catch (NumberFormatException e) {
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理地震波持时表发生异常");
-            e.printStackTrace();
+            throw MyException.build("地震波持时表",e);
         }
     }
 
@@ -497,7 +492,7 @@ public class InsertToWord {
      * @param table10
      * @param table11
      */
-    private static void insertFloorShearCopmare(XWPFTable table10, XWPFTable table11) {
+    private static void insertFloorShearCopmare(XWPFTable table10, XWPFTable table11) throws MyException {
         System.out.println("=========================================================");
         System.out.println("\n处理 楼层剪力对比表");
         try {
@@ -566,8 +561,7 @@ public class InsertToWord {
                 dealCellSM(row11.getCell(25), Util.getPrecisionString(DampingShearForce_6_7.DAMPING.get(i).vy / DampingShearForce_6_7.DAMPING_NOT.get(i).vy, 3));
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理楼层剪力对比表发生异常");
+            throw MyException.build("楼层剪力对比表", e);
         }
     }
 
@@ -578,7 +572,7 @@ public class InsertToWord {
      * @param table12
      * @param table13
      */
-    private static void insertFloorDisplaceCompare(XWPFTable table12, XWPFTable table13, XWPFTable table14, XWPFTable table15) {
+    private static void insertFloorDisplaceCompare(XWPFTable table12, XWPFTable table13, XWPFTable table14, XWPFTable table15) throws MyException {
         System.out.println("\n处理 楼层层间位移对比表与楼层层间位移角");
         try {
             //非减震结构层间位移   原来工作簿5
@@ -683,8 +677,7 @@ public class InsertToWord {
                 dealCellSM(row15.getCell(17), Util.getPrecisionString(ySum / 7, 0));
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "楼层层间位移对比表与楼层层间位移角");
+            throw MyException.build("层间位移对比表与楼层层间位移角", e);
         }
     }
 
@@ -694,7 +687,7 @@ public class InsertToWord {
      * @param table17
      * @param table18
      */
-    private static void insertElasticPropertyOfBaseEarthquake(XWPFTable table17, XWPFTable table18) {
+    private static void insertElasticPropertyOfBaseEarthquake(XWPFTable table17, XWPFTable table18) throws MyException {
         System.out.println("\n处理 地震波下结构X/Y方向的弹性能表");
         try {
             // 减震结构层间剪力
@@ -751,8 +744,8 @@ public class InsertToWord {
                 dealCellSM(table17.getRow(floor + 4).getCell(i + 1), Util.getPrecisionString(sumX[i].toString(), 0));
                 dealCellSM(table18.getRow(floor + 4).getCell(i + 1), Util.getPrecisionString(sumY[i].toString(), 0));
             }
-        } catch (NumberFormatException e) {
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 地震波下结构X/Y方向的弹性能表发生异常");
+        } catch (Exception e) {
+            throw MyException.build("地震波下结构X/Y方向的弹性能表", e);
         }
     }
 
@@ -762,7 +755,7 @@ public class InsertToWord {
      * @param table19
      * @param table20
      */
-    private static void insertEarthquakeDamperDisEnergy(XWPFTable table2, XWPFTable table19, XWPFTable table20) {
+    private static void insertEarthquakeDamperDisEnergy(XWPFTable table2, XWPFTable table19, XWPFTable table20) throws MyException {
         System.out.println("\n处理 各地震波下X/Y方向阻尼器耗能表");
         try {
             //X方向
@@ -845,8 +838,8 @@ public class InsertToWord {
                 dealCellSM(row19.getCell(i + 1), Util.getPrecisionString(energyArrayX[i], 0));
                 dealCellSM(row20.getCell(i + 1), Util.getPrecisionString(energyArrayY[i], 0));
             }
-        } catch (NumberFormatException e) {
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 各地震波下X/Y方向阻尼器耗能表发生异常");
+        } catch (Exception e) {
+            throw MyException.build("各地震波下X/Y方向阻尼器耗能表", e);
         }
     }
 
@@ -861,7 +854,7 @@ public class InsertToWord {
      * @param table19 各地震波下结构  的弹性能
      * @param table20
      */
-    private static void insertAnnexDamperRatio(XWPFTable table16, XWPFTable table17, XWPFTable table18, XWPFTable table19, XWPFTable table20) {
+    private static void insertAnnexDamperRatio(XWPFTable table16, XWPFTable table17, XWPFTable table18, XWPFTable table19, XWPFTable table20) throws MyException {
         System.out.println("\n处理  X/Y方向结构附加阻尼比计算表");
         try {
             XWPFTableRow row17 = table17.getRow(table17.getRows().size() - 1);
@@ -895,7 +888,7 @@ public class InsertToWord {
             WordTab.setV31(v1);
             WordTab.setV32(v2);
         } catch (Exception e) {
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 X/Y方向结构附加阻尼比计算表发生异常");
+            throw MyException.build("X/Y方向结构附加阻尼比计算表", e);
         }
     }
 
@@ -912,7 +905,7 @@ public class InsertToWord {
      * @param table21
      * @param table22
      */
-    private static void insertDamperFloorRatio(XWPFTable table21, XWPFTable table22) {
+    private static void insertDamperFloorRatio(XWPFTable table21, XWPFTable table22) throws Exception {
 
         //X方向
         //原来是工作簿7
@@ -1021,7 +1014,7 @@ public class InsertToWord {
      * @param table23
      * @param table24
      */
-    private static void insertFloorDisplaceAngle(XWPFTable table23, XWPFTable table24) {
+    private static void insertFloorDisplaceAngle(XWPFTable table23, XWPFTable table24) throws MyException {
         System.out.println("\n处理  大震下非减震和减震的结构层间位移角表");
         try {
             //非减震结构层间位移
@@ -1154,9 +1147,7 @@ public class InsertToWord {
             WordTab.setV42(v2);
 
         } catch (Exception e) {
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 大震下非减震和减震的结构层间位移角表发生异常");
-            e.printStackTrace();
-            throw e;
+            throw MyException.build("大震下非减震和减震的结构层间位移角表", e);
         }
     }
 
@@ -1167,7 +1158,7 @@ public class InsertToWord {
      *
      * @param table23
      */
-    private static void insertFloorDisplaceAngle(XWPFTable table23) {
+    private static void insertFloorDisplaceAngle(XWPFTable table23) throws MyException {
         System.out.println("\n处理  大震下非减震和减震的结构层间位移角表");
         try {
             String[][][] displaceAngle = GetExcelValue.getDisplaceAngle(basePath + "\\excel\\工作簿5.xlsx", 2);
@@ -1247,7 +1238,7 @@ public class InsertToWord {
             WordTab.setV42(v2);
 
         } catch (Exception e) {
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 大震下非减震和减震的结构层间位移角表发生异常");
+            throw MyException.build("大震下非减震和减震的结构层间位移角表", e);
         }
     }
 
@@ -1261,7 +1252,7 @@ public class InsertToWord {
      * @param table1  table1 的部分数据来源于table24   和   table25
      *                单独写方法时 table24和table25获取到的各行的对象都一样，无法获取数据，所以直接就写在一个方法里
      */
-    private static void maxEarthquakeDapmerForceDisplace1(XWPFTable table25, XWPFTable table26, XWPFTable table1) {
+    private static void maxEarthquakeDapmerForceDisplace1(XWPFTable table25, XWPFTable table26, XWPFTable table1) throws MyException {
         System.out.println("\n处理  结构各层阻尼器最大出力及位移包络值汇总表");
         try {
             //插入阻尼系数，阻尼指数
@@ -1467,8 +1458,7 @@ public class InsertToWord {
             dealCellSM(table1.getRow(10).getCell(2), Util.getPrecisionString(propertyMax[5], 0));
             dealCellSM(table1.getRow(13).getCell(2), String.valueOf(floor * 2));
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 结构各层阻尼器最大出力及位移包络值汇总表发生异常");
+            throw MyException.build("各层阻尼器最大出力及位移包络值汇总表", e);
         }
     }
 
@@ -1482,7 +1472,7 @@ public class InsertToWord {
      * @param table1  table1 的部分数据来源于table24   和   table25
      *                单独写方法时 table24和table25获取到的各行的对象都一样，无法获取数据，所以直接就写在一个方法里
      */
-    private static void maxEarthquakeDapmerForceDisplace2(XWPFTable table25, XWPFTable table26, XWPFTable table1) {
+    private static void maxEarthquakeDapmerForceDisplace2(XWPFTable table25, XWPFTable table26, XWPFTable table1) throws MyException {
         System.out.println("\n处理  结构各层阻尼器最大出力及位移包络值汇总表");
         try {
             //插入阻尼系数，阻尼指数
@@ -1644,8 +1634,7 @@ public class InsertToWord {
             dealCellSM(table1.getRow(9).getCell(2), String.valueOf(floor * 2));
 
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "处理 结构各层阻尼器最大出力及位移包络值汇总表发生异常");
+            throw MyException.build("结构各层阻尼器最大出力及位移包络值汇总表", e);
         }
     }
 

@@ -56,22 +56,20 @@ public class MainDeal {
             File file3 = new File(basePath);
             File[] file3s = file3.listFiles();
             if (file3s.length < 1) {
-                System.out.println("excel文件夹里没有文件");
-                return;
+                throw new RuntimeException("excel文件夹里没有文件");
             }
         } else {
-            System.out.println("缺少excel的文件夹");
+            throw new RuntimeException("缺少excel的文件夹");
         }
 
         if (txtDirectoryIsExist) {
             File file3 = new File(basePath);
             File[] file3s = file3.listFiles();
             if (file3s.length < 1) {
-                System.out.println("txt文件夹里没有文件");
-                return;
+                throw new RuntimeException("txt文件夹里没有文件");
             }
         }else {
-            System.out.println("缺少txt文件夹");
+            throw new RuntimeException("缺少txt文件夹");
         }
 
         //初始化数据
