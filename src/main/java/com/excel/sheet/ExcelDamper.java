@@ -62,8 +62,8 @@ public class ExcelDamper {
 			if(!map.containsKey(floor)){
 				map.put(floor, new ValueNote(floor.toString()));
 			}
-				valueNote = map.get(floor);
-				Util.insertValue(valueNote, flagCell, vaileCell);
+			valueNote = map.get(floor);
+			Util.insertValue(valueNote, flagCell, vaileCell);
 		}
 		return Util.mapToArray1(map, maxFloor);
 	}

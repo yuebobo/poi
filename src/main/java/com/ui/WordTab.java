@@ -251,13 +251,13 @@ public class WordTab implements TabUI{
 
         g1.add(new Label("  质 量 : "), column++, row);
         t11 = new TextField();
-        t11.setPrefWidth(130);
+        t11.setPrefWidth(80);
         t11.setEditable(false);
         g1.add(t11, column++, 2);
 
         g1.add(new Label("      周 期 : "), column++, row);
         t12 = new TextField();
-        t12.setPrefWidth(130);
+        t12.setPrefWidth(180);
         t12.setEditable(false);
         g1.add(t12, column++, 2);
 

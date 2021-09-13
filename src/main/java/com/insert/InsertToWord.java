@@ -284,7 +284,7 @@ public class InsertToWord {
             WordTab.setV11(v1);
             //===================================  表4  结构周期对比  ====================================
 
-            String v = "";
+            String va = "";
 
             XWPFTableRow row4;
             for (int i = 1; i < 4; i++) {
@@ -292,12 +292,12 @@ public class InsertToWord {
                 dealCellBig(row4.getCell(1),Util.getPrecisionString(Period_5.PERIODS.get(i - 1).period, 3));
                 dealCellBig(row4.getCell(2), Util.getPrecisionString(cycle2[i - 1], 3));
 
-                v = Util.subAndDiv(Period_5.PERIODS.get(i - 1).period.toString(), cycle2[i - 1], 2);
-                v = ","+v;
+                String v = Util.subAndDiv(Period_5.PERIODS.get(i - 1).period.toString(), cycle2[i - 1], 2);
+                va = va + ",【" + v+"】";
                 dealCellBig(row4.getCell(3), v);
             }
 
-            WordTab.setV12(v.substring(1));
+            WordTab.setV12(va.substring(1));
 
             //===================================  表5  结构地震剪力对比  ====================================
             int floor5 = Math.min(DampingShearForce_6_7.DAMPING.size(), f[0].length);
@@ -638,6 +638,7 @@ public class InsertToWord {
                 dealCellSM(row15.getCell(1), String.valueOf(floor - i));
 
                 //层高
+                dealCellSM(row12.getCell(0), Floor_8.FLOOR_HEIGHT[floor - i - 1].toString());
                 dealCellSM(row13.getCell(0), Floor_8.FLOOR_HEIGHT[floor - i - 1].toString());
                 dealCellSM(row14.getCell(0), Floor_8.FLOOR_HEIGHT[floor - i - 1].toString());
                 dealCellSM(row15.getCell(0), Floor_8.FLOOR_HEIGHT[floor - i - 1].toString());
