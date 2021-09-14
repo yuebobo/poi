@@ -26,10 +26,8 @@ public class ExcelDamper {
 		Map<Integer, ValueNote> map = new HashMap<>();
 		//三行表头
 		Iterator it = sheet.iterator();
-		it.next();
-		it.next();
-		it.next();
-		
+		Util.iteratorNext(it,3);
+
 		XSSFRow  row;
 		String firstCell;
 		String flagCell;
@@ -66,6 +64,46 @@ public class ExcelDamper {
 			Util.insertValue(valueNote, flagCell, vaileCell);
 		}
 		return Util.mapToArray1(map, maxFloor);
+	}
+
+
+	public static Map<String,ValueNote> getValueNote(XSSFSheet sheet,int flagPosition , int valuePosition ,String direct){
+		Map<String, ValueNote> map = new HashMap<>();
+		//三行表头
+		Iterator it = sheet.iterator();
+		Util.iteratorNext(it,3);
+		XSSFRow  row;
+		String firstCell;
+		String flagCell;
+		Double vaileCell ;
+		ValueNote valueNote;
+		while (it.hasNext()) {
+			row = (XSSFRow) it.next();
+			try {
+				firstCell  = row.getCell(1).getStringCellValue();
+			} catch (Exception e) {
+				firstCell  = row.getCell(1).getRawValue();
+			}
+
+			try {
+				flagCell = row.getCell(flagPosition).getStringCellValue();
+			} catch (Exception e) {
+				flagCell = row.getCell(flagPosition).getRawValue();
+			}
+			if(firstCell == null) break;
+			if (!firstCell.contains(direct) || !flagCell.contains(direct)){
+				continue;
+			}
+			vaileCell = Math.abs(row.getCell(valuePosition).getNumericCellValue());
+
+			//该楼层还没有在map里
+			if(!map.containsKey(firstCell)){
+				map.put(firstCell, new ValueNote(firstCell));
+			}
+			valueNote = map.get(firstCell);
+			Util.insertValue(valueNote, flagCell, vaileCell);
+		}
+		return map;
 	}
 
 }

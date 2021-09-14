@@ -11,6 +11,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.entity.Constants.LINE;
 
@@ -231,6 +232,45 @@ public class Util {
 				data[1][count][6] = valueNote.getR1y();
 				data[1][count][7] = valueNote.getR2y();
 				count++;
+			}
+		}
+		return data;
+	}
+
+	/**
+	 * ValueNote 转 数组
+	 * 针对阻尼器 楼层数不连续
+	 * @param
+	 * @param
+	 * @return
+	 */
+	public static Double[][] mapToArray1__(Collection<ValueNote> list,String direct){
+		List<ValueNote> collect = list.stream().sorted(Comparator.comparing(ValueNote::getFloor)).collect(Collectors.toList());
+		int size = collect.size();
+		Double[][] data  = new Double[collect.size()][8];
+		if ("X".equals(direct)) {
+			for (int i = 1; i <= size; i++) {
+				ValueNote valueNote = collect.get(i - 1);
+				data[i - 1][0] = Double.valueOf(i);
+				data[i - 1][1] = valueNote.getT1x();
+				data[i - 1][2] = valueNote.getT2x();
+				data[i - 1][3] = valueNote.getT3x();
+				data[i - 1][4] = valueNote.getT4x();
+				data[i - 1][5] = valueNote.getT5x();
+				data[i - 1][6] = valueNote.getR1x();
+				data[i - 1][7] = valueNote.getR2x();
+			}
+		}else {
+			for (int i = 1; i <= size; i++) {
+				ValueNote valueNote = collect.get(i - 1);
+				data[i - 1][0] = Double.valueOf(i);
+				data[i - 1][1] = valueNote.getT1y();
+				data[i - 1][2] = valueNote.getT2y();
+				data[i - 1][3] = valueNote.getT3y();
+				data[i - 1][4] = valueNote.getT4y();
+				data[i - 1][5] = valueNote.getT5y();
+				data[i - 1][6] = valueNote.getR1y();
+				data[i - 1][7] = valueNote.getR2y();
 			}
 		}
 		return data;

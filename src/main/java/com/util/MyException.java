@@ -25,7 +25,14 @@ public class MyException extends Exception{
         return e;
     }
 
-    public static MyException build(String functionName,Exception e){
+    @Override
+    public void printStackTrace() {
+        if (e != null){
+            e.printStackTrace();
+        }
+    }
+
+    public static MyException build(String functionName, Exception e){
         if (e instanceof MyException){
             return (MyException) e;
         }

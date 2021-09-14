@@ -1,6 +1,7 @@
 package com.insert;
 
 import com.data.*;
+import com.entity.ValueNote;
 import com.file.GetExcelValue;
 import com.txt.TxtGetValue;
 import com.ui.WordTab;
@@ -10,7 +11,6 @@ import org.apache.poi.xwpf.usermodel.*;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -73,7 +73,7 @@ public class InsertToWord {
             insertElasticPropertyOfBaseEarthquake(tables.get(19), tables.get(20));
 
             //各地震波下X/Y方向阻尼器耗能
-            insertEarthquakeDamperDisEnergy(tables.get(4), tables.get(21), tables.get(22));
+            insertEarthquakeDamperDisEnergy(tables.get(21), tables.get(22));
 
             //结构附加阻尼比计算  该表的数据依赖与上边四个表的数据(此表要后处理)
             insertAnnexDamperRatio(tables.get(18), tables.get(19), tables.get(20), tables.get(21), tables.get(22));
@@ -189,7 +189,7 @@ public class InsertToWord {
             insertElasticPropertyOfBaseEarthquake(tables.get(19), tables.get(20));
 
             //各地震波下X/Y方向阻尼器耗能
-            insertEarthquakeDamperDisEnergy(tables.get(4), tables.get(21), tables.get(22));
+            insertEarthquakeDamperDisEnergy(tables.get(21), tables.get(22));
 
             //结构附加阻尼比计算  该表的数据依赖与上边四个表的数据(此表要后处理)
             insertAnnexDamperRatio(tables.get(18), tables.get(19), tables.get(20), tables.get(21), tables.get(22));
@@ -756,27 +756,20 @@ public class InsertToWord {
      * @param table19
      * @param table20
      */
-    private static void insertEarthquakeDamperDisEnergy(XWPFTable table2, XWPFTable table19, XWPFTable table20) throws MyException {
+    private static void insertEarthquakeDamperDisEnergy(XWPFTable table19, XWPFTable table20) throws MyException {
         System.out.println("\n处理 各地震波下X/Y方向阻尼器耗能表");
         try {
             //X方向
             //原来是工作簿7
-            Double[][][] valueX = GetExcelValue.getEarthquakeDamperDisEnergyX(basePath + "\\excel\\工作簿4.xlsx");
-            //阻尼器形变
-            Double[][] shapeX = valueX[0];
-            //阻尼器内力
-            Double[][] forceX = valueX[1];
+            Map<String, ValueNote>[] xxx = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿4_.xlsx", 6, 7, "X");
+            Double[][] shapeX = Util.mapToArray1__(xxx[0].values(),"X");
+            Double[][] forceX = Util.mapToArray1__(xxx[1].values(),"X");
 
             //Y方向
             //原来是工作簿8
-            Double[][][] valueY = GetExcelValue.getEarthquakeDamperDisEnergyY(basePath + "\\excel\\工作簿4.xlsx");
-            //阻尼器形变
-            Double[][] shapeY = valueY[0];
-            //阻尼器内力
-            Double[][] forceY = valueY[1];
-
-            //CAD中的编号获取
-//            String[][] modelNo1 = getModelNo(table2);
+            Map<String, ValueNote>[] yyy = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿4_.xlsx", 7, 8, "Y");
+            Double[][] shapeY = Util.mapToArray1__(yyy[0].values(),"Y");
+            Double[][] forceY = Util.mapToArray1__(yyy[1].values(),"Y");
 
             XWPFTableRow row19;
             XWPFTableRow row20;
@@ -909,16 +902,12 @@ public class InsertToWord {
     private static void insertDamperFloorRatio(XWPFTable table21, XWPFTable table22) throws Exception {
 
         //X方向
-        //原来是工作簿7
-        Double[][][] valueX = GetExcelValue.getEarthquakeDamperDisEnergyX(basePath + "\\excel\\工作簿4.xlsx");
-        //阻尼器内力
-        Double[][] forceX = valueX[1];
+        Map<String, ValueNote>[] xxx = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿4_.xlsx", 6, 7, "X");
+        Double[][] forceX = Util.mapToArray1__(xxx[1].values(),"X");
 
         //Y方向
-        //原来是工作簿8
-        Double[][][] valueY = GetExcelValue.getEarthquakeDamperDisEnergyY(basePath + "\\excel\\工作簿4.xlsx");
-        //阻尼器内力
-        Double[][] forceY = valueY[1];
+        Map<String, ValueNote>[] yyy = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿4_.xlsx", 7, 8, "Y");
+        Double[][] forceY = Util.mapToArray1__(yyy[1].values(),"Y");
 
         //阻尼器内力  第一数为模型中的编号 如force[0][0][0]，force[0][1][0]
         Double[][][] force = {forceX, forceY};
@@ -1263,19 +1252,15 @@ public class InsertToWord {
             dealCellSM(table26.getRow(4).getCell(3),OtherData_4_10.DAMPING_EXPONENT.toString());
 
             //X方向  //原来工作簿11
-            Double[][][] valueX = GetExcelValue.getEarthquakeDamperDisEnergyX(basePath + "\\excel\\工作簿5.xlsx");
-            //阻尼器形变
-            Double[][] shapeX = valueX[0];
-            //阻尼器内力
-            Double[][] forceX = valueX[1];
+            Map<String, ValueNote>[] xxx = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿5_.xlsx", 6, 7, "X");
+            Double[][] shapeX = Util.mapToArray1__(xxx[0].values(),"X");
+            Double[][] forceX = Util.mapToArray1__(xxx[1].values(),"X");
 
             //Y方向
             //原来是工作簿12
-            Double[][][] valueY = GetExcelValue.getEarthquakeDamperDisEnergyY(basePath + "\\excel\\工作簿5.xlsx");
-            //阻尼器形变
-            Double[][] shapeY = valueY[0];
-            //阻尼器内力
-            Double[][] forceY = valueY[1];
+            Map<String, ValueNote>[] yyy = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿5_.xlsx", 7, 8, "Y");
+            Double[][] shapeY = Util.mapToArray1__(yyy[0].values(),"Y");
+            Double[][] forceY = Util.mapToArray1__(yyy[1].values(),"Y");
 
             //获取有效列
             Integer[] valueCol = Util.getValueCol(shapeX, 7);
@@ -1482,20 +1467,16 @@ public class InsertToWord {
             dealCellSM(table26.getRow(4).getCell(2),OtherData_4_10.DAMPING_FACTOR.toString());
             dealCellSM(table26.getRow(4).getCell(3),OtherData_4_10.DAMPING_EXPONENT.toString());
 
-            //X方向  //原来工作簿11
-            Double[][][] valueX = GetExcelValue.getEarthquakeDamperDisEnergyX(basePath + "\\excel\\工作簿5.xlsx");
-            //阻尼器形变
-            Double[][] shapeX = valueX[0];
-            //阻尼器内力
-            Double[][] forceX = valueX[1];
+            //X方向
+            Map<String, ValueNote>[] xxx = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿5_.xlsx", 6, 7, "X");
+            Double[][] shapeX = Util.mapToArray1__(xxx[0].values(),"X");
+            Double[][] forceX = Util.mapToArray1__(xxx[1].values(),"X");
 
             //Y方向
-            //原来是工作簿12
-            Double[][][] valueY = GetExcelValue.getEarthquakeDamperDisEnergyY(basePath + "\\excel\\工作簿5.xlsx");
-            //阻尼器形变
-            Double[][] shapeY = valueY[0];
-            //阻尼器内力
-            Double[][] forceY = valueY[1];
+            Map<String, ValueNote>[] yyy = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿5_.xlsx", 7, 8, "Y");
+            Double[][] shapeY = Util.mapToArray1__(yyy[0].values(),"Y");
+            Double[][] forceY = Util.mapToArray1__(yyy[1].values(),"Y");
+
 
             //获取有效列
             Integer[] valueCol = Util.getValueCol(shapeX, 3);

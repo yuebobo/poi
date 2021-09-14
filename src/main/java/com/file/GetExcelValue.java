@@ -1,12 +1,13 @@
 package com.file;
 
+import com.entity.ValueNote;
 import com.excel.sheet.*;
 import com.util.MyException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -267,6 +268,35 @@ public class GetExcelValue {
 			}
 		}
 	}
+
+	/**
+	 * 各地震波下X/Y方向阻尼器耗能
+	 * @param path
+	 * @return
+	 */
+	public static Map<String, ValueNote>[] getEarthquakeDamperDisEnergy__(String path, int valuePositionShape, int valuePositionForce,String direct) throws Exception {
+		FileInputStream e = null;
+		try {
+			e = new FileInputStream(path);
+			XSSFWorkbook excel = new XSSFWorkbook(e);
+			//阻尼器变形
+			Map<String, ValueNote> shape = ExcelDamper.getValueNote(excel.getSheetAt(0), 2, valuePositionShape, direct);
+			//阻尼器内力
+			Map<String, ValueNote> force = ExcelDamper.getValueNote(excel.getSheetAt(1), 3, valuePositionForce, direct);
+			return new Map[]{shape,force};
+		}catch (Exception e1) {
+			throw MyException.build("阻尼器耗能",e1);
+		}
+		finally {
+			if(e != null){
+				try {
+					e.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+	}
 	
 	/**
 	 * 层间位移角
@@ -376,4 +406,14 @@ public class GetExcelValue {
 		}
 		System.out.println();
 	}
+
+
+
+
+	public static void p(Double[][] x){
+		for (Double[] doubles : x) {
+			System.out.println(Arrays.asList(doubles));
+		}
+	}
 }
+
