@@ -1,10 +1,13 @@
 package com.insert;
 
-import com.file.GetExcelValue;
+import com.data.DataInfo;
+import com.util.Util;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * 读取数据，插入到excel模型中
@@ -13,76 +16,66 @@ import java.io.FileInputStream;
  */
 public class InsertToExcel {
 
-	private static String basePath;
-	public static void getValueInsertExcel(String path) {
-		basePath = path;
-		try {
-			FileInputStream shearFile = new FileInputStream(basePath + "\\工作簿0.xlsx");
-			XSSFWorkbook shear = new XSSFWorkbook(shearFile);
-			insertShear(shear.getSheetAt(0),shear.getSheetAt(1));
-		} catch (Exception e) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+"楼层间剪力在插入到excel表格的过程中出现异常");
-			e.printStackTrace();
-		}
 
-		try {
-			FileInputStream displaceFile = new FileInputStream(basePath + "\\工作簿1.xlsx");
-			XSSFWorkbook displace = new XSSFWorkbook(displaceFile);
-			insertDisplace(displace.getSheetAt(0), displace.getSheetAt(1));
-		} catch (Exception e) {
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+"楼层间位移在插入到excel表格的过程中出现异常");
-			e.printStackTrace();
-		} 
-
-	}
-	
 	/**
-	 * 结构层间剪力
-	 * @param sheetX
-	 * @param sheetY
+	 * 插入数据到 excel
 	 */
-	private static void insertShear(XSSFSheet sheetX,XSSFSheet sheetY) throws Exception {
-		//非减震结构层间剪力
-		String[][][] shearNot = GetExcelValue.getShear(basePath+"\\excle\\工作簿3.xlsx",1);
-		// 减震结构层间剪力
-		String[][][] shear = GetExcelValue.getShear(basePath+"\\excle\\工作簿4.xlsx",3);
+	public static void insert(){
+		insertFloorInfo(DataInfo.BASE_PATH + "\\excel\\材料数据.xlsx");
+	}
 
-		int floor = Math.min(shear[0].length, shearNot[1].length);
-		for (int i = 0; i < floor; i++) {
-			sheetX.getRow(i+4).getCell(0).setCellValue(floor-i);
-			sheetY.getRow(i+4).getCell(0).setCellValue(floor-i);
-			for (int j = 0; j < 7; j++) {
-				sheetX.getRow(i+4).getCell(j+1).setCellValue(shearNot[0][i][j]);
-				sheetX.getRow(i+4).getCell(j+8).setCellValue(shear[0][i][j]);
-				sheetY.getRow(i+4).getCell(j+1).setCellValue(shearNot[1][i][j]);
-				sheetY.getRow(i+4).getCell(j+8).setCellValue(shear[1][i][j]);
+	/**
+	 * 对 楼层sheet 进行数据插入
+	 * @param path
+	 */
+	private static void insertFloorInfo(String path) {
+		FileInputStream stream = null;
+		FileOutputStream out = null;
+		try {
+			stream = new FileInputStream(path);
+			XSSFWorkbook workbook = new XSSFWorkbook(stream);
+			insertDrawingNumber(workbook.getSheetAt(8));
+			out = new FileOutputStream(path);
+			workbook.write(out);
+		} catch (Exception e) {
+			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + "excel插入编号异常");
+			e.printStackTrace();
+		} finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (out != null){
+				try {
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
 
 	/**
-	 * 层间位移
-	 * @param sheetX
-	 * @param sheetY
+	 * 插入 图纸编号
+	 * @param sheet
 	 */
-	private static void insertDisplace(XSSFSheet sheetX,XSSFSheet sheetY) throws Exception {
-		//非减震结构层间位移
-		//原来工作簿5
-		String[][][] displaceNot = GetExcelValue.getDisplace(basePath+"\\excle\\工作簿3.xlsx",0);
-		// 减震结构层间位移
-		//原来工作簿6
-		String[][][] displace = GetExcelValue.getDisplace(basePath+"\\excle\\工作簿4.xlsx",2);
-		
-		int floor = Math.min(displace[0].length, displaceNot[1].length);
-		for (int i = 0; i < floor; i++) {
-			sheetX.getRow(i+4).getCell(0).setCellValue(floor-i);
-			sheetY.getRow(i+4).getCell(0).setCellValue(floor-i);
-			for (int j = 0; j < 7; j++) {
-				sheetX.getRow(i+4).getCell(j+1).setCellValue(displaceNot[0][i][j]);
-				sheetX.getRow(i+4).getCell(j+8).setCellValue(displace[0][i][j]);
-				sheetY.getRow(i+4).getCell(j+1).setCellValue(displaceNot[1][i][j]);
-				sheetY.getRow(i+4).getCell(j+8).setCellValue(displace[1][i][j]);
-			}
+	private static void insertDrawingNumber(XSSFSheet sheet){
+		int title = 2;
+		for (int i = 0; i < DataInfo.DRAWING_NUMBER_X.length ; i++) {
+			Util.insertValueToCell(sheet,++title,9,DataInfo.DRAWING_NUMBER_X[i]);
+			Util.insertValueToCell(sheet,title,10,String.valueOf(title-2));
 		}
+
+		for (int i = 0; i < DataInfo.DRAWING_NUMBER_Y.length ; i++) {
+			Util.insertValueToCell(sheet,++title,9,DataInfo.DRAWING_NUMBER_Y[i]);
+			Util.insertValueToCell(sheet,title,10,String.valueOf(title- 2));
+		}
+		Util.insertValueToCell(sheet,title,11,"END");
 	}
+
+
+
 }

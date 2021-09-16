@@ -1,6 +1,7 @@
 package com.mine;
 
 import com.data.DataInfo;
+import com.insert.InsertToExcel;
 import com.insert.InsertToWord;
 import com.ui.WordTab;
 
@@ -74,6 +75,12 @@ public class MainDeal {
 
         //初始化数据
          DataInfo.initBaseData(basePath);
+
+        //excel 插入数据
+        InsertToExcel.insert();
+        if (WordTab.Step.ZERO.equals(WordTab.STEP)){
+            return;
+        }
 
 
         //==================================================  第一套模板  (云南) ======================================================

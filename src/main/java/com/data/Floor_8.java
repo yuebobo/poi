@@ -24,6 +24,9 @@ public class Floor_8 {
     //阻尼器数量 k -> 楼层 ， v -> [x数量，y数量]
     public static Map<Integer,Integer[]> DAMPER_COUNT;
 
+    //图纸编号前缀
+    public static String DAMPER_PREFIX = "";
+
 
     /**
      * 楼层信息初始化
@@ -35,6 +38,9 @@ public class Floor_8 {
 
        cell = sheet.getRow(1).getCell(7);
        FLOORS = Util.getIntValueFromXssCell(cell);
+
+       cell = sheet.getRow(1).getCell(10);
+       DAMPER_PREFIX = Util.getValueFromXssfcell(cell);
 
        DAMPER_COUNT = new HashMap<>();
        FLOOR_HEIGHT = new Integer[FLOORS];

@@ -1,5 +1,6 @@
 package com.data;
 
+import com.insert.InsertToExcel;
 import com.util.MyException;
 import com.util.Util;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -115,12 +116,12 @@ public class DataInfo {
         for (Map.Entry<Integer, Integer[]> e : Floor_8.DAMPER_COUNT.entrySet()) {
             Integer x = e.getValue()[0];
             for (Integer i = 0; i < x; i++) {
-                DRAWING_NUMBER_X[m++] = "X-" + (e.getKey()) + "-" + (i + 1);
+                DRAWING_NUMBER_X[m++] = Floor_8.DAMPER_PREFIX + "X-" + (e.getKey()) + "-" + (i + 1);
             }
 
             Integer y = e.getValue()[1];
             for (Integer i = 0; i < y; i++) {
-                DRAWING_NUMBER_Y[n++] = "Y-" + (e.getKey()) + "-" + (i + 1);
+                DRAWING_NUMBER_Y[n++] = Floor_8.DAMPER_PREFIX + "Y-" + (e.getKey()) + "-" + (i + 1);
             }
         }
 
@@ -136,8 +137,9 @@ public class DataInfo {
     }
 
 
-    static String basePath = "C:\\Users\\Administrator\\Desktop\\WENJ\\weige\\testFile\\file";
+    static String basePath = "C:\\Users\\Administrator\\Desktop\\WENJ\\weige\\new\\file - 副本";
     public static void main(String[] args) throws Exception {
         DataInfo.initBaseData(basePath);
+        InsertToExcel.insert();
     }
 }

@@ -67,6 +67,7 @@ public class WordTab implements TabUI{
     private TextField textField;
     private TextField textField1;
 
+    private int index = 3;
 
     /**
      * 程序的功能类型
@@ -89,6 +90,7 @@ public class WordTab implements TabUI{
      */
     public enum Step{
 
+        ZERO(" 生成编号 "),
         ONE(" 模型对比 "),
         TWO(" 地震波 "),
         THREE(" 附加阻尼比 "),
@@ -150,6 +152,8 @@ public class WordTab implements TabUI{
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 5, 5, 10));
         tab.setContent(grid);
+
+        index = 3;
 
         //功能模式 ，单选按钮
         singleSelect(grid);
@@ -245,6 +249,15 @@ public class WordTab implements TabUI{
 
         int column = 0;
         int row = 2;
+
+        RadioButton r0 = getRadioButton(Step.ZERO, group);
+        GridPane g0 = new GridPane();
+        g0.add(r0, column++, 0);
+        g0.add(new Label(""), column, row);
+
+        //=======================================================================
+
+        column = 0;
         RadioButton r1 = getRadioButton(Step.ONE, group);
         GridPane g1 = new GridPane();
         g1.add(r1, column++, 0);
@@ -322,10 +335,11 @@ public class WordTab implements TabUI{
 
         tfs = new TextField[]{t11,t12,t13,t21,t31,t32,t41,t42};
 
-        grid.add(g1, 0, 5);
-        grid.add(g2, 0, 6);
-        grid.add(g3, 0, 7);
-        grid.add(g4, 0, 8);
+        grid.add(g0, 0, index++);
+        grid.add(g1, 0, index++);
+        grid.add(g2, 0, index++);
+        grid.add(g3, 0, index++);
+        grid.add(g4, 0, index++);
     }
 
 
@@ -392,7 +406,7 @@ public class WordTab implements TabUI{
         g.add(p,1,0);
         g.add(b1,0,1);
         g.add(b2,2,1);
-        grid.add(g,0,9);
+        grid.add(g,0,index++);
 
         GridPane gg = new GridPane();
         gg.add(resultLabel,1,0);
@@ -401,7 +415,7 @@ public class WordTab implements TabUI{
         gg.add(textField1,2,1);
 //        GridPane ggg = new GridPane();
 //        ggg.add(textField1,2,0);
-        grid.add(gg,0,10);
+        grid.add(gg,0,index++);
 //        grid.add(ggg,0,11);
     }
 

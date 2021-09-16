@@ -761,13 +761,13 @@ public class InsertToWord {
         try {
             //X方向
             //原来是工作簿7
-            Map<String, ValueNote>[] xxx = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿4_.xlsx", 6, 7, "X");
+            Map<String, ValueNote>[] xxx = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿4.xlsx", 6, 7, "X");
             Double[][] shapeX = Util.mapToArray1__(xxx[0].values(),"X");
             Double[][] forceX = Util.mapToArray1__(xxx[1].values(),"X");
 
             //Y方向
             //原来是工作簿8
-            Map<String, ValueNote>[] yyy = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿4_.xlsx", 7, 8, "Y");
+            Map<String, ValueNote>[] yyy = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿4.xlsx", 7, 8, "Y");
             Double[][] shapeY = Util.mapToArray1__(yyy[0].values(),"Y");
             Double[][] forceY = Util.mapToArray1__(yyy[1].values(),"Y");
 
@@ -902,11 +902,11 @@ public class InsertToWord {
     private static void insertDamperFloorRatio(XWPFTable table21, XWPFTable table22) throws Exception {
 
         //X方向
-        Map<String, ValueNote>[] xxx = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿4_.xlsx", 6, 7, "X");
+        Map<String, ValueNote>[] xxx = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿4.xlsx", 6, 7, "X");
         Double[][] forceX = Util.mapToArray1__(xxx[1].values(),"X");
 
         //Y方向
-        Map<String, ValueNote>[] yyy = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿4_.xlsx", 7, 8, "Y");
+        Map<String, ValueNote>[] yyy = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿4.xlsx", 7, 8, "Y");
         Double[][] forceY = Util.mapToArray1__(yyy[1].values(),"Y");
 
         //阻尼器内力  第一数为模型中的编号 如force[0][0][0]，force[0][1][0]
@@ -1252,13 +1252,13 @@ public class InsertToWord {
             dealCellSM(table26.getRow(4).getCell(3),OtherData_4_10.DAMPING_EXPONENT.toString());
 
             //X方向  //原来工作簿11
-            Map<String, ValueNote>[] xxx = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿5_.xlsx", 6, 7, "X");
+            Map<String, ValueNote>[] xxx = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿5.xlsx", 6, 7, "X");
             Double[][] shapeX = Util.mapToArray1__(xxx[0].values(),"X");
             Double[][] forceX = Util.mapToArray1__(xxx[1].values(),"X");
 
             //Y方向
             //原来是工作簿12
-            Map<String, ValueNote>[] yyy = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿5_.xlsx", 7, 8, "Y");
+            Map<String, ValueNote>[] yyy = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿5.xlsx", 7, 8, "Y");
             Double[][] shapeY = Util.mapToArray1__(yyy[0].values(),"Y");
             Double[][] forceY = Util.mapToArray1__(yyy[1].values(),"Y");
 
@@ -1468,12 +1468,12 @@ public class InsertToWord {
             dealCellSM(table26.getRow(4).getCell(3),OtherData_4_10.DAMPING_EXPONENT.toString());
 
             //X方向
-            Map<String, ValueNote>[] xxx = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿5_.xlsx", 6, 7, "X");
+            Map<String, ValueNote>[] xxx = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿5.xlsx", 6, 7, "X");
             Double[][] shapeX = Util.mapToArray1__(xxx[0].values(),"X");
             Double[][] forceX = Util.mapToArray1__(xxx[1].values(),"X");
 
             //Y方向
-            Map<String, ValueNote>[] yyy = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿5_.xlsx", 7, 8, "Y");
+            Map<String, ValueNote>[] yyy = GetExcelValue.getEarthquakeDamperDisEnergy__(basePath + "\\excel\\工作簿5.xlsx", 7, 8, "Y");
             Double[][] shapeY = Util.mapToArray1__(yyy[0].values(),"Y");
             Double[][] forceY = Util.mapToArray1__(yyy[1].values(),"Y");
 
@@ -1662,6 +1662,9 @@ public class InsertToWord {
         }
         for (int i = 0; i < DataInfo.DRAWING_NUMBER_Y.length; i++) {
             XWPFTableRow row = table.getRow(i + 1);
+            if (row == null) {
+                row = table.createRow();
+            }
             dealCellSM(row.getCell(2), DataInfo.DRAWING_NUMBER_Y[i]);
             dealCellSM(row.getCell(3), String.valueOf(++x));
         }
@@ -1680,7 +1683,7 @@ public class InsertToWord {
         for (int h = 0; h < 2; h++) {
             Map<Integer, Double[]> map = new HashMap<>();
             for (int i = 0; i < modelNo[h].length; i++) {
-                floor = Integer.valueOf(modelNo[h][i][0].substring(2, 3));
+                floor = Integer.valueOf(modelNo[h][i][0].substring(modelNo[h][i][0].indexOf("-") + 1, modelNo[h][i][0].indexOf("-") + 2));
                 no = modelNo[h][i][1];
                 flag = false;
                 for (int j = 0; j < force[h].length; j++) {

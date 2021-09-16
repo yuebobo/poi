@@ -4,6 +4,8 @@ import com.entity.Constants;
 import com.entity.ValueNote;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -447,6 +449,24 @@ public class Util {
 	 */
 	public static void insertValueToCell(XWPFTableCell cell, String text) {
 		dealCell(cell, text, 10);
+	}
+
+	/**
+	 * 对excel 进行数据插入
+	 * @param sheet
+	 * @param rowNum
+	 * @param cellNum
+	 */
+	public static void insertValueToCell(XSSFSheet sheet,int rowNum,int cellNum,String value){
+		XSSFRow row = sheet.getRow(rowNum);
+		if (row == null){
+			row = sheet.createRow(rowNum);
+		}
+		XSSFCell cell = row.getCell(cellNum);
+		if (cell == null){
+			 cell = row.createCell(cellNum);
+		}
+		cell.setCellValue(value);
 	}
 
 	/**
