@@ -1675,8 +1675,8 @@ public class InsertToWord {
         String[][][] modelNo = getModelNo1();
         Map<Integer, Double[]>[] returnValue = new Map[2];
         Integer floor;
-        String no;
-        boolean flag = false;
+        double no;
+        boolean flag ;
         int count = 0;
         Double[] data;
         double f;
@@ -1684,11 +1684,11 @@ public class InsertToWord {
             Map<Integer, Double[]> map = new HashMap<>();
             for (int i = 0; i < modelNo[h].length; i++) {
                 floor = Integer.valueOf(modelNo[h][i][0].substring(modelNo[h][i][0].indexOf("-") + 1, modelNo[h][i][0].indexOf("-") + 2));
-                no = modelNo[h][i][1];
+                no = Double.valueOf(modelNo[h][i][1]);
                 flag = false;
                 for (int j = 0; j < force[h].length; j++) {
                     f = force[h][j][0];
-                    if (f == Double.valueOf(no)) {
+                    if (f == no) {
                         flag = true;
                         count = j;
                         break;
@@ -1734,6 +1734,7 @@ public class InsertToWord {
             returnValue[0][i][0] = DataInfo.DRAWING_NUMBER_X[i];
             returnValue[0][i][1] = String.valueOf(number++);
         }
+        number = 1;
         for (int i = 0; i < DataInfo.DRAWING_NUMBER_Y.length; i++) {
             returnValue[1][i][0] = DataInfo.DRAWING_NUMBER_Y[i];
             returnValue[1][i][1] = String.valueOf(number++);
